@@ -1,0 +1,1199 @@
+Mods: {
+	NoxusBoss: {
+		Bestiary: {
+			Aelithrysuwl: 尽管这些神秘的生物看起来像是某种独居的猫头鹰，但它们实际具有相当强的社会性。闪闪发光的眼睛仿佛在暗示它们具备相当程度的智慧。
+			Vivajuyfylae: 这些神秘生物中每个个体看起来都像是被一颗星辰所赋予的生命。它们成群结队地飞舞着，永无休止，偶尔还会形成星座。
+			EntropicGod: 无法描述的不可名状之存在。
+			NoxusEgg: 由纯粹黑暗构成的异常之卵。无数个世纪以来，它一直在耐心的等待着孵化。
+			ItemDropConditions.FirstTimeExclusive: 仅在首次击败时掉落。
+			NamelessDeityBoss1: 混沌初开。
+			NamelessDeityBoss2: 璀璨之光。
+			NamelessDeityBoss3: 天界的交织体。
+			NamelessDeityBoss4: 权能。
+			NamelessDeityBoss5: 无穷无尽。
+			NamelessDeityBoss6: 创世者。
+			NamelessDeityBoss7: 全知之神。
+			NamelessDeityBoss8: 超脱于世。
+			NamelessDeityBoss9: 不朽。
+			NamelessDeityBoss10: 灿烂的花朵。
+			NamelessDeityBoss11: 花语。
+			NamelessDeityBoss12: 寰宇之美。
+		}
+
+		Biomes: {
+			EternalGardenBiome: {
+				DisplayName: 永恒花园
+				TownNPCDialogueName: 永恒花园
+			}
+		}
+
+		Buffs: {
+			NoxusFumes: {
+				DisplayName: 诺克萨斯之雾
+				Description: 宇宙幻象萦绕在你周围......
+			}
+
+			BabyNoxusBuff: {
+				DisplayName: 诺克萨斯
+				Description: 他现在是个小家伙了
+			}
+
+			BlackHolePetbuff: {
+				DisplayName: 黑洞
+				Description: 无尽的余弦从神圣的五行诗后提取
+			}
+
+			StarPetBuff: {
+				DisplayName: 恒星
+				Description: 光明将指明你前进的方向
+			}
+		}
+
+		Items: {
+			Cattail: {
+				DisplayName: 香蒲
+				Tooltip: ""
+			}
+
+			CheatPermissionSlip: {
+				DisplayName: 作弊许可单
+				Tooltip:
+					'''
+					恭喜！现在去下载DragonLens mod吧
+					这不是作弊，这张单子允许你这样做
+					快点，去下载它。
+					立刻，马上。
+					'''
+			}
+
+			DeificTouch: {
+				DisplayName: 神化之触
+				Tooltip: 在光标后展露出一个光之维度
+			}
+
+			DivineMonolith: {
+				DisplayName: 圣神之石
+				Tooltip: 可作为时装饰品携带
+			}
+
+			DivineWings: {
+				DisplayName: 上神之翼
+				Tooltip:
+					'''
+					水平飞行速度: 16.67
+					加速倍率: 3.7
+					卓越的垂直飞行速度
+					飞行时间: ∞
+					“你已经通过了试炼”
+					'''
+			}
+
+			BlackHole: {
+				DisplayName: 黑洞
+				Tooltip: “它是个黑洞，字面意义上的”
+			}
+
+			EntropicDye: {
+				DisplayName: 暗熵末神染料
+				Tooltip: ""
+			}
+
+			EternalGardenMusicBox: {
+				DisplayName: 音乐盒（永恒花园）
+				Tooltip: 播放“伊甸园的低语” 作者：ENNWAY!
+			}
+
+			FakeTerminus: {
+				DisplayName: 终末石
+				BaseTooltip: 一件不可思议的古老造物，其被尘封深渊底部以进行保护
+				UnopenedTooltip: 它的眼睛闭上了
+				OpenedTooltip: 它的眼睛睁开了，你将进行一场试炼
+				Tooltip:
+					'''
+					Replaced
+					Replaced2
+					'''
+			}
+
+			Genesis: {
+				DisplayName: 起源石
+				Tooltip: 召唤虚神魔卵，诺克萨斯
+				AlternateTooltip: 左键召唤暗熵终神，右键召唤虚神魔卵
+			}
+
+			GoodApple: {
+				DisplayName: Good Apple
+				Tooltip:
+					'''
+					好树无坏果！
+					你必须通过试炼
+					'''
+				TooltipPostNamelessDeity:
+					'''
+					好树无坏果！
+					额外增加1点生命上限
+					可以无限次使用
+					'''
+			}
+
+			GoodAppleResetter: {
+				DisplayName: Good Apple重设器[DEBUG]
+				Tooltip: ""
+			}
+
+			LoreNoxus: {
+				DisplayName: 诺克萨斯
+				Tooltip:
+					'''
+					[c/E3AF40:寄宿其上的低语流入你的耳中……]
+					按住“左Shift”仔细聆听
+					'''
+				Lore:
+					'''
+					荒谬至极。
+					这般畸变的意图与由来尘封于至暗的深渊底部，但有一件事可以肯定：
+
+					虽然它既不是神明也不是巨龙，但它承载着一种只有他们才能够拥有的一种卓越而崇高的力量。
+
+					是何等的圣器可以造就此等情况，揭开其怪诞力量的顶点？
+					这是命运之手所精心编织的织绵一般的存在吗？这仅仅是偶然吗？又或者，这只是大自然的反复无常，而不循规蹈矩的表现？
+					神明与巨龙......他们即是全部吗？像这样更为伟大的存在会在泰拉瑞亚之外的领域游荡吗？
+					对于已经发生的事，总是有无数的问题要去问，却很少能够得到答案。
+					'''
+			}
+
+			LoreNamelessDeity: {
+				DisplayName: 无名光神
+				Tooltip:
+					'''
+					[c/E3AF40:寄宿其上的低语流入你的耳中……]
+					按住“左Shift”仔细聆听
+					'''
+				Lore: ""
+				Determiner1: ""
+				Determiner2: ""
+				Verb1: 折射在
+				Verb2: 超出了
+				Verb3: 预言了
+				Verb4: 预见了
+				Verb5: 行走于
+				Verb6: 燃烧
+				Verb7: 融合于
+				Verb8: 上升
+				Verb9: 追寻着
+				Verb10: 踏在了
+				Verb11: 瞥见了
+				Verb12: 屈服于
+				Verb13: 发现了
+				Verb14: 解锁
+				Verb15: 寻找着
+				Verb16: 战胜了
+				Verb17: 航行于
+				Verb18: 编织着
+				Verb19: 回荡着
+				Verb20: 体验了
+				Verb21: 计算着
+				Verb22: 扩大了
+				Verb23: 开导了
+				Verb24: 介绍着
+				Verb25: 诞生于
+				Verb26: 统一了
+				Verb27: 登上了
+				Verb28: 找到了
+				Verb29: 提取了
+				Verb30: 测试了
+				Verb31: 打开了
+				Verb32: 挥动着
+				Verb33: 装饰着
+				Verb34: 盼望着
+				Verb35: 鉴赏着
+				Verb36: 躲避了
+				Verb37: 爱护着
+				Verb38: 发射了
+				Verb39: 得出了
+				Verb40: 照耀了
+				Verb41: 烧尽了
+				Verb42: 抹除了
+				Verb43: 清除了
+				Verb44: 出卖了
+				Verb45: 同意了
+				Verb46: 切除了
+				Verb47: 呼出了
+				Verb48: 计划着
+				Verb49: 理解了
+				Verb50: 覆盖着
+				Verb51: 喘着
+				Verb52: 遮住了
+				Verb53: 照亮了
+				Verb54: 招手示意着
+				Verb55: 构建了
+				Verb56: 创造了
+				Verb57: 祈祷着
+				Verb58: 掌控着
+				Verb59: 理解了
+				Verb60: 飞行着
+				Verb61: 熔化了
+				Verb62: 溶解了
+				Verb63: 忏悔了
+				Verb64: 征服了
+				Verb65: 流动着
+				Verb66: 分解着
+				Verb67: 激励了
+				Verb68: 赦免了
+				Verb69: 理解了
+				Verb70: 溺爱着
+				Verb71: 飘着
+				Verb72: 踉跄着
+				Verb73: 实现了
+				Verb74: 生成了
+				Verb75: 净化了
+				Verb76: 写下了
+				Verb77: 扣除了
+				Verb78: 削弱了
+				Verb79: 进步了
+				Verb80: 记着
+				Verb81: 翱翔着
+				Verb82: 面对了
+				Verb83: 不朽了
+				Verb84: 环绕着
+				Verb85: 分裂了
+				Verb86: 联合了
+				Verb87: 治愈了
+				Verb88: 承认了
+				Verb89: 吃惊于
+				Verb90: 缄默着
+				Verb91: 冻结了
+				Verb92: 合格了
+				Verb93: 擅长于
+				Verb94: 沉思着
+				Verb95: 治好了
+				Verb96: 重获新生了
+				Verb97: 区别对待着
+				Verb98: 爬行于
+				Verb99: 吞噬了
+				Verb100: 终结了
+				Verb101: 分裂了
+				Verb102: 阐明了
+				Verb103: 说明了
+				Verb104: 悼念着
+				Verb105: 繁盛了
+				Verb106: 糜烂了
+				Verb107: 应允了
+				Verb108: 默认了
+				Verb109: 布置了
+				Verb110: 渴望着
+				Verb111: 困扰了
+				Verb112: 栖身于
+				Verb113: 深思着
+				Verb114: 拒绝了
+				Verb115: 沉思着
+				Verb116: 瓦解了
+				Verb117: 出现了
+				Verb118: 哀悼着
+				Verb119: 忏悔了
+				Verb120: 嬉笑着
+				Verb121: 悸动着
+				Verb122: 统一着
+				Verb123: 颤抖着
+				Verb124: 臣服于
+				Verb125: 严惩了
+				Verb126: 生长着
+				Verb127: 跳动着
+				Verb128: 欺骗着
+				Verb129: 攻击着
+				Verb130: 警告着
+				Verb131: 允许了
+				Verb132: 忽视了
+				Verb133: 贬低了
+				Verb134: 超越了
+				Verb135: 组成了
+				Verb136: 破坏了
+				Verb137: 庆祝着
+				Verb138: 阐述着
+				Verb139: 承诺着
+				Verb140: 透露了
+				Verb141: 表演着
+				Verb142: 感受着
+				Verb143: 期望着
+				Verb144: 废除了
+				Verb145: 吹拂着
+				Verb146: 打开了
+				Verb147: 发生了
+				Verb148: 决定了
+				Verb149: 废除了
+				Verb150: 蠕动着
+				Adjective1: 不可名状的
+				Adjective2: 璀璨的
+				Adjective3: 短暂的
+				Adjective4: 伤感的
+				Adjective5: 幸福的
+				Adjective6: 永恒的
+				Adjective7: 扭曲的
+				Adjective8: 无所不知的
+				Adjective9: 无所不能的
+				Adjective10: 仁慈的
+				Adjective11: 希望的
+				Adjective12: 崇高的
+				Adjective13: 强壮的
+				Adjective14: 退环境的
+				Adjective15: 残忍的
+				Adjective16: 美丽的
+				Adjective17: 花里胡哨的
+				Adjective18: 短暂的
+				Adjective19: 灿烂的
+				Adjective20: 放荡的
+				Adjective21: 坚定的
+				Adjective22: 秘密的
+				Adjective23: 开明的
+				Adjective24: 固执的
+				Adjective25: 漫不经心的
+				Adjective26: 古老的
+				Adjective27: 神圣的
+				Adjective28: 错综复杂的
+				Adjective29: 谜一般的
+				Adjective30: 自省的
+				Adjective31: 敏捷的
+				Adjective32: 净化的
+				Adjective33: 醉人的
+				Adjective34: 坦诚的
+				Adjective35: 高兴的
+				Adjective36: 非凡的
+				Adjective37: 神化的
+				Adjective38: 太平的
+				Adjective39: 宁静的
+				Adjective40: 和平的
+				Adjective41: 笨拙的
+				Adjective42: 起杀心的
+				Adjective43: 异想天开的
+				Adjective44: 祝福的
+				Adjective45: 伊甸园的
+				Adjective46: 宇宙的
+				Adjective47: 古代的
+				Adjective48: 令人钦佩的
+				Adjective49: 光荣的
+				Adjective50: 寒冷的
+				Adjective51: 富有的
+				Adjective52: 永无过失的
+				Adjective53: 异常的
+				Adjective54: 忠诚的
+				Adjective55: 命中注定的
+				Adjective56: 清白的
+				Adjective57: 怪诞的
+				Adjective58: 华丽的
+				Adjective59: 无尽的
+				Adjective60: 玷污的
+				Adjective61: 机智的
+				Adjective62: 有瑕疵的
+				Adjective63: 末世的
+				Adjective64: 罪恶的
+				Adjective65: 单突触的
+				Adjective66: 突发的
+				Adjective67: 不可分割的
+				Adjective68: 忏悔的
+				Adjective69: 忽隐忽现的
+				Adjective70: 贪婪的
+				Adjective71: 抽象的
+				Adjective72: 复杂的
+				Adjective73: 神秘的
+				Adjective74: 幼龄的
+				Adjective75: 永恒的
+				Adjective76: 热情的
+				Adjective77: 超凡的
+				Adjective78: 放热的
+				Adjective79: 耀眼的
+				Adjective80: 条件反射的
+				Adjective81: 诱人的
+				Adjective82: 涅槃的
+				Adjective83: 单一的
+				Adjective84: 困倦的
+				Adjective85: 混乱的
+				Adjective86: 虚空的
+				Adjective87: 消褪的
+				Adjective88: 入迷的
+				Adjective89: 心甘情愿的
+				Adjective90: 梦幻般的
+				Adjective91: 诗歌般的
+				Adjective92: 骑士般的
+				Adjective93: 戒备的
+				Adjective94: 担忧的
+				Adjective95: 空洞的
+				Adjective96: 含铜的
+				Adjective97: 超动力的
+				Adjective98: 隐居的
+				Adjective99: 聪颖的
+				Adjective100: 彻底的
+				Adjective101: 精灵的
+				Adjective102: 田园诗般的
+				Adjective103: 年长的
+				Adjective104: 被克希洛克祝福的
+				Adjective105: 能胜任的
+				Adjective106: 冷漠的
+				Adjective107: 逼真的
+				Adjective108: 仓促的
+				Adjective109: 凶残的
+				Adjective110: 引人入胜的
+				Adjective111: 奇异的
+				Adjective112: 难忘的
+				Adjective113: 富有创造性的
+				Adjective114: 异国的
+				Adjective115: 野兽般的
+				Adjective116: 视若珍宝的
+				Adjective117: 孤独的
+				Adjective118: 不可阻挡的
+				Adjective119: 有害的
+				Adjective120: 六边的
+				Adjective121: 预编定的
+				Adjective122: 被劫持的
+				Adjective123: 富丽堂皇的
+				Adjective124: 智械的
+				Adjective125: 迷失方向的
+				Adjective126: 博学多识的
+				Adjective127: 骑士的
+				Adjective128: 古怪的
+				Adjective129: 语言学的
+				Adjective130: 抄写的
+				Adjective131: 不准确的
+				Adjective132: 毗连的
+				Adjective133: 目光长远的
+				Adjective134: 冥王星的
+				Adjective135: 暴力的
+				Adjective136: 染色的
+				Adjective137: 异教的
+				Adjective138: 遮天蔽日的
+				Adjective139: 邪恶的
+				Adjective140: 忠诚的
+				Adjective141: 玩忽职守的
+				Adjective142: 饰以珠宝的
+				Adjective143: 虔诚的
+				Adjective144: 耸人听闻的
+				Adjective145: 埋藏的
+				Adjective146: 多云的
+				Adjective147: 地狱的
+				Adjective148: 悲惨的
+				Adjective149: 险恶的
+				Adjective150: 殷勤的
+				Adjective151: 揣揣不安的
+				Adjective152: 无罪的
+				Adjective153: 愤慨的
+				Adjective154: 枯萎的
+				Adjective155: 庄严的
+				Adjective156: 悠闲的
+				Adjective157: 出乎意料的
+				Adjective158: 中伤的
+				Adjective159: 惯常的
+				Adjective160: 习俗的
+				Adjective161: 柔软的
+				Adjective162: 使命的
+				Adjective163: 糟糕的
+				Adjective164: 闪耀的
+				Adjective165: 恰好的
+				Adjective166: 畅通无阻的
+				Adjective167: 镜像的
+				Adjective168: 愿意的
+				Adjective169: 强大的
+				Adjective170: 不幸的
+				Adjective171: 象征性的
+				Adjective172: 无色的
+				Adjective173: 受鼓舞的
+				Adjective174: 传说般的
+				Adjective175: 自然的
+				Adjective176: 狭义的
+				Adjective177: 慷慨激昂的
+				Adjective178: 希腊的
+				Adjective179: 下定决心的
+				Adjective180: 幻想的
+				Adjective181: 清醒的
+				Adjective182: 难以捉摸的
+				Adjective183: 失望的
+				Adjective184: 未经测试的
+				Adjective185: 果断的
+				Adjective186: 好奇的
+				Adjective187: 怪异的
+				Adjective188: 有说服力的
+				Adjective189: 麻痹的
+				Adjective190: 愤怒的
+				Adjective191: 被遗忘的
+				Adjective192: 被背叛的
+				Adjective193: 微弱的
+				Adjective194: 乏味的
+				Adjective195: 恶意的
+				Adjective196: 短暂的
+				Adjective197: 浮夸的
+				Adjective198: 卑劣的
+				Adjective199: 代数的
+				Adjective200: 有说服力的
+				Noun1: 教主
+				Noun2: 神明
+				Noun3: 存在
+				Noun4: 刀片
+				Noun5: 审批
+				Noun6: 帷幕
+				Noun7: 火焰
+				Noun8: 群星
+				Noun9: 离子
+				Noun10: 油画
+				Noun11: 自然
+				Noun12: 战士
+				Noun13: 奴隶
+				Noun14: 家
+				Noun15: 数字
+				Noun16: 对数
+				Noun17: 季节
+				Noun18: 苹果
+				Noun19: 罪人
+				Noun20: 单词
+				Noun21: 螺纹
+				Noun22: 刽子手
+				Noun23: 血
+				Noun24: 星云
+				Noun25: 光
+				Noun26: 斗篷
+				Noun27: 王冠
+				Noun28: 抗原
+				Noun29: 史莱姆
+				Noun30: 代理人
+				Noun31: 术士
+				Noun32: 堡垒
+				Noun33: 桌子
+				Noun34: 激光
+				Noun35: 钇
+				Noun36: 硫磺火
+				Noun37: 地形
+				Noun38: 水果
+				Noun39: 母亲
+				Noun40: 神父
+				Noun41: 主显节
+				Noun42: 门
+				Noun43: 插值体
+				Noun44: 魔棒
+				Noun45: 风
+				Noun46: 池塘
+				Noun47: 赞美诗
+				Noun48: 水汽
+				Noun49: 勇气
+				Noun50: 空地
+				Noun51: 法官
+				Noun52: 征服者
+				Noun53: 贪婪
+				Noun54: 巨人
+				Noun55: 五行诗
+				Noun56: 命运
+				Noun57: 焦点
+				Noun58: 树木
+				Noun59: 细胞
+				Noun60: 熵
+				Noun61: 生命
+				Noun62: 收割者
+				Noun63: 蛇
+				Noun64: 方舟
+				Noun65: 协议
+				Noun66: 安卡
+				Noun67: 徽章
+				Noun68: 铃声
+				Noun69: 语言
+				Noun70: 礼物
+				Noun71: 藏红花
+				Noun72: 炼金术士
+				Noun73: 旅行
+				Noun74: 四分仪
+				Noun75: 雄蕊
+				Noun76: 虹膜
+				Noun77: 香炉
+				Noun78: 铂金
+				Noun79: 岩浆
+				Noun80: 手
+				Noun81: 角落
+				Noun82: 暗影
+				Noun83: 灾厄
+				Noun84: 废料
+				Noun85: 魂灵
+				Noun86: 大小
+				Noun87: 灰烬
+				Noun88: 等离子体
+				Noun89: 巨龙
+				Noun90: 物质
+				Noun91: 奇点
+				Noun92: 世界
+				Noun93: 化石
+				Noun94: 银河
+				Noun95: 阳光
+				Noun96: 巫师
+				Noun97: 暂停
+				Noun98: 年鉴
+				Noun99: 时间
+				Noun100: 圆环
+				Noun101: 叶片
+				Noun102: 落叶
+				Noun103: 阿克塞尔
+				Noun104: 风
+				Noun105: 眼睛
+				Noun106: 钥匙
+				Noun107: 珊瑚
+				Noun108: 星尘
+				Noun109: 特雷门
+				Noun110: 钢笔
+				Noun111: 水银
+				Noun112: 黑曜石
+				Noun113: 肖像
+				Noun114: 仙馐
+				Noun115: 老虎
+				Noun116: 世俗
+				Noun117: 音乐典礼
+				Noun118: 典礼
+				Noun119: 恶鬼
+				Noun120: 壁炉
+				Noun121: 发明
+				Noun122: 苍蝇
+				Noun123: 散光
+				Noun124: 机器人
+				Noun125: 女巫
+				Noun126: 学生
+				Noun127: 梦魇
+				Noun128: 胶水
+				Noun129: 字母表
+				Noun130: 整数
+				Noun131: 农场
+				Noun132: 地外生物
+				Noun133: 残丘
+				Noun134: 行列
+				Noun135: 高级行政官
+				Noun136: 鹮
+				Noun137: 月亮
+				Noun138: 障碍
+				Noun139: 蓝玉
+				Noun140: 指挥官
+				Noun141: 金刚鹦鹉
+				Noun142: 大脑
+				Noun143: 封国
+				Noun144: 玻璃
+				Noun145: 寇赛恩
+				Noun146: 人造卫星
+				Noun147: 猎人
+				Noun148: 指环
+				Noun149: 男人
+				Noun150: 贝壳
+				Noun151: 后裔
+				Noun152: 镁
+				Noun153: 花岗岩
+				Noun154: 帝国
+				Noun155: 行凶者
+				Noun156: 以太
+				Noun157: 自动装置
+				Noun158: 雨林
+				Noun159: 守门人
+				Noun160: 庇护者
+				Noun161: 专家
+				Noun162: 咀嚼物
+				Noun163: 石板
+				Noun164: 字节
+				Noun165: 光年
+				Noun166: 钟爱
+				Noun167: 埃及人
+				Noun168: 加农炮
+				Noun169: 气
+				Noun170: 雄辩者
+				Noun171: 护卫舰
+				Noun172: 研究员
+				Noun173: 后代
+				Noun174: 培根
+				Noun175: 哲学家
+				Noun176: 哥特
+				Noun177: 调和者
+				Noun178: 军官
+				Noun179: 文本
+				Noun180: 实验
+				Noun181: 现实主义者
+				Noun182: 布料
+				Noun183: 探索者
+				Noun184: 打油诗
+				Noun185: 基因
+				Noun186: 吊灯
+				Noun187: 氰化物
+				Noun188: 极端分子
+				Noun189: 制造者
+				Noun190: 忘忧密药
+				Noun191: 滨海之地
+				Noun192: 长笛
+				Noun193: 女皇
+				Noun194: 碎冰鸡尾酒
+				Noun195: 参赛者
+				Noun196: 无业游民
+				Noun197: 看护者
+				Noun198: 暴君
+				Noun199: 观察员
+				Noun200: 科学家
+				Noun201: 终末之杖
+				Preposition1: ""
+				Preposition2: ""
+				Preposition3: ""
+				Preposition4: ""
+				Preposition5: ""
+				Preposition6: ""
+				Preposition7: ""
+				Preposition8: ""
+				Preposition9: ""
+				Preposition10: ""
+				Preposition11: ""
+				Preposition12: ""
+				Preposition13: ""
+				Preposition14: ""
+				Preposition15: ""
+				Preposition16: ""
+				Preposition17: ""
+				Preposition18: ""
+				Preposition19: ""
+				Preposition20: ""
+				Preposition21: ""
+				Preposition22: ""
+				Preposition23: ""
+				Preposition24: ""
+				Preposition25: ""
+				Preposition26: ""
+				Preposition27: ""
+				Preposition28: ""
+				Preposition29: ""
+				Preposition30: ""
+				Preposition31: ""
+				Preposition32: ""
+				Preposition33: ""
+				Preposition34: ""
+				Preposition35: ""
+				Preposition36: ""
+				Preposition37: ""
+				Preposition38: ""
+				Preposition39: ""
+				Preposition40: ""
+				Preposition41: ""
+				EasterEggSentence: 是的，虫潮开荒摸了
+				# This key is used for the purpose of defining the general layout of the language's grammar. Barring requirements below you can create any rules you want.
+				# This system relies on Phrase Structure Rules. It would be wise to research this independently to get a firmer grasp on how this works.
+				# In this context the rules are obviously very primitive and incapable of inferring necessary context to create natural sentences, but that is intentional.
+				# The form 'A = B, C, D ...' indicates what A should be replaced with when generating a random sentence. A is referred to as a 'keyword'.
+				# B, C, D, etc. are all possible options that the random number generator can choose from. Spacing is important, as spaces are used to delineate things in need of replacement.
+				# For this to work, a SENTENCE keyword is required (though its contents can vary), as it serves as the entry point for all text generation.
+				# DETERMINER, NOUN, PREPOSITION, ADJECTIVE, and VERB keywords are all valid, and are auto-generated in the mod's code from the various words listed nearby.
+				PhraseStructureRules:
+					'''
+					SENTENCE = SUBJECT PREDICATE OBJECT, SUBJECT PREDICATE
+					SUBJECT = NOUNPHRASE
+					PREDICATE = VERBPHRASE
+					OBJECT = NOUNPHRASE, PREPOSITION NOUNPHRASE
+					NOUNPHRASE = DETERMINER ADJECTIVE NOUN, DETERMINER NOUN
+					VERBPHRASE = VERB PREPOSITION NOUNPHRASE
+					'''
+				# This was requested by the Chinese translators, whose language does not require spacing between the words. Set this to True or False depending on your needs.
+				IncludeSpacesBetweenWords: False
+			}
+
+			MidnightMonolith: {
+				DisplayName: 至暗之石
+				Tooltip: 可作为时装饰品携带
+			}
+
+			NoxiousEvocator: {
+				DisplayName: 致害诱晶
+				Tooltip: 让宇宙幻象在你的周围浮现
+			}
+
+			NoxusEclipseCalculator: {
+				DisplayName: 诺克萨斯日食计算器[DEBUG]
+				Tooltip: 提供关于未来100天内即将到来的诺克萨斯日食的信息
+				InfoTextPartial: 诺克萨斯日食大约将在{0}天后发生，从{1}开始到{2}结束。将会是日偏食。
+				InfoTextTotal: 诺克萨斯日食大约将在{0}天后发生，从{1}开始到{2}结束。将会是日全食。
+				InfoTextNoxusWorld: 日食永不消散。
+			}
+
+			NoxusMask: {
+				DisplayName: 诺克萨斯面具
+				Tooltip: ""
+			}
+
+			NoxusRelicItem: {
+				DisplayName: 诺克萨斯圣物
+				Tooltip: ""
+			}
+
+			NoxusSprayer: {
+				DisplayName: 诺克萨斯喷雾器
+				Tooltip:
+					'''
+					喷出一股混乱烟雾，蒸发掉它接触的一切
+					“保证能杀死99.9%的低等生物！”
+					'''
+			}
+
+			NoxusTrophy: {
+				DisplayName: 诺克萨斯纪念章
+				Tooltip: ""
+			}
+
+			NoxusWorldFogStarter: {
+				DisplayName: 诺克萨斯世界雾气启动器[DEBUG]
+				Tooltip: ""
+			}
+
+			NuminousDye: {
+				DisplayName: 光辉圣神染料
+				Tooltip: ""
+			}
+
+			OblivionRattle: {
+				DisplayName: 遗忘泼浪鼓
+				Tooltip: ""
+			}
+
+			Rok: {
+				DisplayName: 石
+				Tooltip: 它只是块普通的石头
+			}
+
+			Terminal: {
+				DisplayName: 终末之石
+				Tooltip:
+					'''
+					目前，我们拒绝将Boss Rush视作一个事件
+					事实上，它充其量也只是个拥有些许挑战性的战斗
+					然而，尽管如此，随着终末石功能的改变，我们还是决定最好为
+					那些喜欢br或者需要用br进行测试的人添加一种体验该事件的替代方式
+					'''
+			}
+
+			ThePurifier: {
+				DisplayName: 净化者
+				Tooltip:
+					'''
+					将整个世界重置为初始状态
+					这个过程可能需要一段时间，所以如果游戏暂停了一段时间的话不必惊慌
+					一旦投掷，炸弹需要15秒才会引爆
+					如果你不小心把它扔出去了，可以保存并退出防止它爆炸
+					2012
+					'''
+			}
+
+			NamelessDeityMask: {
+				DisplayName: 无名光神面具
+				Tooltip: "'你的脸将会变成【数据删除】'"
+			}
+
+			NamelessDeityMusicBox: {
+				DisplayName: 音乐盒（无名光神）
+				Tooltip: 播放“扭曲花园” 作者：Heart Plus Up!与ENNWAY!
+			}
+
+			NamelessDeityRelicItem: {
+				DisplayName: 无名光神圣物
+				Tooltip: ""
+			}
+
+			NamelessDeityTrophy: {
+				DisplayName: 无名光神纪念章
+				Tooltip: 当接收电线发出的信号后，默认情况下眼睛将闭上，直到玩家靠近为止。
+			}
+
+			Starseed: {
+				DisplayName: 恒星之种
+				Tooltip: ""
+			}
+
+			StaircaseStarter: {
+				DisplayName: 阶梯启动器[DEBUG]
+				Tooltip: ""
+			}
+
+			Xenqiterthralyensyr: {
+				DisplayName: Xenqiterthralyensyr
+				Tooltip: 其作者的名字早已消失于时间的长河之中
+			}
+		}
+
+		NPCs: {
+			NoxusEggCutscene.DisplayName: ???
+
+			NoxusEgg: {
+				DisplayName: 虚神魔卵，诺克萨斯
+				DisplayNameSingular: 虚神魔卵，诺克萨斯
+
+				BossChecklistIntegration: {
+					SpawnInfo: 使用[i:NoxusBoss/Genesis]
+					DespawnMessage: "[c/7D5CC4:诺克萨斯在转瞬之间消失了。]"
+				}
+			}
+
+			EntropicGod: {
+				DisplayName: 暗熵终神，诺克萨斯
+				DisplayNameSingular: 暗熵终神，诺克萨斯
+
+				BossChecklistIntegration: {
+					SpawnInfo: 使用[i:NoxusBoss/Genesis]
+					DespawnMessage: "[c/7D5CC4:诺克萨斯在转瞬之间消失了。]"
+				}
+
+				InfernumCompatibility.Title: 诺克萨斯
+			}
+
+			NamelessDeityBoss: {
+				DisplayName: 无名光神
+				DisplayNameSingular: 无名光神
+				SillyDeathCountSuffix: ，无伤人的拷打者
+
+				BossChecklistIntegration: {
+					SpawnInfo: 在[i:CalamityMod/Terminus]的眼睛睁开后，使用它。
+					DespawnMessage: "[c/FF463D:你未能通过试炼。]"
+				}
+
+				InfernumCompatibility.Title: ??????????????????????????????????????????????????
+			}
+
+			DismalSeeker.DisplayName: 阴郁索求者
+			Fogwood.DisplayName: 雾中木
+			Mirrorwalker.DisplayName: 镜像行者
+			# These names do not have to be translated, since when displayed ingame they are drawn in a divine language anyway via a special font.
+			Aelithrysuwl.DisplayName: Aelithrysuwl
+			Vivajuyfylae.DisplayName: Vivajuyfylae
+		}
+
+		Projectiles: {
+			ArcingStarburst.DisplayName: 星爆
+			BabyNoxus.DisplayName: 诺克萨斯宝宝
+			BackgroundStar.DisplayName: 星辰
+			BlackHole.DisplayName: 黑洞
+			BlackHolePet.DisplayName: 黑洞
+			BookConstellation.DisplayName: 宏神之智
+			ClockConstellation.DisplayName: 柯罗诺斯之手
+			ControlledStar.DisplayName: 星辰
+			ConvergingSupernovaEnergy.DisplayName: 超新星等离子体
+			DarkComet.DisplayName: 暗之彗星
+			DarkFireball.DisplayName: 暗之火球
+			DarkPortal.DisplayName: 暗之门
+			DarkWave.DisplayName: 暗之浪潮
+			DismalSeekerLantern.DisplayName: 阴郁之灯
+			DistortionField.DisplayName: 扭曲力场
+			ExplodingStar.DisplayName: 星辰
+			FallingGalaxy.DisplayName: 新生之银河
+			FogwoodRoot.DisplayName: 雾中木树根
+			GodRayVisual.DisplayName: 上帝之光
+			GroundStompShock.DisplayName: 撼地冲击
+			LanternExplosion.DisplayName: 爆破
+			LightDagger.DisplayName: 光之匕首
+			LightPortal.DisplayName: 光之门
+			LightSlash.DisplayName: 光之斩击
+			LightSlashTelegraph.DisplayName: 光之斩击预警线
+			LightWave.DisplayName: 光之浪潮
+			NightmareDeathRay.DisplayName: 梦魇死光
+			NoxSpike.DisplayName: 熵神尖刺
+			NoxusExplosion.DisplayName: 熵神爆破
+			NoxusGas.DisplayName: 熵神雾气
+			NoxusSprayerGas.DisplayName: 诺克萨斯喷雾雾气
+			Quasar.DisplayName: 恒星
+			RedirectingDarkFlame.DisplayName: 黑暗之火
+			SlowSolarSpark.DisplayName: 耀阳火花
+			Starburst.DisplayName: 星爆
+			StarPatterenedStarburst.DisplayName: 星爆
+			StarPet.DisplayName: 恒星
+			SunFireball.DisplayName: 烈阳火球
+			SuperCosmicBeam.DisplayName: 寰宇死亡射线
+			SuperLightBeam.DisplayName: 光之死亡射线
+			Supernova.DisplayName: 超新星
+			SwordConstellation.DisplayName: 猎户座之剑
+			SwordConstellationSlashVisual.DisplayName: 非常好视觉设计
+			TelegraphedLightLaserbeam.DisplayName: 光之死亡射线
+			TelegraphedPortalLaserbeam.DisplayName: 寰宇爆破
+			TelegraphedScreenSlice.DisplayName: 维度裂片
+			TelegraphedStarLaserbeam.DisplayName: 烈阳爆发
+			ThePurifierProj.DisplayName: 净化者
+			TerminusProj.DisplayName: 终末石
+			VergilScreenSlice.DisplayName: 审判斩切
+			WindStreakVisual.DisplayName: 风
+			RodOfHarmonyExplosion.DisplayName: 和谐传送杖爆炸
+			DarkField.DisplayName: 黑暗视野
+			PrimordialStardust.DisplayName: 始源星尘
+			NamelessDeityAfterimage.DisplayName: 余像
+		}
+
+		Tiles: {
+			EternalGardenMusicBoxTile.MapEntry: 音乐盒
+			NamelessDeityMusicBoxTile.MapEntry: 音乐盒
+		}
+
+		NamelessDeityDimensionMainMenu.DisplayName: 光之维度
+
+		Configs: {
+			NoxusBossConfig: {
+				DisplayName: 主要配置
+
+				DisplayConfigMessage: {
+					Label: 显示配置信息
+					Tooltip: 开关指导玩家查看UI的文本。
+					WarningText:
+						'''
+						嗨！你读到这篇小作文的第一个想法可能是“我该如何摆脱这篇小作文？这太烦人了。”
+						开门见山吧，考虑到这个mod中各种视觉效果的强度十分逆天，你要知道如何通过配置选项来降低它们的效果。
+						我之所以要阐明这一点，是为了确保那些具有光敏性疾病的人在开始游玩之前都能够了解到这一问题。
+						你可以通过“设置”->“模组配置”->“众神之怒”->“主要配置”找到配置选项。
+						为了确保你正确地遵循了这些步骤，你需要通过“显示配置信息”选项在配置中永久关闭此文本。
+						'''
+				}
+
+				PhotosensitivityMode: {
+					Label: 光敏模式
+					Tooltip: 开关突然闪屏的动画效果。开关该配置时会影响相关的选项，尽管如果需要的话可以手动覆盖它们。
+				}
+
+				ScreenShakeIntensity: {
+					Label: 屏幕抖动强度
+					Tooltip:
+						'''
+						更改屏幕抖动效果的强度。强度为0时，所有该mod引起的屏幕抖动效果都将被禁用。
+						如果灾厄的配置禁止了屏幕抖动，此强度将直接设置为0。
+						'''
+				}
+
+				ScreenShatterEffects: {
+					Label: 碎屏效果
+					Tooltip: 启用碎屏效果，如果你的眼睛因此受到损伤，请禁用它。
+				}
+
+				VisualOverlayIntensity: {
+					Label: 视觉叠加强度
+					Tooltip: 调整视觉叠加的强度，例如模糊和色差。
+				}
+			}
+		}
+
+		Dialog: {
+			PostWoFDefeatNoxusIndicator: 一个神秘物体开始绕地球运转......
+			PostMLNightNoxusIndicator: 一团黑暗的存在正在逼近......
+			FinalBossDefeatNoxusIndicator: 一团黑暗的存在正在不断搅动......
+			FinalBossDefeatNoxusIndicator_SeenNoxus: 黑暗的存在正在不断搅动......
+			TerminusHintLine1: 你做的很好。
+			TerminusHintLine2: 现在，去找到终末石，你的最终试炼就在眼前。
+			NamelessDeityEnterGardenText: 你的最终试炼开始了。
+			NamelessDeityEndScreenText: 你已经通过了试炼。
+			NamelessDeityEndScreenSkipText: 按住ESCAPE键以跳过！
+			NamelessDeityPlayerDeathText: 你未能通过试炼。
+			NamelessDeityEndScreenMainMenuTip: 你已经通过了试炼。你已经通过了试炼。你已经通过了试炼。你已经通过了试炼。你已经通过了试炼。你已经通过了试炼。你已经通过了试炼。你已经通过了试炼。你已经通过了试炼。你已经通过了试炼。
+			NamelessDeityNoxusSprayerTip: 别这样做。
+			NamelessDeityStatusText: 你已经通过了试炼。
+			NamelessDeityStatusPercentageText: 你已经通过了试炼：
+			CattailText: CATTAIL PLACED!
+			PurifierMultiplayerUseAlertText: 净化者已由{0}部署，世界将在15秒内重置。
+			PurifierEntertainingRantText:
+				'''
+				你好！这种白色的背景很正常，你的游戏没有炸，请不要把这一长时间的等待当作bug报上去。
+				坐下来放松一下，如果你有一段时间没喝水的话就喝点水吧。或者专注于其他事情，像是你的电话。
+				不管怎样，正如你可能已猜到的，世界正在从头开始生成。
+				让我们谈谈，好吗？具体说说为什么这个过程需要这么长时间，而且这么奇怪。
+				首先，你知道泰拉瑞亚的世界只是一个巨大的8401x2401物块网格吗？
+				它的大小可以容纳整个世界。
+				从你开始游戏的那一刻起，直到关闭游戏，这个网格一直存在于内存中。确切来说是几十兆字节的内存。
+				它有着某种形式的“分块”，即拆分成一个个子部分。但这实际上只适用于多人游戏，因为通过网络将整个世界传输到客户端将是非常可怕的，并且很可能导致游戏崩溃。
+				这就是为什么当服务器即将崩溃时，你会从地图上掉下来，因为你超出了其中一个“区块”的界限，服务器无法向你发送其他区块。
+				回到世界生成，一切东西都要在这个网格中进行。与我的世界不同，世界生成并非是一件能在飞行中完成的事，必须一次性完成。
+				此外，许多世界生成的步骤都是同步完成的，或者一次一个，而不是同时进行多个。
+				当然，后者不可能适用于所有情况，因为在很多情况下会发生冲突。但正如你想象的，在可能的情况下并行运行对性能来说是一个益处。
+				有时候某些步骤并不是很有效，在某些情况下，一次安置液体的步骤需要几秒钟。
+				据我所知，沙漠化的步骤可以说是有着令人担忧的循环量。首先是整个沙漠的水平方向。
+				然后是从上到下的垂直方向。然后穿过整个沙漠的所有“集群”，再然后穿过集群内部的所有物块。
+				然而，我将这种效率低下的生成方式归结于mod作者们，而不是原版游戏（我也对此感到内疚）。
+				在过去，我常用的奇怪做法是使用递归（也就是调用自身的函数，这解释起来有点奇怪）来计算硫磺海给定区域内所有的水，然后重复多次。
+				呃啊，这......简直是一团糟。
+				无论如何！我很想继续说下去，但你的世界估计已经被彻底抹去了，我可不想说到一半被打断！
+				下次你有世界要重置时，我会再给你放一次这段独白。回头见！
+				'''
+			CelesteMusicCreditText:
+				'''
+				正在播放:
+				'wavedash.ppt'
+				作者：Lena Raine
+				'''
+			NamelessDeityStairwayText1: 欢迎，僭越者。
+			NamelessDeityStairwayText2: 在孤独中，唯有你能见证笼罩在这片领域天堂般的辉煌。
+			NamelessDeityStairwayText3: 你命中注定来到此地，只有这样，你才方可了解你的命运。
+			NamelessDeityStairwayText4: 黑暗之主在你的领地内游荡，将其征服是你义不容辞的责任。
+			NamelessDeityStairwayText5: 一旦胜利，你的命运将再次与我的命运交织在一起，而你将受到试炼。
+			NamelessDeityStairwayText6: 祝你好运。
+			NamelessDeityStairwayTextFanny1: 欢迎，僭越—
+			NamelessDeityStairwayTextFanny2: 等等，Fanny？你他妈在这干什么？！我以为我们早就一刀两断了！
+			NamelessDeityStairwayTextFanny3: 啊啊啊啊啊啊啊啊，不不不不不。
+			NamelessDeityStairwayTextFanny4: 不管怎样，呃，你，去杀了诺克萨斯。
+			NamelessDeityStairwayTextFanny5: 我想，我们将……在我的花园里打一架，在你完事之后？
+			NamelessDeityStairwayTextFanny6: 别把Fanny一起带过来，好吗。
+			OgsculeDontAnnoyCalDevsText: 这个终末石的效果不是灾厄本体加的，不要拿这个去打扰他们的开发者。
+			RodOfHarmonyRantSubtitle1: 把和谐传送杖拿出去，我再也不想看见它了！
+			RodOfHarmonyRantSubtitle2: 我是说，Re-Logic都在想些什么？一个没有冷却的传送杖？认真的吗？
+			RodOfHarmonyRantSubtitle3: 月亮领主后的模组制作都被 毁 了 ……
+			RodOfHarmonyRantSubtitle4: 拜托，伙计。
+			RodOfHarmonyRantSubtitle5: 我想创造一个公平公正的宇宙，但是和谐传送杖摧毁了 一 切 。
+			RodOfHarmonyRantSubtitle6: 所以我不会让你用它的。
+			RodOfHarmonyRantSubtitle7: 你以为你可以愚弄我，结果 你 才是那个被愚弄的人。
+			RodOfHarmonyRantSubtitle8: 以及你知道的。
+			RodOfHarmonyRantSubtitle9: 等等，见鬼，你可能已经知道了。
+			RodOfHarmonyRantSubtitle10: 你可能已经在网上找到了这场战斗。
+			RodOfHarmonyRantSubtitle11: 你也许 知 道 我会这样做。
+			RodOfHarmonyRantSubtitle12: 我是说，我不知道为什么你没有猜到这个。我都已经砸烂了怒气条和肾上腺素条，我当然要去砸烂和谐传送杖！
+			RodOfHarmonyRantSubtitle13: 但是现在，我要砸烂你。
+			RodOfHarmonyRantSubtitle14: 哦草，我说错了……
+			RodOfHarmonyRantSubtitle15: 总而言之就是：我讨厌作弊者。
+			RodOfHarmonyRantSubtitle16: 如果你不同意这个观点，那我都不知道你来这里是干什么的。
+			RodOfHarmonyRantSubtitle17: 也许你就不该把那该死的物品带进来。
+			// CloudSaveMessage: Turn off cloud save if you want to use the Terminus. It has been a source of freeze bugs with the subworld library.
+		}
+
+		FannyDialog: {
+			StairwayText1: 阶梯？！这是从哪来的？其他东西呢？让我看看能不能找到这方面的资料……
+			StairwayText2: 电子游戏里的阶梯，看起来没有尽头……
+			StairwayText3: 哦！我找到了一些关于“BLJ”的东西！你可以试一下它？
+			StairwayText4: 等等，那来自另一个游戏……
+			StairwayText5: 好吧，继续往上走！总有什么事会发生的……？
+			StairwayTextTop1: 等等，爹？！！是你吗？？？
+			StairwayTextTop2: 你确定那不是邪恶的Fanny？
+			StairwayTextTop3: 你说话太伤人了，爹……
+			StairwayTextTop4: 诺克萨斯？谁是诺克萨斯？？？也许我该找个时间看看这方面的资料……
+			StairwayTextTop5: 哦！我记得我把那地方夷为平地的时候！那很有意思！
+			StairwayTextTop6: 他们可没得选！
+			NoxusLoreText1: 哇，伙计！那个诺克萨斯真厉害！我同意，他确实挺荒谬的……
+			NoxusLoreText2: 认真的？？？这跟其他东西没啥区别。没有啥好说的！
+			NoxusLoreText3: 为什么这个“亚利姆”的家伙会想把这玩意跟龙联系在一起？这就是他生命中的 唯 一 目标吗？成为一个蹩脚的垃圾解析员？
+			NoxusLoreText4: 为啥他就不能光明正大的露面，直接说话呢，哈？他有这么害怕暴露自己吗，以至于成为了一维世界的主？
+			NoxusLoreText5: 天哪，这真让人头疼。
+			RodOfHarmonyBreak: 哦不！你的和谐传送杖坏了！当心，没了它，你接下来的战斗会困难的多！
+			RodOfHarmonyBreakEvil1: 哈哈哈哈哈哈！！！你看见了吗！那根荒诞的粉色棍子终于有了冷却时间！冷却时间是 永 久 的！这太酷了不是吗？！
+			RodOfHarmonyBreakEvil2: 试试不用你的滑稽小拐杖赢吧，你这个愚蠢的，只会用一招的小马！
+			NamelessDeityGFB1: 这场战斗的借口真是一堆华而不实的废话。
+			NamelessDeityGFB2:
+				'''
+				Dominic真他妈应该为自己感到羞耻。首先他偷走了灾厄里的克希洛克，然后，他像一个笨手笨脚的，邓宁—克鲁格效应晚期的病人一样，用最蹩脚，无聊，光污染的形式实现了这个boss。认真的？你往这里面塞了多少个激光？！这些图像效果都是些啥？这简直就是个mod内容制作教科书般的反面教材，油管评论区那些愚蠢的人们会关上他们的大脑然后像铸币一样的看着，然后说“哈哈，非常好的bloom和shader效果，这太酷啦！”
+				你们现在的帧数甚至有超过15帧吗？？？
+				'''
+			NamelessDeityGFB3: 我对于如何解决它没有任何忠告。老实说，我建议你关掉游戏，用你的时间做一些真正有意思的事情，而不是他妈的做这种东西。
+		}
+
+		Colors: {
+			CattailAnimationTextHex: 6FA024
+			NoxusTextHex: 745CBC
+			PurifierWarningTextHex: F00448
+			VanillaEventTextHex: 32FF82
+			NamelessDeityTextHex: FF3F5D
+		}
+
+		PlayerDeathMessages: {
+			NamelessDeity1: "{0}未能通过试炼。"
+			NamelessDeity2: "{0}的原子结构被切割了，并被花园吸收。"
+			NamelessDeity3: "{0}在被圣光吞噬的过程中幸福的死去。"
+			NamelessDeity4: "{0}的形体将于群星融为一体。"
+			NamelessDeity5: "{0}的灵魂随着身体的崩解，在花园中徘徊。"
+			NamelessDeity6: "{0}的目的实现了。"
+			NamelessDeity7: "{0}见证了永恒，并湮灭于此。"
+			NamelessDeity8: "{0}的命运结束了。"
+			NamelessDeity9: "{0}在不屈的努力下死去了。"
+			NamelessDeity10: "{0}平静地面对了光芒。"
+			NamelessDeity11: "{0}与大群融为一体。"
+			NamelessDeity12: "{0}消失于以太之中。"
+			NamelessDeity13: "{0}融入了宇宙的壁毯之中。"
+			NamelessDeity14: "{0}超越死亡，化作星尘。"
+			NamelessDeity15: "{0}的旅途在花园那神圣的怀抱中结束了。"
+			NamelessDeity16: "{0}与宇宙交响乐融为一体。"
+			NamelessDeity17: "{0}溶于存在的无限晶格中。"
+		}
+	}
+}
