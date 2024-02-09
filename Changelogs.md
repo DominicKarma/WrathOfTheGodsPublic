@@ -1,4 +1,4 @@
-# Version 1.1.11
+# Version 1.1.12
 
 - Fixed Nameless Deity hanging servers upon being summoned.
 - Fixed secret vanilla world seeds (Such as 'for the worthy', 'get fixed boi', etc.) not working.
