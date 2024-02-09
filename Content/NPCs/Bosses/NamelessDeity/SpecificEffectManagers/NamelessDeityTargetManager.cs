@@ -31,7 +31,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.SpecificEffectManagers
             RenderTargetManager.RenderTargetUpdateLoopEvent += PrepareTarget;
             Main.QueueMainThreadAction(() =>
             {
-                NamelessDeityTarget = new(true, (_, _2) => new(Main.instance.GraphicsDevice, 2500, 2800));
+                NamelessDeityTarget = new(false, (_, _2) => new(Main.instance.GraphicsDevice, 2500, 2800));
             });
         }
 

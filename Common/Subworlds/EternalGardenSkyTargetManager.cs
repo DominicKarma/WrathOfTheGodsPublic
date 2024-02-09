@@ -43,7 +43,7 @@ namespace NoxusBoss.Common.Subworlds
             RenderTargetManager.RenderTargetUpdateLoopEvent += PrepareSkyTarget;
             Main.QueueMainThreadAction(() =>
             {
-                SkyTarget = new(true, (_, _2) => new(Main.instance.GraphicsDevice, 2560, 1440));
+                SkyTarget = new(false, (_, _2) => new(Main.instance.GraphicsDevice, 2560, 1440));
             });
         }
 
