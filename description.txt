@@ -5,7 +5,7 @@ This mod has not been extensively tested in multiplayer. It has been programmed 
 
 The visual effects may be a bit extreme for some. If photosensitivity is a concern, or if you simply want it toned down a bit, refer to the configuration options.
 
-Please report any bugs/issues at the following repository: https://github.com/DominicKarma/NoxusBoss/issues
+Please report any bugs/issues at the following repository: https://github.com/DominicKarma/WrathOfTheGodsPublic/issues
 Include log files when making reports. These are typically located in Documents/My Games/Terraria/tModLoader/Logs.
 
 Credits to Blockaroz and Vaikyia for boss spritework, Moonburn for custom sounds, and CDMusic for the reversed Boss Rush music.
