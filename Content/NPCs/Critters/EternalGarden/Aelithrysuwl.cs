@@ -184,10 +184,10 @@ namespace NoxusBoss.Content.NPCs.Critters.EternalGarden
             NPC.friendly = true;
             StretchFactor = 1f;
 
-            SpawnModBiomes = new int[]
-            {
+            SpawnModBiomes =
+            [
                 ModContent.GetInstance<EternalGardenBiome>().Type
-            };
+            ];
 
             if (Main.netMode != NetmodeID.Server)
                 NPCNameFontSystem.RegisterFontForNPCID(Type, DisplayName.Value, FontRegistry.Instance.DivineLanguageTextText);

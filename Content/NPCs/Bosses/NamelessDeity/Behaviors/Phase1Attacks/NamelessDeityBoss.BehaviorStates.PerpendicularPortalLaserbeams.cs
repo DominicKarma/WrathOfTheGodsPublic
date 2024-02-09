@@ -107,7 +107,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
                 NPC.Center = Vector2.Lerp(NPC.Center, hoverDestination, 0.026f);
                 NPC.velocity = Vector2.Lerp(NPC.velocity, NPC.DirectionToSafe(hoverDestination) * flySpeed, 0.15f);
 
-                if (AttackTimer == closeRedirectTime + farRedirectTime - 1f)
+                if (AttackTimer == closeRedirectTime + 1)
                 {
                     chargeDirectionSign = (Target.Center.X > NPC.Center.X).ToDirectionInt();
                     if (verticalCharges)

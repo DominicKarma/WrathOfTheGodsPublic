@@ -80,7 +80,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
             NamelessDeitySky.HeavenlyBackgroundIntensity = 1f - RelativeDarkening;
 
             // Conjure hands and destroy leftover starbursts on the first frame.
-            if (AttackTimer == 1f)
+            if (AttackTimer == 1f || Hands.Count < pressureArmsCount)
             {
                 int arcingStarburstID = ModContent.ProjectileType<ArcingStarburst>();
                 int starburstID = ModContent.ProjectileType<Starburst>();
@@ -94,7 +94,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
                 }
 
                 for (int i = 0; i < pressureArmsCount; i++)
-                    ConjureHandsAtPosition(star.Center, Vector2.Zero);
+                    ConjureHandsAtPosition(NPC.Center, Vector2.Zero);
                 return;
             }
 

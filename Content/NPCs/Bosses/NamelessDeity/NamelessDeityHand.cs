@@ -276,11 +276,11 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
         public void WriteTo(BinaryWriter writer)
         {
             writer.Write((byte)HasArms.ToInt());
-            writer.WriteVector2(Center);
-
+            writer.Write((byte)UsePalmForm.ToInt());
             writer.Write((byte)CanDoDamage.ToInt());
             writer.Write(Opacity);
             writer.Write(RotationOffset);
+            writer.WriteVector2(Center);
             writer.WriteVector2(Velocity);
         }
 
@@ -290,15 +290,22 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
         /// <param name="reader">The packet's binary reader.</param>
         public static NamelessDeityHand ReadFrom(BinaryReader reader)
         {
-            bool usesRobe = reader.ReadByte() != 0;
+            bool hasArms = reader.ReadByte() != 0;
+            bool usePalmForm = reader.ReadByte() != 0;
+            bool canDoDamage = reader.ReadByte() != 0;
+            float opacity = reader.ReadSingle();
+            float rotationOffset = reader.ReadSingle();
             Vector2 center = reader.ReadVector2();
+            Vector2 velocity = reader.ReadVector2();
 
-            return new(center, usesRobe)
+            return new(center, hasArms)
             {
-                CanDoDamage = reader.ReadByte() != 0,
-                Opacity = reader.ReadSingle(),
-                RotationOffset = reader.ReadSingle(),
-                Velocity = reader.ReadVector2()
+                HasArms = hasArms,
+                UsePalmForm = usePalmForm,
+                CanDoDamage = canDoDamage,
+                Opacity = opacity,
+                RotationOffset = rotationOffset,
+                Velocity = velocity
             };
         }
     }

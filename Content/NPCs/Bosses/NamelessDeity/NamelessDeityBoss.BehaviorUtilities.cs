@@ -100,6 +100,8 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
             {
                 Velocity = velocity
             });
+            NPC.netSpam = 0;
+            NPC.netUpdate = true;
 
             // Create particles.
             for (int i = 0; i < 12; i++)
@@ -167,8 +169,13 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
 
         public void DefaultUniversalHandMotion(float hoverOffset = 950f)
         {
-            while (Hands.Count(h => h.HasArms) < TotalUniversalHands)
+            if (Hands.Count(h => h.HasArms) < TotalUniversalHands)
+            {
                 Hands.Insert(0, new(NPC.Center, true));
+                NPC.netUpdate = true;
+            }
+            if (Hands.Count < 2)
+                return;
 
             float verticalOffset = Sin(TwoPi * FightLength / 120f) * 75f;
             DefaultHandDrift(Hands[0], NPC.Center + new Vector2(-hoverOffset, verticalOffset + 160f) * TeleportVisualsAdjustedScale, 300f);
