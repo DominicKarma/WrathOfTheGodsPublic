@@ -30,6 +30,8 @@ namespace NoxusBoss.Common.CustomWorldSeeds
                     seedState.WasJustEnabledByWorldgen = true;
                 }
             }
+
+            orig(processedSeed);
         }
 
         public static void RegisterSeed(string seedName, params string[] validSeeds) => worldSeeds[seedName] = new(seedName, validSeeds);
