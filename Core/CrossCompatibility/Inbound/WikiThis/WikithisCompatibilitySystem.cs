@@ -9,13 +9,13 @@ namespace NoxusBoss.Core.CrossCompatibility.Inbound
 {
     public class WikithisCompatibilitySystem : ModSystem
     {
-        public static bool CompatibilityEnabled => false;
+        public static bool CompatibilityEnabled => true;
 
         public const string WikiURL = "https://terrariamods.wiki.gg/wiki/{}";
 
         public override void PostSetupContent()
         {
-            // Wikithis is clientside, and should not be accessed on servers.
+            // Wikithis is client-side, and should not be accessed on servers.
             if (Main.netMode == NetmodeID.Server)
                 return;
 
@@ -24,7 +24,6 @@ namespace NoxusBoss.Core.CrossCompatibility.Inbound
                 return;
 
             // Don't load if compatibility is disabled.
-            // TODO -- At the time of writing this, the wiki is far from finished. I am not comfortable sending players to something that is not ready for usage yet, and as such it is currently disabled.
             // Note: After discussing it, this will be disabled at mod release time, with a patch turning this on once ready.
             if (!CompatibilityEnabled)
                 return;

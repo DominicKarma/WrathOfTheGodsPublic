@@ -60,7 +60,7 @@ namespace NoxusBoss.Content.Projectiles.Pets
         public void CheckActive()
         {
             // Keep the projectile from disappearing as long as the player isn't dead and has the pet buff.
-            if (!Owner.dead && Owner.HasBuff(ModContent.BuffType<BlackHolePetbuff>()))
+            if (!Owner.dead && Owner.HasBuff(ModContent.BuffType<BlackHolePetBuff>()))
                 Projectile.timeLeft = 2;
         }
     }

@@ -38,7 +38,7 @@ Mods: {
 				Description: 他现在是个小家伙了
 			}
 
-			BlackHolePetbuff: {
+			BlackHolePetBuff: {
 				DisplayName: 黑洞
 				Description: 无尽的余弦从神圣的五行诗后提取
 			}

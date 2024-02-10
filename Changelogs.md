@@ -1,3 +1,8 @@
+# Version 1.1.13
+
+- Enabled WikiThis mod compatibility.
+- Fixed debug mode features accidentally being enabled.
+
 # Version 1.1.12
 
 - Fixed Nameless Deity hanging servers upon being summoned.

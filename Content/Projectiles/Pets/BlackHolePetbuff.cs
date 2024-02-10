@@ -3,7 +3,7 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Projectiles.Pets
 {
-    public class BlackHolePetbuff : ModBuff
+    public class BlackHolePetBuff : ModBuff
     {
         public override void SetStaticDefaults()
         {

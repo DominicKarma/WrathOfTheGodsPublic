@@ -27,7 +27,7 @@ namespace NoxusBoss.Content.Items.Pets
         {
             Item.CloneDefaults(ItemID.ZephyrFish);
             Item.shoot = ModContent.ProjectileType<BlackHolePet>();
-            Item.buffType = ModContent.BuffType<BlackHolePetbuff>();
+            Item.buffType = ModContent.BuffType<BlackHolePetBuff>();
             Item.master = true;
         }
 
