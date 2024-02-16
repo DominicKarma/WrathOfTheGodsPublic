@@ -1,3 +1,6 @@
+# Version 1.1.14
+- Updated a snippet of code pertaining to Calamity's special boss health bar UI. Now, it uses appropriate mod calls.
+
 # Version 1.1.13
 
 - Enabled WikiThis mod compatibility.

@@ -144,14 +144,7 @@ namespace NoxusBoss.Common.Utilities
             if (ModReferences.BaseCalamity is null || Main.gameMenu)
                 return;
 
-            foreach (var global in npc.Globals)
-            {
-                if (global.Name == "CalamityGlobalNPC")
-                {
-                    shouldCloseHPBarField ??= global.GetType().GetField("ShouldCloseHPBar");
-                    shouldCloseHPBarField?.SetValue(global, true);
-                }
-            }
+            ModReferences.BaseCalamity.Call("SetShouldCloseBossHealthBar", npc, true);
         }
 
         /// <summary>
