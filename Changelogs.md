@@ -1,3 +1,7 @@
+# Version 1.1.15
+- Fixed the falling Galaxies in Nameless Deity's fight having unnatural hitboxes.
+- Fixed the falling Galaxies in Nameless Deity's fight being cheese-able with the Ice Rod in the get fixed boi seed.
+
 # Version 1.1.14
 - Updated a snippet of code pertaining to Calamity's special boss health bar UI. Now, it uses appropriate mod calls.
 

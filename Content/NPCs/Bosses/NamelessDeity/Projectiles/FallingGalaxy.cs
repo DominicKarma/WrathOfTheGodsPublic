@@ -48,8 +48,8 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
 
         public override void SetDefaults()
         {
-            Projectile.width = 300;
-            Projectile.height = 300;
+            Projectile.width = 150;
+            Projectile.height = 150;
             Projectile.penetrate = -1;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
@@ -116,7 +116,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
             }
 
             // Collide with tiles if ready.
-            Projectile.tileCollide = Projectile.Bottom.Y >= target.Center.Y - 120f;
+            Projectile.tileCollide = Projectile.Bottom.Y >= target.Center.Y + (Main.zenithWorld ? 200f : -120f);
 
             // SPEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEN!
             SpinRotation += Projectile.velocity.Y * Sin(Projectile.rotation).NonZeroSign() * 0.01f;
@@ -187,7 +187,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
             float telegraphCompletion = InverseLerp(0f, TelegraphTime, Time);
 
             // Use the projectile's width as a base for the telegraph's width.
-            float baseWidth = Projectile.width * 0.98f;
+            float baseWidth = Projectile.width * 1.96f;
 
             // Make it so that the width expands outward in a cute, slightly cartoonish way as it appears.
             float fadeInScale = Clamp(ElasticEasing.Default.Evaluate(EasingType.Out, InverseLerp(0f, 0.25f, telegraphCompletion)), 0f, 10f);
@@ -268,10 +268,10 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
             galaxyColor2.A = 0;
 
             // Calculate the draw position.
-            Vector2 galaxyDrawPosition = worldPosition - Main.screenPosition;
+            Vector2 galaxyDrawPosition = worldPosition - Main.screenPosition + Vector2.UnitY * 32f;
 
             // Draw the galaxy. Projectile.scale is intrinsic to Projectile.width when the projectile is initially spawned, so it doesn't need to be accounted for here.
-            float scale = Projectile.width / (float)MoltenNoise.Width * opacity * 2f;
+            float scale = Projectile.width / (float)MoltenNoise.Width * opacity * 4f;
             Main.spriteBatch.Draw(MoltenNoise, galaxyDrawPosition, null, galaxyColor1, 0f, MoltenNoise.Size() * 0.5f, scale, 0, 0f);
             Main.spriteBatch.Draw(MoltenNoise, galaxyDrawPosition, null, galaxyColor2, 0f, MoltenNoise.Size() * 0.5f, scale * 0.7f, 0, 0f);
 
