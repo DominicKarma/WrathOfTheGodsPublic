@@ -1,3 +1,6 @@
+# Version 1.1.16
+- Fixed players hosted in the cloud not receiving loot or having the game crash upon defeating the Nameless Deity.
+
 # Version 1.1.15
 - Fixed the falling Galaxies in Nameless Deity's fight having unnatural hitboxes.
 - Fixed the falling Galaxies in Nameless Deity's fight being cheese-able with the Ice Rod in the get fixed boi seed.

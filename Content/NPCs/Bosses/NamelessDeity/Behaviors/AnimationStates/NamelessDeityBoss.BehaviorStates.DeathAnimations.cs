@@ -286,8 +286,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
                         NamelessDeityTipsOverrideSystem.UseDeathAnimationText = true;
 
                         // Save the player's file data, to ensure that the loot re-entry is registered.
-                        if (!IsFileLocked(new(Main.ActivePlayerFileData.Path)))
-                            Player.SavePlayer(Main.ActivePlayerFileData);
+                        Player.SavePlayer(Main.ActivePlayerFileData);
 
                         // Kick clients out of the server.
                         if (Main.netMode == NetmodeID.MultiplayerClient)
