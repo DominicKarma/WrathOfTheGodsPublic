@@ -880,6 +880,11 @@ Mods: {
 				Tooltip: Plays 'Twisted Garden' by Heart Plus Up! and ENNWAY!
 			}
 
+			NamelessDeityMusicBoxP3: {
+				DisplayName: Music Box (Nameless Deity - Final Phase)
+				Tooltip: Plays 'REPLACED VIA CODE DONT CHANGE THIS' by Heart Plus Up! and ENNWAY!
+			}
+
 			NamelessDeityRelicItem: {
 				DisplayName: Nameless Deity Relic
 				Tooltip: ""

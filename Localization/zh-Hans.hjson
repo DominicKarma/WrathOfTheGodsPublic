@@ -880,6 +880,11 @@ Mods: {
 				Tooltip: 播放“扭曲花园” 作者：Heart Plus Up!与ENNWAY!
 			}
 
+			NamelessDeityMusicBoxP3: {
+				// DisplayName: Music Box (Nameless Deity - Final Phase)
+				// Tooltip: Plays 'REPLACED VIA CODE DONT CHANGE THIS' by Heart Plus Up! and ENNWAY!
+			}
+
 			NamelessDeityRelicItem: {
 				DisplayName: 无名光神圣物
 				Tooltip: ""

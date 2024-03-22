@@ -89,6 +89,9 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
                     ClearAllProjectiles();
                     CurrentPhase = 2;
                     NPC.netUpdate = true;
+
+                    // Use a special track for phase 3 and onward.
+                    Music = MusicLoader.GetMusicSlot(Mod, "Assets/Sounds/Music/ARIA BEYOND THE BLAZING FIRMAMENT");
                 });
             }, NamelessAIType.DeathAnimation, NamelessAIType.DeathAnimation_GFB);
         }

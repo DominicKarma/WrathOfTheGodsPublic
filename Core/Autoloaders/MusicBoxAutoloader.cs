@@ -1,11 +1,14 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Core.CrossCompatibility.Inbound;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
+using static NoxusBoss.Core.Autoloaders.MusicBoxAutoloader.AutoloadableMusicBoxItem;
 
 namespace NoxusBoss.Core.Autoloaders
 {
@@ -26,6 +29,8 @@ namespace NoxusBoss.Core.Autoloaders
 
             internal int tileID;
 
+            internal PreDrawTooltipDelegate drawOverrideBehavior;
+
             public ToastyQoLRequirement Requirement => obtainmentRequirement;
 
             public override string Name => name;
@@ -35,6 +40,8 @@ namespace NoxusBoss.Core.Autoloaders
             // Necessary for autoloaded types since the constructor is important in determining the behavior of the given instance, making it impossible to rely on an a parameterless one for
             // managing said instances.
             protected override bool CloneNewInstances => true;
+
+            public delegate bool PreDrawTooltipDelegate(DrawableTooltipLine line, ref int yOffset);
 
             public AutoloadableMusicBoxItem(string texturePath, string musicPath, ToastyQoLRequirement requirement)
             {
@@ -60,6 +67,9 @@ namespace NoxusBoss.Core.Autoloaders
                 MusicLoader.AddMusicBox(Mod, musicSlotID, Type, tileID);
             }
 
+            public override bool PreDrawTooltipLine(DrawableTooltipLine line, ref int yOffset) =>
+                drawOverrideBehavior(line, ref yOffset);
+
             public override void SetDefaults()
             {
                 Item.DefaultToMusicBox(tileID);
@@ -67,23 +77,19 @@ namespace NoxusBoss.Core.Autoloaders
         }
 
         [Autoload(false)]
-        public class AutoloadableMusicBoxTile : ModTile
+        public class AutoloadableMusicBoxTile(string texturePath) : ModTile
         {
             internal int itemID;
 
-            private readonly string texturePath;
+            internal Func<int, int, bool> drawBehavior;
 
-            private readonly string name;
+            private readonly string texturePath = texturePath;
+
+            private readonly string name = Path.GetFileName(texturePath).Replace("_Tile", "Tile");
 
             public override string Name => name;
 
             public override string Texture => texturePath;
-
-            public AutoloadableMusicBoxTile(string texturePath)
-            {
-                name = Path.GetFileName(texturePath).Replace("_Tile", "Tile");
-                this.texturePath = texturePath;
-            }
 
             public override void SetStaticDefaults()
             {
@@ -115,9 +121,11 @@ namespace NoxusBoss.Core.Autoloaders
                 if (frameX >= 36)
                     Item.NewItem(new EntitySource_TileBreak(i, j), new Point(i, j).ToWorldCoordinates(), itemID);
             }
+
+            public override bool PreDraw(int i, int j, SpriteBatch spriteBatch) => drawBehavior(i, j);
         }
 
-        public static void Create(Mod mod, string texturePathBase, string musicPath, ToastyQoLRequirement requirement, out int itemID, out int tileID)
+        public static void Create(Mod mod, string texturePathBase, string musicPath, ToastyQoLRequirement requirement, out int itemID, out int tileID, Func<int, int, bool> tileDrawBehavior = null, PreDrawTooltipDelegate itemTooltipBehavior = null)
         {
             // Autoload the item.
             AutoloadableMusicBoxItem boxItem = new($"{texturePathBase}_Item", musicPath, requirement);
@@ -128,6 +136,10 @@ namespace NoxusBoss.Core.Autoloaders
             AutoloadableMusicBoxTile boxTile = new($"{texturePathBase}_Tile");
             mod.AddContent(boxTile);
             tileID = boxTile.Type;
+
+            // Load the draw behavior.
+            boxItem.drawOverrideBehavior = itemTooltipBehavior ?? new((DrawableTooltipLine line, ref int yOffset) => true);
+            boxTile.drawBehavior = tileDrawBehavior ?? ((x, y) => true);
 
             // Link the loaded types together by informing each other of their respective IDs.
             boxItem.tileID = tileID;

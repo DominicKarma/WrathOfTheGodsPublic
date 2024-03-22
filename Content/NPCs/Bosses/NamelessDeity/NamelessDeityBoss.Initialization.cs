@@ -21,10 +21,12 @@ using NoxusBoss.Core;
 using NoxusBoss.Core.Autoloaders;
 using NoxusBoss.Core.CrossCompatibility.Inbound;
 using NoxusBoss.Core.GlobalItems;
+using NoxusBoss.Core.Graphics.Shaders;
 using NoxusBoss.Core.Graphics.UI.Bestiary;
 using NoxusBoss.Core.MiscSceneManagers;
 using Terraria;
 using Terraria.Audio;
+using Terraria.GameContent;
 using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.GameContent.UI.Elements;
@@ -32,6 +34,7 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using Terraria.UI.Chat;
 using static NoxusBoss.Core.CrossCompatibility.Inbound.CalRemixCompatibilitySystem;
 
 namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
@@ -210,13 +213,88 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
             // Autoload the mask item.
             MaskID = MaskAutoloader.Create(Mod, "NoxusBoss/Content/NPCs/Bosses/NamelessDeity/AutoloadedContent/NamelessDeityMask", ToastyQoLRequirementRegistry.PostNamelessDeity);
 
-            // Autoload the music box for Nameless.
+            // Autoload the music boxes for Nameless.
             string musicPath = "Assets/Sounds/Music/NamelessDeity";
             MusicBoxAutoloader.Create(Mod, "NoxusBoss/Content/NPCs/Bosses/NamelessDeity/AutoloadedContent/NamelessDeityMusicBox", musicPath, ToastyQoLRequirementRegistry.PostNoxus, out _, out _);
+
+            string musicPathP3 = "Assets/Sounds/Music/ARIA BEYOND THE BLAZING FIRMAMENT";
+            MusicBoxAutoloader.Create(Mod, "NoxusBoss/Content/NPCs/Bosses/NamelessDeity/AutoloadedContent/NamelessDeityMusicBoxP3", musicPathP3, ToastyQoLRequirementRegistry.PostNoxus, out _, out _, DrawPhase3MusicBoxTile, DrawPhase3MusicBoxItemTooltips);
 
             // Autoload the relic for Nameless.
             RelicAutoloader.Create(Mod, "NoxusBoss/Content/NPCs/Bosses/NamelessDeity/AutoloadedContent/NamelessDeityRelic", ToastyQoLRequirementRegistry.PostNamelessDeity, out int relicID, out _);
             RelicID = relicID;
+        }
+
+
+        private static bool DrawPhase3MusicBoxTile(int x, int y)
+        {
+            Tile t = ParanoidTileRetrieval(x, y);
+
+            // Calculate the top left of the tile.
+            int left = x - t.TileFrameX % 32 / 16;
+            int top = y - t.TileFrameY % 32 / 16;
+
+            // The time multiplier is a prime number to ensure that the cycle can for all values traverse the set of possible music box frames.
+            ulong frameSeed = (ulong)(left * 19 + top * 76 + (int)(Main.GlobalTimeWrappedHourly * 50f) * 37);
+            int frameX = t.TileFrameX;
+            int frameY = t.TileFrameY % 32 + (int)(frameSeed / 36 * 36 % 2016);
+
+            // Draw the texture.
+            Texture2D mainTexture = TextureAssets.Tile[TileID.MusicBoxes].Value;
+            Vector2 drawOffset = Main.drawToScreen ? Vector2.Zero : new Vector2(Main.offScreenRange);
+            Vector2 drawPosition = new Vector2(x * 16 - Main.screenPosition.X, y * 16 - Main.screenPosition.Y) + drawOffset;
+            Color lightColor = Lighting.GetColor(x, y).MultiplyRGB(new(198, 198, 198));
+            Main.spriteBatch.Draw(mainTexture, drawPosition, new Rectangle(frameX, frameY, 16, 16), lightColor, 0f, Vector2.Zero, 1f, 0, 0f);
+
+            return false;
+        }
+
+        private static bool DrawPhase3MusicBoxItemTooltips(DrawableTooltipLine line, ref int yOffset)
+        {
+            string replacementString = "REPLACED VIA CODE DONT CHANGE THIS";
+            if (line.Text.Contains(replacementString))
+            {
+                Color rarityColor = line.OverrideColor ?? line.Color;
+                Vector2 drawPosition = new(line.X, line.Y);
+
+                // Draw lines.
+                List<string> lines = [.. line.Text.Split(replacementString)];
+                float staticSpacing = 150f;
+                Vector2 staticPosition = drawPosition;
+                Vector2 staticSize = Vector2.One;
+                for (int i = 0; i < lines.Count; i++)
+                {
+                    ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, line.Font, lines[i], drawPosition, rarityColor, line.Rotation, line.Origin, line.BaseScale, line.MaxWidth, line.Spread);
+                    drawPosition.X += line.Font.MeasureString(lines[i]).X * line.BaseScale.X;
+                    if (i == 0)
+                    {
+                        drawPosition.X += staticSpacing;
+                        staticPosition = drawPosition + new Vector2(-2f, -4f);
+                        staticSize = new Vector2(staticSpacing - 6f, line.Font.MeasureString(lines[i]).Y * line.BaseScale.Y);
+                    }
+                }
+
+                // Draw static where the replaced name text would be.
+                Main.spriteBatch.End();
+                Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Main.UIScaleMatrix);
+
+                // Prepare the static shader.
+                var staticShader = ShaderManager.GetShader("StaticOverlayShader");
+                staticShader.TrySetParameter("staticInterpolant", 1f);
+                staticShader.TrySetParameter("staticZoomFactor", 0.5f);
+                staticShader.SetTexture(ModContent.Request<Texture2D>("Terraria/Images/Misc/noise"), 1, SamplerState.PointWrap);
+                staticShader.Apply();
+
+                // Draw the pixel.
+                Main.spriteBatch.Draw(WhitePixel, staticPosition, null, Color.Black, 0f, WhitePixel.Size() * Vector2.UnitX, staticSize / WhitePixel.Size(), 0, 0f);
+
+                Main.spriteBatch.End();
+                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Main.UIScaleMatrix);
+
+                return false;
+            }
+
+            return true;
         }
 
         public override void SetStaticDefaults()
