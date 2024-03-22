@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using NoxusBoss.Common.MainMenuThemes;
+using NoxusBoss.Content.NPCs.Bosses.NamelessDeity.SpecificEffectManagers;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Core;
 using NoxusBoss.Core.Graphics.Shaders.Keyboard;
@@ -70,6 +71,19 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
             int crashDelay = 269;
             ref float screenShattered = ref NPC.ai[2];
             ref float congratulatoryTextDrawnBefore = ref NPC.ai[3];
+
+            if (Main.netMode != NetmodeID.MultiplayerClient && NamelessDeathAnimationSkipSystem.SkipNextDeathAnimation)
+            {
+                NPC.NPCLoot();
+                NPC.active = false;
+                WorldSaveSystem.HasDefeatedNamelessDeity = true;
+                NamelessDeathAnimationSkipSystem.SkipNextDeathAnimation = false;
+
+                if (Main.netMode == NetmodeID.Server)
+                    NetMessage.SendData(MessageID.WorldData);
+
+                return;
+            }
 
             // Make the different stars interpolant dissipate, in case Nameless was defeated when it was changed.
             DifferentStarsInterpolant = Clamp(DifferentStarsInterpolant - 0.03f, 0f, 1f);

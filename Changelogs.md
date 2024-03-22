@@ -1,3 +1,6 @@
+# Version 1.1.17
+- Added a mod call for making Nameless Deity not do the screen smash death animation.
+
 # Version 1.1.16
 - Fixed players hosted in the cloud not receiving loot or having the game crash upon defeating the Nameless Deity.
 
