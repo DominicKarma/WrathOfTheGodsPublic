@@ -1,3 +1,6 @@
+# Version 1.1.19
+- Increased the volume of the new Nameless Deity theme.
+
 # Version 1.1.18
 - Updated Nameless Deity's theme.
 
