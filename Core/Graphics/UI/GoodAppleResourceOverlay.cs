@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
+using Luminance.Assets;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Common.DataStructures;
 using NoxusBoss.Content.Items;
-using NoxusBoss.Core.Graphics.Shaders;
 using ReLogic.Content;
 using Terraria;
 using Terraria.GameContent;
@@ -15,16 +15,16 @@ namespace NoxusBoss.Core.Graphics.UI
 {
     public class GoodAppleResourceOverlay : ModResourceOverlay
     {
-        private static Asset<Texture2D> barsFillingTexture;
+        private static LazyAsset<Texture2D> barsFillingTexture;
 
-        private static Asset<Texture2D> barsPanelTexture;
+        private static LazyAsset<Texture2D> barsPanelTexture;
 
-        private static Asset<Texture2D> fancyPanelTexture;
+        private static LazyAsset<Texture2D> fancyPanelTexture;
 
-        private static Asset<Texture2D> heartTexture;
+        private static LazyAsset<Texture2D> heartTexture;
 
         // This field is used to cache vanilla assets used in the CompareAssets method.
-        private readonly Dictionary<string, Asset<Texture2D>> vanillaAssetCache = new();
+        private readonly Dictionary<string, Asset<Texture2D>> vanillaAssetCache = [];
 
         private const string FancyFolder = "Images/UI/PlayerResourceSets/FancyClassic/";
 
@@ -40,10 +40,10 @@ namespace NoxusBoss.Core.Graphics.UI
                 return;
 
             // Autoload assets.
-            barsFillingTexture = ModContent.Request<Texture2D>("NoxusBoss/Core/Graphics/UI/BarsLifeOverlay_Fill");
-            barsPanelTexture = ModContent.Request<Texture2D>("NoxusBoss/Core/Graphics/UI/BarsLifeOverlay_Panel");
-            fancyPanelTexture = ModContent.Request<Texture2D>("NoxusBoss/Core/Graphics/UI/FancyLifeOverlay_Panel");
-            heartTexture = ModContent.Request<Texture2D>("NoxusBoss/Core/Graphics/UI/ClassicLifeOverlay");
+            barsFillingTexture = LazyAsset<Texture2D>.Request("NoxusBoss/Core/Graphics/UI/BarsLifeOverlay_Fill");
+            barsPanelTexture = LazyAsset<Texture2D>.Request("NoxusBoss/Core/Graphics/UI/BarsLifeOverlay_Panel");
+            fancyPanelTexture = LazyAsset<Texture2D>.Request("NoxusBoss/Core/Graphics/UI/FancyLifeOverlay_Panel");
+            heartTexture = LazyAsset<Texture2D>.Request("NoxusBoss/Core/Graphics/UI/ClassicLifeOverlay");
         }
 
         public override bool PreDrawResourceDisplay(PlayerStatsSnapshot snapshot, IPlayerResourcesDisplaySet displaySet, bool drawingLife, ref Color textColor, out bool drawText)
@@ -144,15 +144,15 @@ namespace NoxusBoss.Core.Graphics.UI
         public static void ApplyShader(ResourceOverlayDrawContext context)
         {
             // Apply the numinous shader dye effect on top of the hearts.
-            ManagedShader dyeShader = ShaderManager.GetShader("NuminousDyeShader");
-            dyeShader.TrySetParameter("uImageSize0", heartTexture.Size());
-            dyeShader.TrySetParameter("uSourceRect", heartTexture.Frame());
+            ManagedShader dyeShader = ShaderManager.GetShader("NoxusBoss.NuminousDyeShader");
+            dyeShader.TrySetParameter("uImageSize0", heartTexture.Value.Size());
+            dyeShader.TrySetParameter("uSourceRect", heartTexture.Value.Frame());
             dyeShader.TrySetParameter("uTime", Main.GlobalTimeWrappedHourly * 0.5f - context.resourceNumber * Pi / 20f);
             dyeShader.SetTexture(ModContent.Request<Texture2D>("NoxusBoss/Content/Items/Dyes/NuminousDyeTexture"), 1);
             dyeShader.Apply();
         }
 
-        public static void DrawOver(ResourceOverlayDrawContext context, float overlayIntensity, Asset<Texture2D> overlay, bool drawPulse, Vector2 drawOffset = default)
+        public static void DrawOver(ResourceOverlayDrawContext context, float overlayIntensity, LazyAsset<Texture2D> overlay, bool drawPulse, Vector2 drawOffset = default)
         {
             context.position += drawOffset;
 

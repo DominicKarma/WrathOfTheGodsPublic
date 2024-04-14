@@ -4,8 +4,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.NPCs.Bosses.NamelessDeity;
 using NoxusBoss.Content.Particles;
-using NoxusBoss.Core.Graphics.Automators;
-using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Graphics;
@@ -127,11 +125,11 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 
                 // Prepare the psychedelic dissipation shader.
                 float fadeOut = InverseLerp(0.49f, 0.71f, deathAnimationCompletion);
-                float dissipationIntensity = InverseLerp(0.15f, 0.3f, deathAnimationCompletion) * Remap(deathAnimationCompletion, 0.2f, 0.64f, 0.001f, 0.1577f);
-                float scale = Remap(deathAnimationCompletion, 0.3f, 0.6f, 1f, 1.4f);
+                float dissipationIntensity = InverseLerp(0.15f, 0.3f, deathAnimationCompletion) * Utils.Remap(deathAnimationCompletion, 0.2f, 0.64f, 0.001f, 0.1577f);
+                float scale = Utils.Remap(deathAnimationCompletion, 0.3f, 0.6f, 1f, 1.4f);
                 Color screenshotColor = Color.Lerp(Color.White, Color.Gold with { A = 0 }, InverseLerp(0.05f, 0.12f, deathAnimationCompletion)) * (1f - fadeOut);
 
-                var afterimageShader = ShaderManager.GetShader("NamelessDeityPsychedelicAfterimageShader");
+                var afterimageShader = ShaderManager.GetShader("NoxusBoss.NamelessDeityPsychedelicAfterimageShader");
                 afterimageShader.TrySetParameter("uScreenResolution", screenshot.Size());
                 afterimageShader.TrySetParameter("warpSpeed", dissipationIntensity);
                 afterimageShader.SetTexture(TurbulentNoise, 1);

@@ -112,7 +112,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
                 Vector2 starSpawnPosition = NPC.Center + new Vector2(300f, -350f) * TeleportVisualsAdjustedScale;
                 CreateTwinkle(starSpawnPosition, Vector2.One * 1.3f);
                 if (Main.netMode != NetmodeID.MultiplayerClient)
-                    NewProjectileBetter(starSpawnPosition, Vector2.Zero, ModContent.ProjectileType<ControlledStar>(), 0, 0f);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), starSpawnPosition, Vector2.Zero, ModContent.ProjectileType<ControlledStar>(), 0, 0f);
 
                 // Play mumble sounds.
                 PerformMumble();
@@ -161,9 +161,9 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
                 if (NPC.velocity.Length() > 4f)
                     NPC.velocity *= 0.8f;
 
-                float hoverSpeedInterpolant = Remap(NPC.Distance(Target.Center), 980f, 1900f, 0.0018f, 0.04f);
+                float hoverSpeedInterpolant = Utils.Remap(NPC.Distance(Target.Center), 980f, 1900f, 0.0018f, 0.04f);
                 NPC.Center = Vector2.Lerp(NPC.Center, Target.Center, hoverSpeedInterpolant);
-                NPC.SimpleFlyMovement(NPC.DirectionToSafe(Target.Center) * 4f, 0.1f);
+                NPC.SimpleFlyMovement(NPC.SafeDirectionTo(Target.Center) * 4f, 0.1f);
             }
 
             // Find the star to control.
@@ -229,13 +229,13 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
 
                     for (int i = 0; i < starburstCount; i++)
                     {
-                        Vector2 starburstVelocity = star.DirectionToSafe(Target.Center).RotatedBy(TwoPi * i / starburstCount + shootOffsetAngle) * starburstStartingSpeed;
-                        NewProjectileBetter(star.Center + starburstVelocity * 3f, starburstVelocity, starburstID, StarburstDamage, 0f);
+                        Vector2 starburstVelocity = star.SafeDirectionTo(Target.Center).RotatedBy(TwoPi * i / starburstCount + shootOffsetAngle) * starburstStartingSpeed;
+                        NewProjectileBetter(NPC.GetSource_FromAI(), star.Center + starburstVelocity * 3f, starburstVelocity, starburstID, StarburstDamage, 0f);
                     }
                     for (int i = 0; i < starburstCount / 2; i++)
                     {
-                        Vector2 starburstVelocity = star.DirectionToSafe(Target.Center).RotatedBy(TwoPi * i / starburstCount / 2f + shootOffsetAngle) * starburstStartingSpeed * 0.6f;
-                        NewProjectileBetter(star.Center + starburstVelocity * 3f, starburstVelocity, starburstID, StarburstDamage, 0f);
+                        Vector2 starburstVelocity = star.SafeDirectionTo(Target.Center).RotatedBy(TwoPi * i / starburstCount / 2f + shootOffsetAngle) * starburstStartingSpeed * 0.6f;
+                        NewProjectileBetter(NPC.GetSource_FromAI(), star.Center + starburstVelocity * 3f, starburstVelocity, starburstID, StarburstDamage, 0f);
                     }
                 }
             }
@@ -247,14 +247,14 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
                 {
                     // Create the flares.
                     int flareCount = (int)(flareShootCounter * 2f) + baseFlareCount;
-                    int flareTelegraphTime = (int)Remap(AttackTimer - attackDelay, 0f, 300f, minTelegraphTime, maxTelegraphTime) + laserShootTime;
+                    int flareTelegraphTime = (int)Utils.Remap(AttackTimer - attackDelay, 0f, 300f, minTelegraphTime, maxTelegraphTime) + laserShootTime;
                     float flareSpinDirection = (flareShootCounter % 2f == 0f).ToDirectionInt();
                     float flareSpinCoverage = PiOver2 * flareSpinDirection;
-                    Vector2 directionToTarget = star.DirectionToSafe(Target.Center);
+                    Vector2 directionToTarget = star.SafeDirectionTo(Target.Center);
                     for (int i = 0; i < flareCount; i++)
                     {
                         Vector2 flareDirection = directionToTarget.RotatedBy(TwoPi * i / flareCount);
-                        NewProjectileBetter(star.Center, flareDirection, ModContent.ProjectileType<TelegraphedStarLaserbeam>(), SunBeamDamage, 0f, -1, flareTelegraphTime, laserShootTime, flareSpinCoverage / flareTelegraphTime);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), star.Center, flareDirection, ModContent.ProjectileType<TelegraphedStarLaserbeam>(), SunBeamDamage, 0f, -1, flareTelegraphTime, laserShootTime, flareSpinCoverage / flareTelegraphTime);
                     }
 
                     flareShootCounter++;

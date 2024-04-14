@@ -1,12 +1,11 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Luminance.Common.DataStructures;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Common.BaseEntities;
 using NoxusBoss.Common.DataStructures;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Core.Configuration;
 using NoxusBoss.Core.GlobalItems;
-using NoxusBoss.Core.Graphics.Automators;
-using NoxusBoss.Core.Graphics.Shaders;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
 using Terraria.Audio;
@@ -14,7 +13,7 @@ using Terraria.ID;
 
 namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
 {
-    public class SuperCosmicBeam : BasePrimitiveLaserbeam, IDrawPixelated, IProjOwnedByBoss<NamelessDeityBoss>
+    public class SuperCosmicBeam : BasePrimitiveLaserbeam, IProjOwnedByBoss<NamelessDeityBoss>
     {
         public const string PlayerImmuneTimeOverrideName = "ImmuneTimeOverride";
 
@@ -33,7 +32,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
 
         public override float MaxLaserLength => 9400f;
 
-        public override ManagedShader LaserShader => ShaderManager.GetShader("NamelessDeityCosmicLaserShader");
+        public override ManagedShader LaserShader => ShaderManager.GetShader("NoxusBoss.NamelessDeityCosmicLaserShader");
 
         public override void SetStaticDefaults()
         {
@@ -100,7 +99,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
             Projectile.scale = InverseLerp(0f, 12f, Time) * InverseLerp(20f, 45f, Projectile.timeLeft);
 
             // Rapidly fade in.
-            Projectile.Opacity = Clamp(Projectile.Opacity + 0.1f, 0f, 1f);
+            Projectile.Opacity = Saturate(Projectile.Opacity + 0.1f);
 
             return true;
         }
@@ -129,7 +128,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
                     continue;
 
                 Dust light = Dust.NewDustPerfect(target.Center + Main.rand.NextVector2Square(-25f, 25f), 264);
-                light.velocity = Projectile.DirectionToSafe(target.Center).RotatedByRandom(0.72f) * Main.rand.NextFloat(1.2f, 8f);
+                light.velocity = Projectile.SafeDirectionTo(target.Center).RotatedByRandom(0.72f) * Main.rand.NextFloat(1.2f, 8f);
                 light.color = Color.Lerp(Color.Cyan, Color.Fuchsia, Sin01(Main.GlobalTimeWrappedHourly * 10f + i * 0.2f)) * particleAppearInterpolant * (1f - deathFadeOut);
                 light.scale = Main.rand.NextFloat(0.5f, 1.8f) * Lerp(1f, 0.1f, particleIntensity);
                 light.fadeIn = 0.7f;
@@ -162,7 +161,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
             Vector2 playerUV = new(playerU * 0.96f, playerV * 0.5f);
 
             // Mark the player as being disintegrated if their UVs are within that of the laser.
-            float disintegrationInterpolant = Clamp(Main.LocalPlayer.GetValueRef<int>(DisintegrationTimeName) / 40f, 0f, 1f);
+            float disintegrationInterpolant = Saturate(Main.LocalPlayer.GetValueRef<int>(DisintegrationTimeName) / 40f);
             if (playerUV.Between(new Vector2(-0.467f, -0.5f), Vector2.One * 0.5f) && !Main.LocalPlayer.dead && !Main.LocalPlayer.ghost)
             {
                 Main.LocalPlayer.GetValueRef<bool>(BeingDisintegratedName).Value = true;
@@ -171,7 +170,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
                 {
                     float k = InverseLerp(0f, 0.5f, disintegrationInterpolant);
 
-                    ManagedShader animeShader = ShaderManager.GetShader("AnimeObliterationShader");
+                    ManagedShader animeShader = ShaderManager.GetShader("NoxusBoss.AnimeObliterationShader");
                     animeShader.TrySetParameter("scatterDirectionBias", Projectile.velocity * Pow(k, 2f) * -20f);
                     animeShader.TrySetParameter("pixelationFactor", Vector2.One * 1.5f / LocalPlayerDrawManager.PlayerTarget.Size());
                     animeShader.TrySetParameter("disintegrationFactor", Pow(k, 1.6f) * 4f);
@@ -203,7 +202,5 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
             laserShader.SetTexture(SharpNoise, 5, SamplerState.AnisotropicWrap);
             laserShader.SetTexture(FireNoise, 6, SamplerState.AnisotropicWrap);
         }
-
-        public void DrawWithPixelation() { }
     }
 }

@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Common.SpecialWorldEvents;
 using NoxusBoss.Common.Utilities;
 using NoxusBoss.Core;
-using NoxusBoss.Core.Graphics.Shaders;
 using NoxusBoss.Core.Graphics.Shaders.Screen;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using NoxusBoss.Core.Music;
@@ -143,12 +142,12 @@ namespace NoxusBoss.Content.NPCs.Enemies.NoxusWorld.Mirrorwalkers
             }
 
             // Prevent the player from going super fast when near the mirror.
-            float maxHorizontalPlayerSpeed = Remap(distanceFromMirror, 600f, 150f, 11f, 0.5f);
+            float maxHorizontalPlayerSpeed = Utils.Remap(distanceFromMirror, 600f, 150f, 11f, 0.5f);
             Target.velocity.X = Clamp(Target.velocity.X, -maxHorizontalPlayerSpeed, maxHorizontalPlayerSpeed);
 
             // Make sounds and music quieter the close the player is to the mirror.
-            MusicVolumeManipulationSystem.MuffleFactor = Remap(distanceFromMirror, 540f, 100f, 1f, 0.01f);
-            SoundMufflingSystem.MuffleFactor = Remap(distanceFromMirror, 560f, 120f, 1f, 0f);
+            MusicVolumeManipulationSystem.MuffleFactor = Utils.Remap(distanceFromMirror, 540f, 100f, 1f, 0.01f);
+            SoundMufflingSystem.MuffleFactor = Utils.Remap(distanceFromMirror, 560f, 120f, 1f, 0f);
 
             Time++;
         }
@@ -179,7 +178,7 @@ namespace NoxusBoss.Content.NPCs.Enemies.NoxusWorld.Mirrorwalkers
             float rotation = -Main.LocalPlayer.fullRotation;
 
             // Apply the horror shader.
-            var horrorShader = ShaderManager.GetShader("MirrorwalkerHorrorShader");
+            var horrorShader = ShaderManager.GetShader("NoxusBoss.MirrorwalkerHorrorShader");
             horrorShader.TrySetParameter("contrastMatrix", HighContrastScreenShakeShaderData.CalculateContrastMatrix(NPC.Opacity * 2f));
             horrorShader.TrySetParameter("noiseOffsetFactor", Lerp(6f, 1f, NPC.Opacity) * HorrorInterpolant);
             horrorShader.TrySetParameter("noiseOverlayColor", Color.MediumPurple);

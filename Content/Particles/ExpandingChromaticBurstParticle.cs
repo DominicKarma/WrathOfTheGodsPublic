@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Core.Graphics.Particles;
 using Terraria;
 
 namespace NoxusBoss.Content.Particles
@@ -9,16 +8,16 @@ namespace NoxusBoss.Content.Particles
     {
         public float ScaleExpandRate;
 
-        public override BlendState DrawBlendState => BlendState.Additive;
+        public override BlendState BlendState => BlendState.Additive;
 
-        public override string TexturePath => ChromaticBurstPath;
+        public override string AtlasTextureName => "NoxusBoss.ExpandingChromaticBurstParticle.png";
 
         public ExpandingChromaticBurstParticle(Vector2 position, Vector2 velocity, Color color, int lifetime, float scale, float scaleExpandRate = 0.8f)
         {
             Position = position;
             Velocity = velocity;
-            Color = color;
-            Scale = scale;
+            DrawColor = color;
+            Scale = Vector2.One * scale;
             Lifetime = lifetime;
             ScaleExpandRate = scaleExpandRate;
         }
@@ -26,12 +25,12 @@ namespace NoxusBoss.Content.Particles
         public override void Update()
         {
             Opacity = InverseLerp(0f, 4f, Lifetime - Time);
-            Scale += ScaleExpandRate;
+            Scale += Vector2.One * ScaleExpandRate;
         }
 
-        public override void Draw()
+        public override void Draw(SpriteBatch spriteBatch)
         {
-            Main.spriteBatch.Draw(Texture, Position - Main.screenPosition, null, Color * Opacity, Rotation, Texture.Size() * 0.5f, Scale * 0.3f, 0, 0f);
+            spriteBatch.Draw(Texture, Position - Main.screenPosition, null, DrawColor * Opacity, Rotation, null, Scale * 0.3f, 0);
         }
     }
 }

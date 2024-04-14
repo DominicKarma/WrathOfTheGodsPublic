@@ -3,8 +3,8 @@ using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm;
+using NoxusBoss.Content.Particles.Metaballs;
 using NoxusBoss.Core;
-using NoxusBoss.Core.Graphics.Metaballs;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using ReLogic.Content;
 using Terraria;
@@ -467,7 +467,7 @@ namespace NoxusBoss.Content.NPCs.Enemies.NoxusWorld.DismalSeekers
             // Attempt to slowly fly above the player while releasing flames.
             if (AttackTimer <= fastRedirectTime + hoverFireShootTime && NPC.Opacity >= 0.95f)
             {
-                Vector2 force = NPC.DirectionToSafe(Target.Center - Vector2.UnitY * 300f) * 0.07f;
+                Vector2 force = NPC.SafeDirectionTo(Target.Center - Vector2.UnitY * 300f) * 0.07f;
                 force.X = Abs(force.X) * initialHorizontalOffset;
                 NPC.velocity = (NPC.velocity + force).ClampLength(0f, 10f);
 
@@ -476,7 +476,7 @@ namespace NoxusBoss.Content.NPCs.Enemies.NoxusWorld.DismalSeekers
                 {
                     Vector2 flameSpawnPosition = NPC.Center + HandOffset + Vector2.UnitY.RotatedBy(NPC.rotation) * OpacityAdjustedScale * 14f;
                     Vector2 flameVelocity = Main.rand.NextVector2CircularEdge(0.9f, 0.9f) + (Target.Center - flameSpawnPosition).SafeNormalize(Vector2.Zero) * 0.4f;
-                    NewProjectileBetter(flameSpawnPosition, flameVelocity, ModContent.ProjectileType<RedirectingDarkFlame>(), 40, 0f);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), flameSpawnPosition, flameVelocity, ModContent.ProjectileType<RedirectingDarkFlame>(), 40, 0f);
                 }
             }
 
@@ -551,8 +551,8 @@ namespace NoxusBoss.Content.NPCs.Enemies.NoxusWorld.DismalSeekers
                     LanternIsInUse = false;
                     NPC.netUpdate = true;
 
-                    Vector2 lanternVelocity = NPC.DirectionToSafe(Target.Center) * 11f - Vector2.UnitY * 9f;
-                    NewProjectileBetter(NPC.Center + HandOffset, lanternVelocity, ModContent.ProjectileType<DismalSeekerLantern>(), 40, 0f, -1, LanternRotation);
+                    Vector2 lanternVelocity = NPC.SafeDirectionTo(Target.Center) * 11f - Vector2.UnitY * 9f;
+                    NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center + HandOffset, lanternVelocity, ModContent.ProjectileType<DismalSeekerLantern>(), 40, 0f, -1, LanternRotation);
                 }
             }
 
@@ -608,7 +608,7 @@ namespace NoxusBoss.Content.NPCs.Enemies.NoxusWorld.DismalSeekers
                     particleSize *= Main.rand.NextFloat(1f, 1.8f);
                 }
 
-                PitchBlackMetaball.CreateParticle(NPC.Center + Main.rand.NextVector2Circular(8f, 20f).RotatedBy(NPC.rotation) * OpacityAdjustedScale, particleVelocity, particleSize);
+                ModContent.GetInstance<NoxusGasMetaball>().CreateParticle(NPC.Center + Main.rand.NextVector2Circular(8f, 20f).RotatedBy(NPC.rotation) * OpacityAdjustedScale, particleVelocity, particleSize);
             }
 
             // Create tatters when killed.

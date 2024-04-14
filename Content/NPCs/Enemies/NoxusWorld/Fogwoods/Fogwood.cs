@@ -245,7 +245,7 @@ namespace NoxusBoss.Content.NPCs.Enemies.NoxusWorld.Fogwoods
                     bool validGround = true;
                     for (int dx = -2; dx < 2; dx++)
                     {
-                        Tile t = ParanoidTileRetrieval((int)(potentialTeleportPosition.X / 16f + dx), (int)(potentialTeleportPosition.Y / 16f) + 1);
+                        Tile t = Framing.GetTileSafely((int)(potentialTeleportPosition.X / 16f + dx), (int)(potentialTeleportPosition.Y / 16f) + 1);
                         bool dirtOrGrass = t.TileType == TileID.Dirt || t.TileType == TileID.Grass;
                         if (!dirtOrGrass || !WorldGen.SolidTile(t) || t.Slope != SlopeType.Solid || t.IsHalfBlock)
                         {
@@ -257,7 +257,7 @@ namespace NoxusBoss.Content.NPCs.Enemies.NoxusWorld.Fogwoods
                         continue;
 
                     // Try again if stuck inside of ground.
-                    Tile teleportTile = ParanoidTileRetrieval((int)(potentialTeleportPosition.X / 16f), (int)(potentialTeleportPosition.Y / 16f));
+                    Tile teleportTile = Framing.GetTileSafely((int)(potentialTeleportPosition.X / 16f), (int)(potentialTeleportPosition.Y / 16f));
                     if (WorldGen.SolidTile(teleportTile))
                         continue;
 
@@ -267,7 +267,7 @@ namespace NoxusBoss.Content.NPCs.Enemies.NoxusWorld.Fogwoods
                     {
                         for (int dy = -3; dy <= 2; dy++)
                         {
-                            Tile t = ParanoidTileRetrieval((int)(potentialTeleportPosition.X / 16f + dx), (int)(potentialTeleportPosition.Y / 16f + dy));
+                            Tile t = Framing.GetTileSafely((int)(potentialTeleportPosition.X / 16f + dx), (int)(potentialTeleportPosition.Y / 16f + dy));
                             if (t.TileType is TileID.Trees or TileID.VanityTreeSakura or TileID.VanityTreeYellowWillow or TileID.Pumpkins or TileID.LargePiles2 or TileID.Sunflower)
                             {
                                 treeNearby = true;
@@ -365,7 +365,7 @@ namespace NoxusBoss.Content.NPCs.Enemies.NoxusWorld.Fogwoods
                 PulseRing ring = new(NPC.Bottom, Vector2.Zero, Color.BlueViolet, 0f, 3f, 20);
                 ring.Spawn();
 
-                NPC.velocity.X = NPC.DirectionToSafe(Target.Center).X * (NPC.Distance(Target.Center) * 0.008f + 15f);
+                NPC.velocity.X = NPC.SafeDirectionTo(Target.Center).X * (NPC.Distance(Target.Center) * 0.008f + 15f);
                 NPC.velocity.Y -= 20f;
                 NPC.netUpdate = true;
             }
@@ -441,7 +441,7 @@ namespace NoxusBoss.Content.NPCs.Enemies.NoxusWorld.Fogwoods
                         if (WorldUtils.Find(rootSpawnPosition.ToTileCoordinates(), Searches.Chain(new Searches.Down(50), new WorldConditions.IsSolid()), out Point p))
                             rootSpawnPosition = p.ToWorldCoordinates(8f, 16f);
 
-                        NewProjectileBetter(rootSpawnPosition, Vector2.Zero, ModContent.ProjectileType<FogwoodRoot>(), 25, 0f);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), rootSpawnPosition, Vector2.Zero, ModContent.ProjectileType<FogwoodRoot>(), 25, 0f);
                     }
                 }
             }

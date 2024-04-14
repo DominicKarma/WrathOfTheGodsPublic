@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
+using Luminance.Common.DataStructures;
 using Microsoft.Xna.Framework;
-using NoxusBoss.Common.DataStructures;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Core;
 using Terraria;
@@ -81,7 +81,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
             float movementSpeed = NPC.position.Distance(NPC.oldPosition);
             bool probablyTeleported = movementSpeed >= 160f;
             if (!probablyTeleported)
-                idleSound.Sound.Pitch = Remap(movementSpeed, 5f, 35f, 0f, 0.025f);
+                idleSound.Sound.Pitch = Utils.Remap(movementSpeed, 5f, 35f, 0f, 0.025f);
 
             // Make the idle sound's volume depend on how opaque and close to the foreground Nameless is.
             float backgroundSoundFade = 1f / (ZPosition + 1f);

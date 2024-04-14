@@ -29,15 +29,6 @@ namespace NoxusBoss.Common.Utilities
         }
 
         /// <summary>
-        /// Gives a given <see cref="Player"/> infinite flight in accordance with Calamity's system, if it's enabled.
-        /// </summary>
-        /// <param name="p">The player to apply infinite flight to.</param>
-        public static void GrantInfiniteFlight(this Player p)
-        {
-            ModReferences.BaseCalamity?.Call("ToggleInfiniteFlight", p, true);
-        }
-
-        /// <summary>
         /// Resets rage and adrenaline for a given <see cref="Player"/>.
         /// </summary>
         /// <param name="p">The player to reset ripper values for.</param>
@@ -55,18 +46,6 @@ namespace NoxusBoss.Common.Utilities
                 adrenalineField?.SetValue(modPlayer, 0f);
                 rageField?.SetValue(modPlayer, 0f);
             }
-        }
-
-        /// <summary>
-        /// Gets the current mouse item for a given <see cref="Player"/>. This supports <see cref="Main.mouseItem"/> (the item held by the cursor) and <see cref="Player.HeldItem"/> (the item in use with the hotbar).
-        /// </summary>
-        /// <param name="player">The player to retrieve the mouse item for.</param>
-        public static Item HeldMouseItem(this Player player)
-        {
-            if (!Main.mouseItem.IsAir)
-                return Main.mouseItem;
-
-            return player.HeldItem;
         }
 
         public static Referenced<T> GetValueRef<T>(this Player player, string key) where T : struct =>

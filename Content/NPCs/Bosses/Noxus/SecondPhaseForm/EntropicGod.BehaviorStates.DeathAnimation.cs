@@ -2,8 +2,7 @@
 using NoxusBoss.Content.NPCs.Bosses.NamelessDeity;
 using NoxusBoss.Content.NPCs.Bosses.Noxus.Projectiles;
 using NoxusBoss.Content.NPCs.Bosses.Noxus.SpecificEffectManagers;
-using NoxusBoss.Core.Graphics.Metaballs;
-using NoxusBoss.Core.Graphics.SpecificEffectManagers;
+using NoxusBoss.Content.Particles.Metaballs;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -82,14 +81,13 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
             {
                 SoundEngine.PlaySound(FireballShootSound);
                 if (Main.netMode != NetmodeID.MultiplayerClient)
-                    NewProjectileBetter(NPC.Center + Vector2.UnitY * portalVerticalOffset, -Vector2.UnitY, ModContent.ProjectileType<DarkPortal>(), 0, 0f, -1, portalScale, portalExistTime);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center + Vector2.UnitY * portalVerticalOffset, -Vector2.UnitY, ModContent.ProjectileType<DarkPortal>(), 0, 0f, -1, portalScale, portalExistTime);
             }
 
             // Make the camera pan on Noxus.
             float cameraInterpolant = Pow(InverseLerp(1f, 40f, AttackTimer - portalSummonDelay - portalEnterDelay + 96f), 4f);
             CameraPanSystem.Zoom = cameraInterpolant * -0.2f + NoxusDeathCutsceneSystem.EyeAppearInterpolant * 0.425f;
-            CameraPanSystem.CameraFocusPoint = Vector2.Lerp(CameraPanSystem.CameraFocusPoint, NPC.Center, 0.6f);
-            CameraPanSystem.CameraPanInterpolant = cameraInterpolant;
+            CameraPanSystem.PanTowards(NPC.Center, cameraInterpolant);
 
             // Move into the portal and attempt to leave.
             if (AttackTimer >= portalSummonDelay + portalEnterDelay)
@@ -135,7 +133,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
             {
                 Vector2 gasSpawnPosition = NPC.Center + Main.rand.NextVector2Circular(82f, 82f);
                 float gasSize = NPC.width * Main.rand.NextFloat(0.9f, 4f);
-                PitchBlackMetaball.CreateParticle(gasSpawnPosition, Main.rand.NextVector2Circular(27f, 27f), gasSize);
+                ModContent.GetInstance<NoxusGasMetaball>().CreateParticle(gasSpawnPosition, Main.rand.NextVector2Circular(27f, 27f), gasSize);
             }
         }
     }

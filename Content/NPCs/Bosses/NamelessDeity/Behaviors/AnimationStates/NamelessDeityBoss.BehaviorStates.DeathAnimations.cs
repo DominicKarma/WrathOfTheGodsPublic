@@ -188,7 +188,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
 
             // Block the UI and inputs until they return to the title screen.
             if (AttackTimer >= blackDelay + riseDelay - 75f)
-                InputAndUIBlockerSystem.Start(true, true, () => NPC.active);
+                BlockerSystem.Start(true, true, () => NPC.active);
 
             // Display congratulatory text.
             if (AttackTimer == blackDelay + riseDelay + 60f)
@@ -246,7 +246,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
             // Move further into the background.
             if (AttackTimer >= blackDelay + riseDelay + riseTime + handCount * handReleaseRate && AttackTimer < blackDelay + riseDelay + riseTime + handCount * handReleaseRate + chargeLineUpTime)
             {
-                float hoverSpeedInterpolant = Remap(ZPosition, 3f, 7f, 0.03f, 0.8f);
+                float hoverSpeedInterpolant = Utils.Remap(ZPosition, 3f, 7f, 0.03f, 0.8f);
                 NPC.velocity *= 0.8f;
                 NPC.Center = Vector2.Lerp(NPC.Center, Target.Center - Vector2.UnitY * 100f, hoverSpeedInterpolant);
             }

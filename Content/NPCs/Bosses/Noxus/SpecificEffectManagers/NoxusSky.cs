@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.CustomWorldSeeds;
@@ -9,8 +10,6 @@ using NoxusBoss.Content.NPCs.Bosses.NamelessDeity;
 using NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Core.Configuration;
-using NoxusBoss.Core.Graphics.Particles;
-using NoxusBoss.Core.Graphics.Shaders;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using ReLogic.Content;
 using Terraria;
@@ -41,7 +40,8 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SpecificEffectManagers
                 sky.DrawFog();
             }
 
-            var twinkleParticles = ParticleManager.activeParticles.Where(p => p is TwinkleParticle).Cast<TwinkleParticle>();
+            var activeParticles = (List<Particle>)typeof(ParticleManager).GetField("ActiveParticles", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null);
+            var twinkleParticles = activeParticles.Where(p => p is TwinkleParticle).Cast<TwinkleParticle>();
             if (twinkleParticles.Any())
             {
                 spriteBatch.UseBlendState(BlendState.Additive);
@@ -50,7 +50,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SpecificEffectManagers
                 foreach (TwinkleParticle t in twinkleParticles)
                 {
                     t.Opacity *= 0.6f;
-                    t.Draw();
+                    t.Draw(Main.spriteBatch);
                     t.Opacity /= 0.6f;
                 }
                 spriteBatch.ResetToDefault();
@@ -314,7 +314,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SpecificEffectManagers
             Vector2 noxusUV = EntropicGod.Myself is null ? Vector2.One * 100f : (EntropicGod.Myself.Center - Main.screenPosition + screenArea * 0.5f + new Vector2(380f, 200f)) / textureArea;
 
             // Draw the background with a special shader.
-            var backgroundShader = ShaderManager.GetShader("NoxusBackgroundShader");
+            var backgroundShader = ShaderManager.GetShader("NoxusBoss.NoxusBackgroundShader");
             backgroundShader.TrySetParameter("intensity", Clamp(intensity, SkyIntensityOverride, 1f));
             backgroundShader.TrySetParameter("scrollSpeed", 0.13f);
             backgroundShader.TrySetParameter("noiseZoom", 0.32f);
@@ -340,7 +340,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SpecificEffectManagers
             Vector2 screenArea = new(Main.instance.GraphicsDevice.Viewport.Width, Main.instance.GraphicsDevice.Viewport.Height);
             Vector2 textureArea = screenArea / WhitePixel.Size();
 
-            var backgroundShader = ShaderManager.GetShader("DarkFogShader");
+            var backgroundShader = ShaderManager.GetShader("NoxusBoss.DarkFogShader");
             backgroundShader.TrySetParameter("fogCenter", (fogCenter - Main.screenPosition) / screenArea);
             backgroundShader.TrySetParameter("screenResolution", screenArea);
             backgroundShader.TrySetParameter("fogTravelDistance", fogSpreadDistance);

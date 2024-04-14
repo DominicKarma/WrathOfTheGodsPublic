@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Core.Configuration;
-using NoxusBoss.Core.Graphics.Automators;
 using NoxusBoss.Core.Graphics.Shaders.Screen;
 using Terraria;
 using Terraria.Graphics.Effects;
@@ -39,7 +38,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             RenderTargetManager.RenderTargetUpdateLoopEvent += PrepareBurnSnapshotShader;
 
             Main.OnPostDraw += DrawBurnEffect;
-            Main.QueueMainThreadAction(() => BurnTarget = new(true, RenderTargetManager.CreateScreenSizedTarget));
+            Main.QueueMainThreadAction(() => BurnTarget = new(true, ManagedRenderTarget.CreateScreenSizedTarget));
         }
 
         public override void OnModUnload() => Main.OnPostDraw -= DrawBurnEffect;

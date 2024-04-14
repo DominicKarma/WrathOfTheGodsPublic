@@ -53,7 +53,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
             int attackDelay = SuperCosmicLaserbeam_AttackDelay;
             int laserShootTime = SuperCosmicLaserbeam_LaserShootTime;
             int realityTearReleaseRate = 75;
-            float laserAngularVelocity = Remap(NPC.Distance(Target.Center), 1150f, 1775f, 0.0161f, 0.074f);
+            float laserAngularVelocity = Utils.Remap(NPC.Distance(Target.Center), 1150f, 1775f, 0.0161f, 0.074f);
 
             // Kill the player in GFB.
             if (Main.zenithWorld)
@@ -88,7 +88,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
 
             // Cast the book after the teleport.
             if (Main.netMode != NetmodeID.MultiplayerClient && !AnyProjectiles(ModContent.ProjectileType<BookConstellation>()) && AttackTimer <= attackDelay)
-                NewProjectileBetter(NPC.Center, Vector2.UnitX, ModContent.ProjectileType<BookConstellation>(), 0, 0f);
+                NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.UnitX, ModContent.ProjectileType<BookConstellation>(), 0, 0f);
 
             // Make the sky more pale.
             if (AttackTimer <= 75f)
@@ -105,13 +105,13 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
                     {
                         float sliceAngle = Pi * i / 3f + laserDirection + PiOver2;
                         Vector2 sliceDirection = sliceAngle.ToRotationVector2();
-                        NewProjectileBetter(laserStart - sliceDirection * 2000f, sliceDirection, ModContent.ProjectileType<TelegraphedScreenSlice>(), 0, 0f, -1, 30f, 4000f);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), laserStart - sliceDirection * 2000f, sliceDirection, ModContent.ProjectileType<TelegraphedScreenSlice>(), 0, 0f, -1, 30f, 4000f);
                     }
 
                     if (Target.Center.WithinRange(NPC.Center, 335f))
                     {
                         for (int i = 0; i < 3; i++)
-                            NewProjectileBetter(EyePosition, (Target.Center - EyePosition).SafeNormalize(Vector2.UnitY) * 5.6f + Main.rand.NextVector2Circular(0.9f, 0.9f), ModContent.ProjectileType<Starburst>(), StarburstDamage, 0f);
+                            NewProjectileBetter(NPC.GetSource_FromAI(), EyePosition, (Target.Center - EyePosition).SafeNormalize(Vector2.UnitY) * 5.6f + Main.rand.NextVector2Circular(0.9f, 0.9f), ModContent.ProjectileType<Starburst>(), StarburstDamage, 0f);
                     }
                 }
             }
@@ -150,15 +150,15 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
                     ChantSound = LoopedSoundManager.CreateNew(ChantSoundLooped, () => !NPC.active || CurrentState != NamelessAIType.SuperCosmicLaserbeam);
 
                 // Shake the screen.
-                Main.instance.CameraModifiers.Add(new PunchCameraModifier(NPC.Center, NPC.DirectionToSafe(Target.Center), 42f, 2.75f, 112));
+                Main.instance.CameraModifiers.Add(new PunchCameraModifier(NPC.Center, NPC.SafeDirectionTo(Target.Center), 42f, 2.75f, 112));
                 HighContrastScreenShakeShaderData.ContrastIntensity = 14.5f;
 
                 ScreenEffectSystem.SetFlashEffect(NPC.Center, 2f, 60);
                 RadialScreenShoveSystem.Start(NPC.Center, 54);
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
-                    NewProjectileBetter(NPC.Center, laserDirection.ToRotationVector2(), ModContent.ProjectileType<SuperCosmicBeam>(), SuperLaserbeamDamage, 0f, -1, 0f, SuperCosmicBeam.DefaultLifetime);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, laserDirection.ToRotationVector2(), ModContent.ProjectileType<SuperCosmicBeam>(), SuperLaserbeamDamage, 0f, -1, 0f, SuperCosmicBeam.DefaultLifetime);
                 }
             }
 
@@ -210,12 +210,12 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
             if (NPC.WithinRange(Target.Center, 40f))
                 NPC.velocity *= 0.92f;
             else
-                NPC.SimpleFlyMovement(NPC.DirectionToSafe(Target.Center) * 2f, 0.15f);
+                NPC.SimpleFlyMovement(NPC.SafeDirectionTo(Target.Center) * 2f, 0.15f);
 
             // Zoom towards the as the attack ends.
             if (AttackTimer >= attackDelay + laserShootTime - 5f)
             {
-                float slowdownRadius = Remap(AttackTimer - attackDelay - laserShootTime, 5f, 50f, 270f, 600f);
+                float slowdownRadius = Utils.Remap(AttackTimer - attackDelay - laserShootTime, 5f, 50f, 270f, 600f);
                 NPC.SmoothFlyNearWithSlowdownRadius(Target.Center, 0.07f, 0.09f, slowdownRadius);
             }
 

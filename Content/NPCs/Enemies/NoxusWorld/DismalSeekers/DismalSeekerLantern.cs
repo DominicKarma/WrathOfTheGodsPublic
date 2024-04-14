@@ -56,7 +56,7 @@ namespace NoxusBoss.Content.NPCs.Enemies.NoxusWorld.DismalSeekers
 
             // Weakly seek out the nearest player.
             Player closest = Main.player[Player.FindClosest(Projectile.Center, 1, 1)];
-            Projectile.velocity += Projectile.DirectionToSafe(closest.Center) * 0.33f;
+            Projectile.velocity += Projectile.SafeDirectionTo(closest.Center) * 0.33f;
 
             // Idly emit light.
             Lighting.AddLight(Projectile.Center, Color.Violet.ToVector3() * 0.67f);
@@ -136,7 +136,7 @@ namespace NoxusBoss.Content.NPCs.Enemies.NoxusWorld.DismalSeekers
 
             // Create a burning shockwave.
             if (Main.netMode != NetmodeID.MultiplayerClient)
-                NewProjectileBetter(Projectile.Center, Vector2.Zero, ModContent.ProjectileType<LanternExplosion>(), 60, 0f);
+                NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<LanternExplosion>(), 60, 0f);
 
             // Shake the screen a little bit.
             StartShakeAtPoint(Projectile.Center, 5f, shakeStrengthDissipationIncrement: 0.3f);

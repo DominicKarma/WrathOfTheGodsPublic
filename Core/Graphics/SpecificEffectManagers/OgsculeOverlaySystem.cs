@@ -1,9 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Luminance.Assets;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.Items.SummonItems;
 using NoxusBoss.Content.NPCs.Bosses.NamelessDeity;
 using NoxusBoss.Core.GlobalItems;
-using ReLogic.Content;
 using ReLogic.Graphics;
 using Terraria;
 using Terraria.GameContent;
@@ -16,7 +16,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
     [Autoload(Side = ModSide.Client)]
     public class OgsculeOverlaySystem : ModSystem
     {
-        public static Asset<Texture2D> OgsculeTexture
+        public static LazyAsset<Texture2D> OgsculeTexture
         {
             get;
             private set;
@@ -39,7 +39,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
         public override void OnModLoad()
         {
             if (Main.netMode != NetmodeID.Server)
-                OgsculeTexture = ModContent.Request<Texture2D>("NoxusBoss/Assets/ExtraTextures/Ogscule");
+                OgsculeTexture = LazyAsset<Texture2D>.Request("NoxusBoss/Assets/ExtraTextures/Ogscule");
 
             Main.OnPostDraw += DrawOgscule;
             NoxusGlobalItem.UseItemEvent += MakeGFBTerminusSummonOgscule;
@@ -70,7 +70,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             // Draw the ogscule overlay.
             Main.spriteBatch.Begin();
 
-            // Load the 'don't annoy the Cal devs about this' text from localization.
+            // Load the 'don't annoy the Cal developers about this' text from localization.
             string text = Language.GetTextValue("Mods.NoxusBoss.Dialog.OgsculeDontAnnoyCalDevsText");
 
             float textScale = Sin(Main.GlobalTimeWrappedHourly * 3.5f) * 0.03f + 0.55f;

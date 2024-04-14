@@ -1,4 +1,4 @@
-﻿using NoxusBoss.Common.Easings;
+﻿using Luminance.Common.Easings;
 using Terraria;
 using static NoxusBoss.Content.NPCs.Bosses.NamelessDeity.NamelessDeityBoss;
 
@@ -39,9 +39,9 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
         /// Negative rotations correspond to downward flaps.
         /// </summary>
         public static readonly PiecewiseCurve WingFlapAngularMotion = new PiecewiseCurve().
-            Add(PolynomialEasing.Cubic, EasingType.Out, 0.25f, 0.36f, -0.4f). // Anticipation.
-            Add(PolynomialEasing.Quartic, EasingType.In, -1.82f, 0.51f). // Flap. Descends 1.87 radians (Approximately 107 degrees) in a short period of time.
-            Add(PolynomialEasing.Quadratic, EasingType.In, -0.4f, 1f); // Recovery. By the end of this frame the wings have returned to their starting value of -0.4 radians and are ready for anticipation again.
+            Add(EasingCurves.Cubic, EasingType.Out, 0.25f, 0.36f, -0.4f). // Anticipation.
+            Add(EasingCurves.Quartic, EasingType.In, -1.82f, 0.51f). // Flap. Descends 1.87 radians (Approximately 107 degrees) in a short period of time.
+            Add(EasingCurves.Quadratic, EasingType.In, -0.4f, 1f); // Recovery. By the end of this frame the wings have returned to their starting value of -0.4 radians and are ready for anticipation again.
 
         /// <summary>
         /// Updates the wings.

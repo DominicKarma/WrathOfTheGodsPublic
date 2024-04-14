@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
+using Luminance.Common.StateMachines;
 using Microsoft.Xna.Framework;
-using NoxusBoss.Common.StateMachines;
 using NoxusBoss.Core.CrossCompatibility.Inbound;
 using Terraria;
 using Terraria.ModLoader;
@@ -10,9 +10,9 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
 {
     public partial class NamelessDeityBoss : ModNPC, IBossChecklistSupport, IToastyQoLChecklistBossSupport
     {
-        private PushdownAutomata<BossAIState<NamelessAIType>, NamelessAIType> stateMachine;
+        private PushdownAutomata<EntityAIState<NamelessAIType>, NamelessAIType> stateMachine;
 
-        public PushdownAutomata<BossAIState<NamelessAIType>, NamelessAIType> StateMachine
+        public PushdownAutomata<EntityAIState<NamelessAIType>, NamelessAIType> StateMachine
         {
             get
             {
@@ -39,7 +39,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
             LoadStateTransitions();
         }
 
-        public void ResetGenericVariables(bool stateWasPopped)
+        public void ResetGenericVariables(bool stateWasPopped, EntityAIState<NamelessAIType> oldState)
         {
             GeneralHoverOffset = Vector2.Zero;
             NPC.Opacity = 1f;

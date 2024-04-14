@@ -9,7 +9,6 @@ using NoxusBoss.Common.Utilities;
 using NoxusBoss.Content.NPCs.Bosses.NamelessDeity;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Core.Graphics.Automators;
-using NoxusBoss.Core.Graphics.Shaders;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using ReLogic.Content;
 using Terraria;
@@ -294,7 +293,7 @@ namespace NoxusBoss.Content.NPCs.Critters.EternalGarden
         {
             // Fly towards the tree.
             Vector2 treeDestination = new(Main.maxTilesX * 8f, Main.maxTilesY * 16f - 1600f);
-            Vector2 idealVelocity = NPC.DirectionToSafe(treeDestination) * 5f;
+            Vector2 idealVelocity = NPC.SafeDirectionTo(treeDestination) * 5f;
             NPC.SimpleFlyMovement(idealVelocity, 0.2f);
 
             // Fly up and down when there's still a distance amount of distance to the tree.
@@ -351,7 +350,7 @@ namespace NoxusBoss.Content.NPCs.Critters.EternalGarden
             }
 
             // Fly towards the perch position.
-            Vector2 idealVelocity = NPC.DirectionToSafe(PerchPosition) * 4f;
+            Vector2 idealVelocity = NPC.SafeDirectionTo(PerchPosition) * 4f;
             NPC.SimpleFlyMovement(idealVelocity, 0.2f);
 
             // Update the current direction.
@@ -569,8 +568,8 @@ namespace NoxusBoss.Content.NPCs.Critters.EternalGarden
             }
 
             // Fly towards the ground position.
-            Vector2 positionToFlyTo = GroundPosition - Vector2.UnitY * Remap(NPC.Distance(GroundPosition), 360f, 75f, 275f, 0f);
-            Vector2 idealVelocity = NPC.DirectionToSafe(positionToFlyTo) * 3.6f;
+            Vector2 positionToFlyTo = GroundPosition - Vector2.UnitY * Utils.Remap(NPC.Distance(GroundPosition), 360f, 75f, 275f, 0f);
+            Vector2 idealVelocity = NPC.SafeDirectionTo(positionToFlyTo) * 3.6f;
             NPC.SimpleFlyMovement(idealVelocity, 0.15f);
 
             // Update the current direction.
@@ -619,7 +618,7 @@ namespace NoxusBoss.Content.NPCs.Critters.EternalGarden
         {
             // Fly away from the closest player and vanish after enough time has passed.
             Player closestPlayer = Main.player[Player.FindClosest(NPC.Center, 1, 1)];
-            NPC.velocity.X = Lerp(NPC.velocity.X, NPC.DirectionToSafe(closestPlayer.Center).X * -15f, 0.15f);
+            NPC.velocity.X = Lerp(NPC.velocity.X, NPC.SafeDirectionTo(closestPlayer.Center).X * -15f, 0.15f);
             NPC.velocity.Y = Clamp(NPC.velocity.Y - 0.4f, -39f, 1f);
 
             // Update the current direction.
@@ -711,7 +710,7 @@ namespace NoxusBoss.Content.NPCs.Critters.EternalGarden
         public void DrawWithShaderWrapper(SpriteBatch spriteBatch, Vector2 screenPos)
         {
             // Prepare the eye shader.
-            var eyeShader = ShaderManager.GetShader("AelithrysuwlEyeShader");
+            var eyeShader = ShaderManager.GetShader("NoxusBoss.AelithrysuwlEyeShader");
             eyeShader.TrySetParameter("baseTextureSize", EyeTexture.Size());
             eyeShader.TrySetParameter("drawAreaRectangle", NPC.frame);
             eyeShader.TrySetParameter("eyeColor1", VioletEyeColor);

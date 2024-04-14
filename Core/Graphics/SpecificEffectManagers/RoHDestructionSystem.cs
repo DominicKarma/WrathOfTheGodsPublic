@@ -5,6 +5,7 @@ using NoxusBoss.Content.NPCs.Bosses.NamelessDeity;
 using NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles;
 using Terraria;
 using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.GameContent.Drawing;
 using Terraria.ID;
@@ -26,6 +27,12 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
         public static int SlashHitDelay => 9;
 
         public static float RoHVerticalOffset => Pow(InverseLerp(0f, 45f, AnimationTimer), 0.3f) * -90f - Sin01(TwoPi * AnimationTimer / 36f) * 24f;
+
+        /// <summary>
+        /// Where the <see cref="Main.screenPosition"/> would be without modifications.
+        /// </summary>
+        public static Vector2 UnmodifiedCameraPosition =>
+            Main.LocalPlayer.TopLeft + new Vector2(Main.LocalPlayer.width * 0.5f, Main.LocalPlayer.height - 21f) - Main.ScreenSize.ToVector2() * 0.5f + Vector2.UnitY * Main.LocalPlayer.gfxOffY;
 
         public override void OnModLoad()
         {
@@ -68,7 +75,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             Main.instance.LoadItem(ItemID.RodOfHarmony);
 
             // Calculate draw variables.
-            Vector2 cameraOffset = -CameraPanSystem.UnmodifiedCameraPosition;
+            Vector2 cameraOffset = -UnmodifiedCameraPosition;
             Vector2 rohPosition = Main.LocalPlayer.Top + Vector2.UnitY * RoHVerticalOffset;
             Texture2D rohTexture = TextureAssets.Item[ItemID.RodOfHarmony].Value;
             Rectangle frame = rohTexture.Frame();
@@ -82,8 +89,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             // Make the camera focus on the RoH.
             float cameraPanInterpolant = InverseLerp(84f, 90f, AnimationTimer);
             float cameraZoomInterpolant = InverseLerp(90f, 156f, AnimationTimer);
-            CameraPanSystem.CameraFocusPoint = rohPosition;
-            CameraPanSystem.CameraPanInterpolant = cameraPanInterpolant;
+            CameraPanSystem.PanTowards(rohPosition, cameraPanInterpolant);
             CameraPanSystem.Zoom = cameraZoomInterpolant * 1.1f;
 
             scale *= Main.GameViewMatrix.Zoom;
@@ -141,7 +147,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 
                 float sliceLength = 3400f;
                 Vector2 sliceDirection = 0.57f.ToRotationVector2();
-                NewProjectileBetter(rohPosition - sliceDirection * sliceLength * 0.5f + Vector2.UnitY * 10f, sliceDirection, ModContent.ProjectileType<VergilScreenSlice>(), 0, 0f, -1, 12, sliceLength);
+                NewProjectileBetter(new EntitySource_WorldEvent(), rohPosition - sliceDirection * sliceLength * 0.5f + Vector2.UnitY * 10f, sliceDirection, ModContent.ProjectileType<VergilScreenSlice>(), 0, 0f, -1, 12, sliceLength);
             }
 
             // Create rod break visuals.
@@ -163,7 +169,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
                     }, Main.myPlayer);
                 }
 
-                NewProjectileBetter(rohPosition, Vector2.Zero, ModContent.ProjectileType<RodOfHarmonyExplosion>(), 0, 0f);
+                NewProjectileBetter(new EntitySource_WorldEvent(), rohPosition, Vector2.Zero, ModContent.ProjectileType<RodOfHarmonyExplosion>(), 0, 0f);
 
                 // Shake the screen.
                 StartShake(20f, shakeStrengthDissipationIncrement: 0.4f);

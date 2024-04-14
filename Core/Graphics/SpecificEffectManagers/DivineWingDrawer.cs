@@ -4,8 +4,6 @@ using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.Items.Accessories.Wings;
 using NoxusBoss.Content.NPCs.Bosses.NamelessDeity;
 using NoxusBoss.Content.NPCs.Bosses.NamelessDeity.SpecificEffectManagers;
-using NoxusBoss.Core.Graphics.Automators;
-using NoxusBoss.Core.Graphics.Shaders;
 using ReLogic.Content;
 using Terraria;
 using Terraria.DataStructures;
@@ -72,8 +70,8 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             RenderTargetManager.RenderTargetUpdateLoopEvent += PrepareAfterimageTarget;
             Main.QueueMainThreadAction(() =>
             {
-                AfterimageTarget = new(true, RenderTargetManager.CreateScreenSizedTarget);
-                AfterimageTargetPrevious = new(true, RenderTargetManager.CreateScreenSizedTarget);
+                AfterimageTarget = new(true, ManagedRenderTarget.CreateScreenSizedTarget);
+                AfterimageTargetPrevious = new(true, ManagedRenderTarget.CreateScreenSizedTarget);
             });
             On_LegacyPlayerRenderer.DrawPlayers += DrawWingsTarget;
             On_PlayerDrawLayers.DrawPlayer_09_Wings += DisallowWingDrawingIfNecessary;
@@ -151,7 +149,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 
             // Draw the contents of the previous frame to the target.
             bool probablyUsingSniperEffects = Main.LocalPlayer.scope || Main.LocalPlayer.HeldMouseItem().type == ItemID.SniperRifle || Main.LocalPlayer.HeldMouseItem().type == ItemID.Binoculars;
-            if (!probablyUsingSniperEffects || CameraPanSystem.UnmodifiedCameraPosition.WithinRange(Main.screenPosition, Main.LocalPlayer.velocity.Length() + 60f))
+            if (!probablyUsingSniperEffects || RoHDestructionSystem.UnmodifiedCameraPosition.WithinRange(Main.screenPosition, Main.LocalPlayer.velocity.Length() + 60f))
                 Main.spriteBatch.Draw(AfterimageTargetPrevious, Vector2.Zero, Color.White);
 
             // Draw player wings.
@@ -168,7 +166,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
         public static void DrawPlayerWingsToTarget()
         {
             // Prepare the wing psychedelic shader.
-            var wingShader = ShaderManager.GetShader("NamelessDeityPsychedelicWingShader");
+            var wingShader = ShaderManager.GetShader("NoxusBoss.NamelessDeityPsychedelicWingShader");
             wingShader.TrySetParameter("colorShift", WingColorShift);
             wingShader.TrySetParameter("lightDirection", Vector3.UnitZ);
             wingShader.TrySetParameter("normalMapCrispness", 0.86f);
@@ -207,7 +205,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             gd.Clear(Color.Transparent);
 
             // Prepare the afterimage psychedelic shader.
-            var afterimageShader = ShaderManager.GetShader("NamelessDeityPsychedelicAfterimageShader");
+            var afterimageShader = ShaderManager.GetShader("NoxusBoss.NamelessDeityPsychedelicAfterimageShader");
             afterimageShader.TrySetParameter("uScreenResolution", Main.ScreenSize.ToVector2());
             afterimageShader.TrySetParameter("warpSpeed", 0.00028f);
             afterimageShader.SetTexture(TurbulentNoise, 1);

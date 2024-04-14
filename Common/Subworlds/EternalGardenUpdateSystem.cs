@@ -352,7 +352,7 @@ namespace NoxusBoss.Common.Subworlds
             if (Main.netMode != NetmodeID.MultiplayerClient && NamelessDeityBoss.Myself is null && !AnyProjectiles(godRayID))
             {
                 Vector2 centerOfWorld = new Point(Main.maxTilesX / 2, EternalGardenWorldGen.SurfaceTilePoint).ToWorldCoordinates() + Vector2.UnitY * 320f;
-                NewProjectileBetter(centerOfWorld, Vector2.Zero, godRayID, 0, 0f);
+                NewProjectileBetter(new EntitySource_WorldEvent(), centerOfWorld, Vector2.Zero, godRayID, 0, 0f);
             }
 
             // Check if anyone is in the center of the garden for the purpose of determining if the time-in-center timer should increment.
@@ -391,7 +391,7 @@ namespace NoxusBoss.Common.Subworlds
 
             // Disallow player movement shortly after the sound plays to force the feeling of suspense.
             if (TimeSpentInCenter == 150 && AnyoneInCenter)
-                InputAndUIBlockerSystem.Start(true, false, () => TimeSpentInCenter >= 150);
+                BlockerSystem.Start(true, false, () => TimeSpentInCenter >= 150);
 
             // Spawn Nameless if a player has spent a sufficient quantity of time in the center of the garden.
             TimeSpentInCenter = Utils.Clamp(TimeSpentInCenter + AnyoneInCenter.ToDirectionInt(), 0, 600);

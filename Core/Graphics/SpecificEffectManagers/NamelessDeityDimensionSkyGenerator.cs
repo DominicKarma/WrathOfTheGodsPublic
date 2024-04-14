@@ -7,10 +7,8 @@ using NoxusBoss.Common.MainMenuThemes;
 using NoxusBoss.Content.Items.Accessories.VanityEffects;
 using NoxusBoss.Content.NPCs.Bosses.NamelessDeity;
 using NoxusBoss.Content.NPCs.Bosses.NamelessDeity.SpecificEffectManagers;
+using NoxusBoss.Content.Particles.Metaballs;
 using NoxusBoss.Core.Configuration;
-using NoxusBoss.Core.Graphics.Automators;
-using NoxusBoss.Core.Graphics.Metaballs;
-using NoxusBoss.Core.Graphics.Shaders;
 using ReLogic.Content;
 using Terraria;
 using Terraria.ID;
@@ -76,7 +74,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             SkyTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/NPCs/Bosses/NamelessDeity/SpecificEffectManagers/NamelessDeitySky", AssetRequestMode.ImmediateLoad);
 
             // This render target should not be automatically disposed because of how much effort is necessary to regenerate it.
-            Main.QueueMainThreadAction(() => NamelessDeityDimensionTarget = new(true, RenderTargetManager.CreateScreenSizedTarget, false));
+            Main.QueueMainThreadAction(() => NamelessDeityDimensionTarget = new(true, ManagedRenderTarget.CreateScreenSizedTarget, false));
             RenderTargetManager.RenderTargetUpdateLoopEvent += PrepareDimensionTarget;
         }
 
@@ -86,7 +84,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             if (DeificTouch.UsingEffect)
             {
                 for (int i = 0; i < 2; i++)
-                    NamelessDeityDimensionMetaball.CreateParticle(Main.MouseWorld, Main.rand.NextVector2Circular(4f, 4f), 28f);
+                    ModContent.GetInstance<NamelessDeityDimensionMetaball>().CreateParticle(Main.MouseWorld, Main.rand.NextVector2Circular(4f, 4f), 28f);
             }
         }
 
@@ -124,7 +122,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
                 InProximityOfDivineMonolith = false;
 
             // Evaluate the intensity of the effect. If it is not in use, don't waste resources attempting to update it.
-            float intensity = HeavenlyBackgroundIntensity * Remap(ManualSunScale, 1f, 12f, 1f, 0.45f);
+            float intensity = HeavenlyBackgroundIntensity * Utils.Remap(ManualSunScale, 1f, 12f, 1f, 0.45f);
             if (!IsEffectActive && DeificTouch.UsingEffect && HeavenlyBackgroundIntensity <= 0f && Intensity <= 0f)
                 intensity = 1.5f;
             if (usingNamelessMenu)
@@ -164,7 +162,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
         {
             float kaleidoscopeOverpowerInterpolant = Pow(1f - KaleidoscopeInterpolant, 0.4f);
             DrawSkyOverlay(backgroundIntensity * kaleidoscopeOverpowerInterpolant);
-            CosmicBackgroundSystem.Draw(backgroundIntensity * Remap(KaleidoscopeInterpolant, 1f, 0.1f, 0.2f, 1f));
+            CosmicBackgroundSystem.Draw(backgroundIntensity * Utils.Remap(KaleidoscopeInterpolant, 1f, 0.1f, 0.2f, 1f));
             DrawSmoke(backgroundIntensity * kaleidoscopeOverpowerInterpolant);
             DrawGalaxies(backgroundIntensity * kaleidoscopeOverpowerInterpolant);
 
@@ -197,7 +195,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             if (backgroundIntensity > 1f)
                 backgroundIntensity = 1f;
 
-            var galaxyShader = ShaderManager.GetShader("GalaxyShader");
+            var galaxyShader = ShaderManager.GetShader("NoxusBoss.GalaxyShader");
             var gd = Main.instance.GraphicsDevice;
             Vector2 scalingFactor = new(gd.DisplayMode.Width / 2560f, gd.DisplayMode.Height / 1440f);
 
@@ -238,7 +236,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 
                 // Randomly decide galaxy colors based on the world seed.
                 float hue = Utils.RandomFloat(ref seed);
-                float distanceFadeOut = Remap(baseGalaxyScale, 0.4f, 0.9f, 0.2f, 1f);
+                float distanceFadeOut = Utils.Remap(baseGalaxyScale, 0.4f, 0.9f, 0.2f, 1f);
                 Color galaxyColor1 = Main.hslToRgb(hue, 1f, 0.67f) * backgroundIntensity * distanceFadeOut;
                 Color galaxyColor2 = Main.hslToRgb((hue + 0.11f) % 1f, 1f, 0.67f) * backgroundIntensity * distanceFadeOut;
                 galaxyColor1.G /= 2;
@@ -283,7 +281,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             if (NoxusBossConfig.Instance.PhotosensitivityMode)
                 animationSpeed *= 0.4f;
 
-            var kaleidoscopeShader = ShaderManager.GetShader("KaleidoscopeShader");
+            var kaleidoscopeShader = ShaderManager.GetShader("NoxusBoss.KaleidoscopeShader");
             kaleidoscopeShader.TrySetParameter("totalSplits", inFinalPhase ? 4f : 7f);
             kaleidoscopeShader.TrySetParameter("distanceBandingFactor", 0f);
             kaleidoscopeShader.TrySetParameter("animationSpeed", animationSpeed);

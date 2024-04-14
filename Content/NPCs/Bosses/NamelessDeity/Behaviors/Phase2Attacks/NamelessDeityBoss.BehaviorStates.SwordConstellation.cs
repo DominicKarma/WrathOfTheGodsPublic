@@ -1,10 +1,8 @@
 ﻿using System.Linq;
 using Microsoft.Xna.Framework;
-using NoxusBoss.Common.Easings;
 using NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Core.Configuration;
-using NoxusBoss.Core.Graphics.Particles;
 using NoxusBoss.Core.Graphics.Shaders.Keyboard;
 using NoxusBoss.Core.Graphics.Shaders.Screen;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
@@ -34,12 +32,6 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
             get;
             set;
         }
-
-        // Used by the sword slash attack. Dictates how the sword's angle is manipulated to achieve the swing.
-        public static readonly PiecewiseCurve SwordSlashAngularMotion = new PiecewiseCurve().
-            Add(PolynomialEasing.Quadratic, EasingType.Out, 0f, 0.5f, Pi). // Slow start/anticipation.
-            Add(PolynomialEasing.Quintic, EasingType.Out, Pi + 0.54f, 0.8f). // Fast swing.
-            Add(PolynomialEasing.Cubic, EasingType.In, 0f, 1f); // End swing.
 
         public static int SwordConstellation_SlashCount
         {
@@ -118,7 +110,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
 
                 // Create the sword.
                 if (Main.netMode != NetmodeID.MultiplayerClient)
-                    NewProjectileBetter(Target.Center, Vector2.Zero, ModContent.ProjectileType<SwordConstellation>(), SwordConstellationDamage, 0f, -1, 1f);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), Target.Center, Vector2.Zero, ModContent.ProjectileType<SwordConstellation>(), SwordConstellationDamage, 0f, -1, 1f);
 
                 // Play a sound to accompany the converging stars.
                 SoundEngine.PlaySound(StarConvergenceFastSound);
@@ -197,7 +189,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
             float anticipationCompletion = InverseLerp(0f, anticipationAnimationRatio, swordAnimationCompletion);
             float swordScale = InverseLerpBump(-0.1f, 0.07f, 0.5f, 0.8f, swordAnimationCompletion);
 
-            float downwardDirectionToPlayerDot = Abs(Vector2.Dot(NPC.DirectionToSafe(Target.Center), Vector2.UnitY));
+            float downwardDirectionToPlayerDot = Abs(Vector2.Dot(NPC.SafeDirectionTo(Target.Center), Vector2.UnitY));
             float downwardDirectionLeniancy = InverseLerp(0.54f, 0.8f, downwardDirectionToPlayerDot);
             float handOffsetAngle = SwordSlashDirection == -1 ? -0.49f : -PiOver4;
             if (SwordSlashDirection == -1)
@@ -210,7 +202,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
 
             // Drift towards the target at first.
             if (swordAnimationCompletion <= playerDriftAnimationRatio)
-                NPC.velocity = NPC.DirectionToSafe(Target.Center + Vector2.UnitY * 125f) * 3f;
+                NPC.velocity = NPC.SafeDirectionTo(Target.Center + Vector2.UnitY * 125f) * 3f;
 
             // Slash at the target when ready.
             float slashAnticipationCompletion = InverseLerp(0f, slashDelay + (int)((slashAnimationTime - 1f) * anticipationAnimationRatio), SwordAnimationTimer);
@@ -305,7 +297,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
                     {
                         Vector2 sliceDirection = NPC.velocity.SafeNormalize(Vector2.UnitY);
                         Vector2 sliceSpawnPosition = activeHand.Center + (sword.rotation - PiOver2).ToRotationVector2() * TeleportVisualsAdjustedScale * -388f;
-                        NewProjectileBetter(sliceSpawnPosition - sliceDirection * 2000f, sliceDirection, ModContent.ProjectileType<TelegraphedScreenSlice>(), ScreenSliceDamage, 0f, -1, 3f, 4000f);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), sliceSpawnPosition - sliceDirection * 2000f, sliceDirection, ModContent.ProjectileType<TelegraphedScreenSlice>(), ScreenSliceDamage, 0f, -1, 3f, 4000f);
                     }
                 }
             }

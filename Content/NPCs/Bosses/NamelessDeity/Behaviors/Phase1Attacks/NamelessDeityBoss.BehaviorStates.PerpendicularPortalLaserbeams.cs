@@ -98,14 +98,14 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
             // Move back a bit from the player.
             if (AttackTimer <= closeRedirectTime + farRedirectTime)
             {
-                float flySpeed = Remap(AttackTimer - closeRedirectTime, 0f, farRedirectTime - 4f, 45f, 80f) * chargeSpeedFactor;
+                float flySpeed = Utils.Remap(AttackTimer - closeRedirectTime, 0f, farRedirectTime - 4f, 45f, 80f) * chargeSpeedFactor;
                 Vector2 hoverDestination = Target.Center + new Vector2((Target.Center.X < NPC.Center.X).ToDirectionInt() * 1450f, -Target.Velocity.Y * 12f - 542f);
                 if (verticalCharges)
                     hoverDestination = Target.Center + new Vector2((Target.Center.X < NPC.Center.X).ToDirectionInt() * 960f - Target.Velocity.X * 12f, 1075f);
 
                 // Handle movement.
                 NPC.Center = Vector2.Lerp(NPC.Center, hoverDestination, 0.026f);
-                NPC.velocity = Vector2.Lerp(NPC.velocity, NPC.DirectionToSafe(hoverDestination) * flySpeed, 0.15f);
+                NPC.velocity = Vector2.Lerp(NPC.velocity, NPC.SafeDirectionTo(hoverDestination) * flySpeed, 0.15f);
 
                 if (AttackTimer == closeRedirectTime + 1)
                 {
@@ -134,7 +134,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
                         stardustVelocity = stardustVelocity.RotatedBy(stardustGoesRight.ToDirectionInt() * PiOver2);
                     }
 
-                    NewProjectileBetter(leftFanPosition - Vector2.UnitX * 150f, stardustVelocity, ModContent.ProjectileType<PrimordialStardust>(), PrimordialStardustDamage, 0f);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), leftFanPosition - Vector2.UnitX * 150f, stardustVelocity, ModContent.ProjectileType<PrimordialStardust>(), PrimordialStardustDamage, 0f);
                 }
 
                 // Release portals. If the charge is really close to the target they appear regardless of the timer, to ensure that they can't just stand still.
@@ -145,18 +145,18 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
                     int fireDelay = remainingChargeTime + 14;
                     float portalScale = Main.rand.NextFloat(0.54f, 0.67f);
 
-                    Vector2 portalDirection = ((verticalCharges ? Vector2.UnitX : Vector2.UnitY) * NPC.DirectionToSafe(Target.Center)).SafeNormalize(Vector2.UnitY).RotatedByRandom(laserAngularVariance);
+                    Vector2 portalDirection = ((verticalCharges ? Vector2.UnitX : Vector2.UnitY) * NPC.SafeDirectionTo(Target.Center)).SafeNormalize(Vector2.UnitY).RotatedByRandom(laserAngularVariance);
 
                     // Summon the portal and shoot the telegraph for the laser.
-                    NewProjectileBetter(NPC.Center + portalDirection * Main.rand.NextFloatDirection() * 20f, portalDirection, ModContent.ProjectileType<LightPortal>(), 0, 0f, -1, portalScale, portalExistTime + remainingChargeTime + 15, fireDelay);
-                    NewProjectileBetter(NPC.Center, portalDirection, ModContent.ProjectileType<TelegraphedPortalLaserbeam>(), PortalLaserbeamDamage, 0f, -1, fireDelay, laserShootTime);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center + portalDirection * Main.rand.NextFloatDirection() * 20f, portalDirection, ModContent.ProjectileType<LightPortal>(), 0, 0f, -1, portalScale, portalExistTime + remainingChargeTime + 15, fireDelay);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, portalDirection, ModContent.ProjectileType<TelegraphedPortalLaserbeam>(), PortalLaserbeamDamage, 0f, -1, fireDelay, laserShootTime);
 
                     // Spawn a second telegraph laser in the opposite direction if a portal was summoned due to being close to the target.
                     // This is done to prevent just flying up/forward to negate the attack.
                     if (forcefullySpawnPortal)
                     {
                         portalDirection *= -1f;
-                        NewProjectileBetter(NPC.Center, portalDirection, ModContent.ProjectileType<TelegraphedPortalLaserbeam>(), PortalLaserbeamDamage, 0f, -1, fireDelay, laserShootTime);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, portalDirection, ModContent.ProjectileType<TelegraphedPortalLaserbeam>(), PortalLaserbeamDamage, 0f, -1, fireDelay, laserShootTime);
                     }
                 }
 

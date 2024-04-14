@@ -1,113 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.ID;
 
 namespace NoxusBoss.Common.Utilities
 {
     public static partial class Utilities
     {
         /// <summary>
-        /// Determines if a typical hitbox rectangle is intersecting a circular hitbox.
-        /// </summary>
-        /// <param name="centerCheckPosition">The center of the circular hitbox.</param>
-        /// <param name="radius">The radius of the circular hitbox.</param>
-        /// <param name="targetHitbox">The hitbox of the target to check.</param>
-        public static bool CircularHitboxCollision(Vector2 centerCheckPosition, float radius, Rectangle targetHitbox)
-        {
-            float topLeftDistance = Vector2.Distance(centerCheckPosition, targetHitbox.TopLeft());
-            float topRightDistance = Vector2.Distance(centerCheckPosition, targetHitbox.TopRight());
-            float bottomLeftDistance = Vector2.Distance(centerCheckPosition, targetHitbox.BottomLeft());
-            float bottomRightDistance = Vector2.Distance(centerCheckPosition, targetHitbox.BottomRight());
-
-            float distanceToClosestPoint = topLeftDistance;
-            if (topRightDistance < distanceToClosestPoint)
-                distanceToClosestPoint = topRightDistance;
-            if (bottomLeftDistance < distanceToClosestPoint)
-                distanceToClosestPoint = bottomLeftDistance;
-            if (bottomRightDistance < distanceToClosestPoint)
-                distanceToClosestPoint = bottomRightDistance;
-
-            return distanceToClosestPoint <= radius;
-        }
-
-        /// <summary>
-        /// <see cref="Collision.TileCollision(Vector2, Vector2, int, int, bool, bool, int)"/> but it doesn't fail for non-wooden platforms.
-        /// </summary>
-        /// <param name="topLeft">The top left of the area to check.</param>
-        /// <param name="width">The width of the area the check.</param>
-        /// <param name="height">The height of the area the check.</param>
-        /// <param name="onlyTopSurfaces">Whether only top surface collisions were found.</param>
-        public static bool TileCollision(Vector2 topLeft, float width, float height, out bool onlyTopSurfaces)
-        {
-            onlyTopSurfaces = false;
-
-            int leftX = (int)(topLeft.X / 16f) - 1;
-            int rightX = (int)((topLeft.X + (float)width) / 16f) + 2;
-            int topY = (int)(topLeft.Y / 16f) - 1;
-            int bottomY = (int)((topLeft.Y + (float)height) / 16f) + 2;
-
-            leftX = Utils.Clamp(leftX, 0, Main.maxTilesX - 1);
-            rightX = Utils.Clamp(rightX, 0, Main.maxTilesX - 1);
-            topY = Utils.Clamp(topY, 0, Main.maxTilesY - 1);
-            bottomY = Utils.Clamp(bottomY, 0, Main.maxTilesY - 1);
-
-            Vector2 tileWorldPosition = default;
-            for (int i = leftX; i < rightX; i++)
-            {
-                for (int j = topY; j < bottomY; j++)
-                {
-                    Tile tile = Main.tile[i, j];
-                    if (!tile.HasUnactuatedTile)
-                        continue;
-
-                    bool topSurfaceCollision = (Main.tileSolidTop[tile.TileType] && tile.TileFrameY == 0) || TileID.Sets.Platforms[tile.TileType];
-                    bool solidCollision = Main.tileSolid[tile.TileType] && !Main.tileSolidTop[tile.TileType] && !TileID.Sets.Platforms[tile.TileType];
-
-                    if (solidCollision || topSurfaceCollision)
-                    {
-                        tileWorldPosition.X = i * 16;
-                        tileWorldPosition.Y = j * 16;
-                        int tileHeight = 16;
-                        if (tile.IsHalfBlock)
-                        {
-                            tileWorldPosition.Y += 8f;
-                            tileHeight -= 8;
-                        }
-
-                        if (topLeft.X + (float)width > tileWorldPosition.X &&
-                            topLeft.X < tileWorldPosition.X + 16f &&
-                            topLeft.Y + (float)height > tileWorldPosition.Y &&
-                            topLeft.Y < tileWorldPosition.Y + (float)tileHeight)
-                        {
-                            if (solidCollision)
-                            {
-                                onlyTopSurfaces = false;
-                                return true;
-                            }
-
-                            // Don't return if a top surface was found. Continue checking for non top surface tiles.
-                            else
-                                onlyTopSurfaces = true;
-                        }
-                    }
-                }
-            }
-
-            if (onlyTopSurfaces)
-                return true;
-
-            return false;
-        }
-
-        /// <summary>
         /// Performs collision response across a specific axis relative to the AABB of the base hitbox and of all surrounding hitboxes. This response involves velocity manipulations (such as not falling when there's ground below).
         /// </summary>
         /// <param name="vertical">Whether to apply responses on the Y axis. If true, the Y axis is checked. If false, the X axis is checked.</param>
         /// <param name="checkBoxes">All interactable hitboxes to potentially respond to.</param>
         /// <param name="hitbox">The base hitbox.</param>
-        /// <param name="velocity">The velocity of the hibox.</param>
+        /// <param name="velocity">The velocity of the hitbox.</param>
         /// <param name="depth">How much the velocity would have gone into a hitbox without the collision response. Useful for ascertaining collision context, such as if it was from above or below when a Y collision is registered.</param>
         public static void PerformAABBCollisionResponse(bool vertical, List<Rectangle> checkBoxes, Rectangle hitbox, ref Vector2 velocity, out Vector2 depth)
         {

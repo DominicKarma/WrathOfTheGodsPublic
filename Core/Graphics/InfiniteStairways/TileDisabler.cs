@@ -25,6 +25,7 @@ namespace NoxusBoss.Core.Graphics.InfiniteStairways
             On_Main.DrawBackgroundBlackFill += TemporarilyDisableBlackDrawing;
             On_Collision.TileCollision += DisableTileCollision;
             On_Collision.SlopeCollision += DisableSlopeCollision;
+            On_Main.DrawWires += DisableWireDrawing;
         }
 
         private void MakeTilesInvisible_SolidLayer(On_Main.orig_DoDraw_Tiles_Solid orig, Main self)
@@ -74,6 +75,12 @@ namespace NoxusBoss.Core.Graphics.InfiniteStairways
                 return orig(Position, Velocity, Width, Height, gravity, fall);
 
             return new(Position.X, Position.Y, Velocity.X, Velocity.Y);
+        }
+
+        private void DisableWireDrawing(On_Main.orig_DrawWires orig, Main self)
+        {
+            if (!TilesAreUninteractable)
+                orig(self);
         }
 
         private void TemporarilyDisableBlackDrawing(On_Main.orig_DrawBackgroundBlackFill orig, Main self)

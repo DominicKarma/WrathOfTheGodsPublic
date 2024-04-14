@@ -136,7 +136,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
                         for (int i = 0; i < 21; i++)
                         {
                             Vector2 starburstVelocity = (Target.Center - EyePosition).SafeNormalize(Vector2.UnitY).RotatedBy(TwoPi * i / 21f) * ArcingEyeStarbursts_StarburstShootSpeed * 0.08f;
-                            NewProjectileBetter(EyePosition, starburstVelocity, ModContent.ProjectileType<Starburst>(), StarburstDamage, 0f);
+                            NewProjectileBetter(NPC.GetSource_FromAI(), EyePosition, starburstVelocity, ModContent.ProjectileType<Starburst>(), StarburstDamage, 0f);
                         }
                     }
 
@@ -150,7 +150,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
                 {
                     float starburstShootOffsetAngle = Lerp(-ArcingEyeStarbursts_StarburstArc, ArcingEyeStarbursts_StarburstArc, starburstInterpolant);
                     Vector2 starburstVelocity = (Target.Center - EyePosition).SafeNormalize(Vector2.UnitY).RotatedBy(starburstShootOffsetAngle) * ArcingEyeStarbursts_StarburstShootSpeed;
-                    NewProjectileBetter(EyePosition, starburstVelocity, ModContent.ProjectileType<ArcingStarburst>(), StarburstDamage, 0f);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), EyePosition, starburstVelocity, ModContent.ProjectileType<ArcingStarburst>(), StarburstDamage, 0f);
                 }
 
                 // Create sound and screen effects.
@@ -169,7 +169,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
             }
 
             // Update universal hands.
-            float handHoverOffset = Remap(AttackTimer - shootDelay - starburstCount, 0f, starburstCount + 12f, 900f, 1200f);
+            float handHoverOffset = Utils.Remap(AttackTimer - shootDelay - starburstCount, 0f, starburstCount + 12f, 900f, 1200f);
             DefaultUniversalHandMotion(handHoverOffset);
         }
     }

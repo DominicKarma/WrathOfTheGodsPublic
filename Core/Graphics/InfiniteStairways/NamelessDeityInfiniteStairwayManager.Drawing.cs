@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using NoxusBoss.Common.Subworlds;
-using NoxusBoss.Content.Particles;
 using NoxusBoss.Core.MiscSceneManagers;
 using ReLogic.Content;
 using Terraria;
@@ -212,11 +211,11 @@ namespace NoxusBoss.Core.Graphics.InfiniteStairways
             float horizontalSpeed = Abs(player.velocity.X);
             if (StepSoundCountdown <= 0)
             {
-                float stepSoundPitch = Remap(horizontalSpeed, 4f, 11f, 0f, 0.55f);
+                float stepSoundPitch = Utils.Remap(horizontalSpeed, 4f, 11f, 0f, 0.55f);
                 SoundEngine.PlaySound(StairStepSound with { Pitch = stepSoundPitch });
 
                 // Define the delay for the next step sound.
-                StepSoundCountdown = (int)Remap(horizontalSpeed, 4f, 11f, 30f, 2f);
+                StepSoundCountdown = (int)Utils.Remap(horizontalSpeed, 4f, 11f, 30f, 2f);
                 dustCount += 5;
                 dustLingerance += 0.9f;
 
@@ -236,13 +235,6 @@ namespace NoxusBoss.Core.Graphics.InfiniteStairways
                 light.fadeIn = Main.rand.NextFloat(dustLingerance);
                 light.noGravity = true;
                 light.noLight = true;
-
-                if (Main.rand.NextBool(100))
-                {
-                    int starPointCount = Main.rand.Next(4, 9);
-                    TwinkleParticle twinkle = new(footSpawnPosition, Main.rand.NextVector2Circular(5f, 5f) - Vector2.UnitY * Main.rand.NextFloat(4f, 9f), dustColor, 120, starPointCount, Vector2.One * Opacity * 0.6f);
-                    twinkle.Spawn();
-                }
             }
         }
 

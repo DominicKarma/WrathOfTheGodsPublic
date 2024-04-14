@@ -1,9 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Luminance.Common.DataStructures;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Common.DataStructures;
 using NoxusBoss.Content.NPCs.Bosses.NamelessDeity.SpecificEffectManagers;
 using NoxusBoss.Content.Particles;
-using NoxusBoss.Core.Graphics.Shaders;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
 using Terraria.DataStructures;
@@ -74,7 +73,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearWrap, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
             DrawData explosionDrawData = new(DendriticNoise, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.White * Projectile.Opacity);
 
-            var shockwaveShader = ShaderManager.GetShader("ShockwaveShader");
+            var shockwaveShader = ShaderManager.GetShader("NoxusBoss.ShockwaveShader");
             shockwaveShader.TrySetParameter("shockwaveColor", DetermineExplosionColor().ToVector3());
             shockwaveShader.TrySetParameter("screenSize", Main.ScreenSize.ToVector2());
             shockwaveShader.TrySetParameter("explosionDistance", Radius * Projectile.scale * 0.5f);

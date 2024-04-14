@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Core.Graphics.Particles;
 using Terraria;
 
 namespace NoxusBoss.Content.Particles
@@ -9,33 +8,32 @@ namespace NoxusBoss.Content.Particles
     {
         public Color InitialColor;
 
-        public override BlendState DrawBlendState => BlendState.Additive;
+        public override BlendState BlendState => BlendState.NonPremultiplied;
 
-        public override string TexturePath => "NoxusBoss/Content/Particles/Blood2";
+        public override string AtlasTextureName => "NoxusBoss.BloodParticle2.png";
 
         public BloodParticle2(Vector2 relativePosition, Vector2 velocity, int lifetime, float scale, Color color)
         {
             Position = relativePosition;
             Velocity = velocity;
-            Scale = scale;
+            Scale = Vector2.One * scale;
             Lifetime = lifetime;
             InitialColor = color;
-            Color = color;
+            DrawColor = color;
         }
 
         public override void Update()
         {
             Velocity *= 0.98f;
-            Color = Color.Lerp(InitialColor, Color.Transparent, Pow(LifetimeRatio, 4f));
+            DrawColor = Color.Lerp(InitialColor, Color.Transparent, Pow(LifetimeRatio, 4f));
             Rotation = Velocity.ToRotation();
         }
 
-        public override void Draw()
+        public override void Draw(SpriteBatch spriteBatch)
         {
             float brightness = Pow(Lighting.Brightness((int)(Position.X / 16f), (int)(Position.Y / 16f)), 0.15f);
-            Rectangle frame = Texture.Frame(1, 3, 0, (int)(LifetimeRatio * 3f), 0, 0);
-            Vector2 origin = frame.Size() * 0.5f;
-            Main.spriteBatch.Draw(Texture, Position - Main.screenPosition, frame, Color * brightness, Rotation, origin, Scale, SpriteEffects.None, 0f);
+            Rectangle frame = Texture.Frame.Subdivide(1, 3, 0, (int)(LifetimeRatio * 3f));
+            spriteBatch.Draw(Texture, Position - Main.screenPosition, frame, DrawColor * brightness, Rotation, null, Scale, SpriteEffects.None);
         }
     }
 }

@@ -1,7 +1,6 @@
-﻿using Microsoft.Xna.Framework;
-using NoxusBoss.Common.Easings;
+﻿using Luminance.Common.Easings;
+using Microsoft.Xna.Framework;
 using NoxusBoss.Content.NPCs.Bosses.Noxus.Projectiles;
-using NoxusBoss.Content.NPCs.Bosses.Noxus.SpecificEffectManagers;
 using NoxusBoss.Core.CrossCompatibility.Inbound;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
@@ -75,15 +74,15 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
                     SoundEngine.PlaySound(FireballShootSound, Hands[1].Center);
 
                     // Make the fireballs slower at first.
-                    fireballShootSpeed *= Remap(AttackTimer - hoverTime, 0f, 24f, 0.4f, 1f);
+                    fireballShootSpeed *= Utils.Remap(AttackTimer - hoverTime, 0f, 24f, 0.4f, 1f);
 
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
                         Vector2 fireballShootVelocity = (Target.Center - Hands[0].Center).SafeNormalize(Vector2.UnitY) * fireballShootSpeed;
-                        NewProjectileBetter(Hands[0].Center, fireballShootVelocity, ModContent.ProjectileType<DarkFireball>(), FireballDamage, 0f);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), Hands[0].Center, fireballShootVelocity, ModContent.ProjectileType<DarkFireball>(), FireballDamage, 0f);
 
                         fireballShootVelocity = (Target.Center - Hands[1].Center).SafeNormalize(Vector2.UnitY) * fireballShootSpeed;
-                        NewProjectileBetter(Hands[1].Center, fireballShootVelocity, ModContent.ProjectileType<DarkFireball>(), FireballDamage, 0f);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), Hands[1].Center, fireballShootVelocity, ModContent.ProjectileType<DarkFireball>(), FireballDamage, 0f);
                     }
                 }
             }
@@ -108,11 +107,11 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
                             spikeSpawnPosition.Y = NPC.Center.Y;
 
                             Vector2 spikeShootDirection = Vector2.Lerp(Vector2.UnitY, (Target.Center - spikeSpawnPosition).SafeNormalize(Vector2.UnitY), 0.2f).SafeNormalize(Vector2.UnitY);
-                            NewProjectileBetter(spikeSpawnPosition, spikeShootDirection * 0.0001f, ModContent.ProjectileType<NoxSpike>(), SpikeDamage, 0f);
-                            NewProjectileBetter(spikeSpawnPosition, spikeShootDirection * new Vector2(1f, -1f) * 0.0001f, ModContent.ProjectileType<NoxSpike>(), SpikeDamage, 0f);
+                            NewProjectileBetter(NPC.GetSource_FromAI(), spikeSpawnPosition, spikeShootDirection * 0.0001f, ModContent.ProjectileType<NoxSpike>(), SpikeDamage, 0f);
+                            NewProjectileBetter(NPC.GetSource_FromAI(), spikeSpawnPosition, spikeShootDirection * new Vector2(1f, -1f) * 0.0001f, ModContent.ProjectileType<NoxSpike>(), SpikeDamage, 0f);
                         }
-                        NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<NoxusExplosion>(), ExplosionDamage, 0f);
-                        NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<DarkWave>(), 0, 0f);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<NoxusExplosion>(), ExplosionDamage, 0f);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<DarkWave>(), 0, 0f);
                     }
 
                     TeleportTo(Target.Center + Vector2.UnitY * 2500f);
@@ -190,14 +189,14 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
                 {
                     Vector2 portalSpawnPosition = Target.Center + Target.Velocity.SafeNormalize(Main.rand.NextVector2Unit()) * 480f;
                     Vector2 portalDirection = (Target.Center - portalSpawnPosition).SafeNormalize(Vector2.UnitY);
-                    NewProjectileBetter(portalSpawnPosition + Target.Velocity * 30f, portalDirection, ModContent.ProjectileType<DarkPortal>(), 0, 0f, -1, portalScale, portalExistTime);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), portalSpawnPosition + Target.Velocity * 30f, portalDirection, ModContent.ProjectileType<DarkPortal>(), 0, 0f, -1, portalScale, portalExistTime);
 
                     TeleportPosition = portalSpawnPosition + Target.Velocity * 30f;
                     TeleportDirection = portalDirection;
 
                     portalSpawnPosition += portalDirection * Target.Center.Distance(portalSpawnPosition) * 2f;
                     portalDirection = (Target.Center - portalSpawnPosition).SafeNormalize(Vector2.UnitY);
-                    NewProjectileBetter(portalSpawnPosition + Target.Velocity * 30f, portalDirection, ModContent.ProjectileType<DarkPortal>(), 0, 0f, -1, portalScale, portalExistTime);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), portalSpawnPosition + Target.Velocity * 30f, portalDirection, ModContent.ProjectileType<DarkPortal>(), 0, 0f, -1, portalScale, portalExistTime);
 
                     NPC.netUpdate = true;
                 }
@@ -218,13 +217,13 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
 
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<DarkWave>(), 0, 0f);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<DarkWave>(), 0, 0f);
                     for (int i = 0; i < fireballCount; i++)
                     {
                         float fireballShootAngle = Lerp(-maxFireballShootAngle, maxFireballShootAngle, i / (float)(fireballCount - 1f));
-                        NewProjectileBetter(NPC.Center, NPC.DirectionToSafe(Target.Center).RotatedBy(fireballShootAngle) * fireballShootSpeed, ModContent.ProjectileType<DarkFireball>(), CometDamage, 0f);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, NPC.SafeDirectionTo(Target.Center).RotatedBy(fireballShootAngle) * fireballShootSpeed, ModContent.ProjectileType<DarkFireball>(), CometDamage, 0f);
                     }
-                    NewProjectileBetter(NPC.Center, NPC.DirectionToSafe(Target.Center) * fireballShootSpeed * 0.45f, ModContent.ProjectileType<DarkFireball>(), CometDamage, 0f);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, NPC.SafeDirectionTo(Target.Center) * fireballShootSpeed * 0.45f, ModContent.ProjectileType<DarkFireball>(), CometDamage, 0f);
                 }
             }
 
@@ -331,8 +330,8 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
 
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    NewProjectileBetter(NPC.Center, Vector2.UnitX, ModContent.ProjectileType<NightmareDeathRay>(), NightmareDeathrayDamage, 0f, -1, 0f, deathrayShootTime);
-                    NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<DarkWave>(), 0, 0f);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.UnitX, ModContent.ProjectileType<NightmareDeathRay>(), NightmareDeathrayDamage, 0f, -1, 0f, deathrayShootTime);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<DarkWave>(), 0, 0f);
                 }
 
                 ScreenEffectSystem.SetFlashEffect(NPC.Center, 4f, 45);
@@ -346,7 +345,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
             // Orient the laser direction in 3D space.
             // It begins by spinning around, before orienting itself upward and slicing downward, releasing countless spikes.
             float spinCompletion = InverseLerp(moveIntoBackgroundTime, moveIntoBackgroundTime + 30f, wrappedAttackTimer);
-            float spinInterpolant = new PolynomialEasing(3f).Evaluate(EasingType.In, spinCompletion);
+            float spinInterpolant = EasingCurves.Cubic.Evaluate(EasingType.In, spinCompletion);
             float generalSpin = TwoPi * (wrappedAttackTimer - moveIntoBackgroundTime) * spinInterpolant / 90f;
             if (LaserSpinDirection == -1f)
                 generalSpin = -generalSpin - Pi;
@@ -385,8 +384,8 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
                         float spikeVerticalOffset = Main.rand.NextFloat(32f, 84f);
                         for (float dy = spikeVerticalOffset; dy < 2000f; dy += spikeSpacing)
                         {
-                            NewProjectileBetter(NPC.Center + Vector2.UnitY * dy, Vector2.UnitX * 0.0001f, ModContent.ProjectileType<NoxSpike>(), SpikeDamage, 0f);
-                            NewProjectileBetter(NPC.Center + Vector2.UnitY * dy, -Vector2.UnitX * 0.0001f, ModContent.ProjectileType<NoxSpike>(), SpikeDamage, 0f);
+                            NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center + Vector2.UnitY * dy, Vector2.UnitX * 0.0001f, ModContent.ProjectileType<NoxSpike>(), SpikeDamage, 0f);
+                            NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center + Vector2.UnitY * dy, -Vector2.UnitX * 0.0001f, ModContent.ProjectileType<NoxSpike>(), SpikeDamage, 0f);
                         }
                     }
                 }
@@ -412,8 +411,8 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
                     float spikeVerticalOffset = Main.rand.NextFloat(32f, 84f);
                     for (float dy = spikeVerticalOffset; dy < 2000f; dy += 118f)
                     {
-                        NewProjectileBetter(NPC.Center + Vector2.UnitY * dy, Vector2.UnitX * 0.0001f, ModContent.ProjectileType<NoxSpike>(), SpikeDamage, 0f);
-                        NewProjectileBetter(NPC.Center + Vector2.UnitY * dy, -Vector2.UnitX * 0.0001f, ModContent.ProjectileType<NoxSpike>(), SpikeDamage, 0f);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center + Vector2.UnitY * dy, Vector2.UnitX * 0.0001f, ModContent.ProjectileType<NoxSpike>(), SpikeDamage, 0f);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center + Vector2.UnitY * dy, -Vector2.UnitX * 0.0001f, ModContent.ProjectileType<NoxSpike>(), SpikeDamage, 0f);
                     }
                 }
 
@@ -497,10 +496,10 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
                         Vector2 portalSpawnPosition = PortalArcSpawnCenter - Vector2.UnitY * 400f;
-                        NewProjectileBetter(portalSpawnPosition, (PortalArcSpawnCenter - portalSpawnPosition).SafeNormalize(Vector2.UnitY), ModContent.ProjectileType<DarkPortal>(), 0, 0f, -1, portalScale, portalLingerTime);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), portalSpawnPosition, (PortalArcSpawnCenter - portalSpawnPosition).SafeNormalize(Vector2.UnitY), ModContent.ProjectileType<DarkPortal>(), 0, 0f, -1, portalScale, portalLingerTime);
 
                         portalSpawnPosition = PortalArcSpawnCenter + Vector2.UnitY * 400f;
-                        NewProjectileBetter(portalSpawnPosition, (PortalArcSpawnCenter - portalSpawnPosition).SafeNormalize(Vector2.UnitY), ModContent.ProjectileType<DarkPortal>(), 0, 0f, -1, portalScale, portalLingerTime);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), portalSpawnPosition, (PortalArcSpawnCenter - portalSpawnPosition).SafeNormalize(Vector2.UnitY), ModContent.ProjectileType<DarkPortal>(), 0, 0f, -1, portalScale, portalLingerTime);
                     }
                 }
 
@@ -511,10 +510,10 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
                         Vector2 portalSpawnPosition = PortalArcSpawnCenter + new Vector2(-720f - horizontalArcOffset * 240f, -560f + arcInterpolant * 1120f);
-                        NewProjectileBetter(portalSpawnPosition, (PortalArcSpawnCenter - portalSpawnPosition).SafeNormalize(Vector2.UnitY), ModContent.ProjectileType<DarkPortal>(), 0, 0f, -1, portalScale, portalLingerTime);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), portalSpawnPosition, (PortalArcSpawnCenter - portalSpawnPosition).SafeNormalize(Vector2.UnitY), ModContent.ProjectileType<DarkPortal>(), 0, 0f, -1, portalScale, portalLingerTime);
 
                         portalSpawnPosition = PortalArcSpawnCenter + new Vector2(720f + horizontalArcOffset * 240f, -560f + arcInterpolant * 1120f);
-                        NewProjectileBetter(portalSpawnPosition, (PortalArcSpawnCenter - portalSpawnPosition).SafeNormalize(Vector2.UnitY), ModContent.ProjectileType<DarkPortal>(), 0, 0f, -1, portalScale, portalLingerTime);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), portalSpawnPosition, (PortalArcSpawnCenter - portalSpawnPosition).SafeNormalize(Vector2.UnitY), ModContent.ProjectileType<DarkPortal>(), 0, 0f, -1, portalScale, portalLingerTime);
                     }
                 }
 
@@ -536,7 +535,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
                 TeleportTo(Target.Center - Vector2.UnitX * TargetDirection * 300f);
 
                 if (Main.netMode != NetmodeID.MultiplayerClient)
-                    NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<DarkWave>(), 0, 0f);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<DarkWave>(), 0, 0f);
             }
 
             if (AttackTimer >= DefaultTeleportDelay * 2f + handRaiseTime + portalCastTime + attackTransitionDelay)
@@ -647,7 +646,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
                 ChargeAfterimageInterpolant = 1f;
 
                 // Curve towards the player before accelerating.
-                Vector2 idealDirection = NPC.DirectionToSafe(Target.Center);
+                Vector2 idealDirection = NPC.SafeDirectionTo(Target.Center);
                 if (AttackTimer >= teleportDelay + spinDelay + spinTime + 7f)
                     idealDirection = NPC.velocity.SafeNormalize(Vector2.UnitY);
                 if (AttackTimer == teleportDelay + spinDelay + spinTime + 1f)
@@ -661,7 +660,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
                     ScreenEffectSystem.SetBlurEffect((Hands[0].Center + Hands[1].Center) * 0.5f, 0.7f, 27);
 
                     if (Main.netMode != NetmodeID.MultiplayerClient)
-                        NewProjectileBetter((Hands[0].Center + Hands[1].Center) * 0.5f, Vector2.Zero, ModContent.ProjectileType<DarkWave>(), 0, 0f);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), (Hands[0].Center + Hands[1].Center) * 0.5f, Vector2.Zero, ModContent.ProjectileType<DarkWave>(), 0, 0f);
 
                     // Shoot the comets.
                     if (Main.netMode != NetmodeID.MultiplayerClient)
@@ -670,14 +669,14 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
                         for (int i = 0; i < slowDarkCometCount; i++)
                         {
                             float localDarkCometSpread = Lerp(-darkCometSpread, darkCometSpread, i / (float)(slowDarkCometCount - 1f));
-                            Vector2 darkCometShootVelocity = NPC.DirectionToSafe(Target.Center).RotatedBy(localDarkCometSpread) * slowDarkCometShootSpeed;
-                            NewProjectileBetter(cometSpawnPosition, darkCometShootVelocity, ModContent.ProjectileType<DarkComet>(), NPC.damage, 0f);
+                            Vector2 darkCometShootVelocity = NPC.SafeDirectionTo(Target.Center).RotatedBy(localDarkCometSpread) * slowDarkCometShootSpeed;
+                            NewProjectileBetter(NPC.GetSource_FromAI(), cometSpawnPosition, darkCometShootVelocity, ModContent.ProjectileType<DarkComet>(), NPC.damage, 0f);
                         }
                         for (int i = 0; i < fastDarkCometCount; i++)
                         {
                             float localDarkCometSpread = Lerp(-darkCometSpread, darkCometSpread, i / (float)(fastDarkCometCount - 1f));
-                            Vector2 darkCometShootVelocity = NPC.DirectionToSafe(Target.Center).RotatedBy(localDarkCometSpread) * fastDarkCometShootSpeed;
-                            NewProjectileBetter(cometSpawnPosition, darkCometShootVelocity, ModContent.ProjectileType<DarkComet>(), NPC.damage, 0f);
+                            Vector2 darkCometShootVelocity = NPC.SafeDirectionTo(Target.Center).RotatedBy(localDarkCometSpread) * fastDarkCometShootSpeed;
+                            NewProjectileBetter(NPC.GetSource_FromAI(), cometSpawnPosition, darkCometShootVelocity, ModContent.ProjectileType<DarkComet>(), NPC.damage, 0f);
                         }
                     }
                 }

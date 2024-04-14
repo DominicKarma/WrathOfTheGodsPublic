@@ -6,7 +6,6 @@ using NoxusBoss.Content.NPCs.Enemies.NoxusWorld.DismalSeekers;
 using NoxusBoss.Content.NPCs.Enemies.NoxusWorld.Fogwoods;
 using NoxusBoss.Content.NPCs.Enemies.NoxusWorld.Mirrorwalkers;
 using NoxusBoss.Core.GlobalItems;
-using NoxusBoss.Core.Graphics.Shaders;
 using NoxusBoss.Core.Netcode;
 using NoxusBoss.Core.Netcode.Packets;
 using ReLogic.Content;
@@ -85,7 +84,8 @@ namespace NoxusBoss.Common.SpecialWorldEvents
             // Load the fog shader.
             if (Main.netMode != NetmodeID.Server)
             {
-                Ref<Effect> s = new(Mod.Assets.Request<Effect>("Assets/Effects/SkyAndZoneEffects/DarkFogScreenShader", AssetRequestMode.ImmediateLoad).Value);
+                Ref<Effect> s = new(Mod.Assets.Request<Effect>("Assets/AutoloadedEffects/Shaders/SkyAndZoneEffects/DarkFogScreenShader", AssetRequestMode.ImmediateLoad).Value);
+
                 Filters.Scene["NoxusBoss:NoxusWorldFog"] = new Filter(new NoxusWorldFogShaderData(s, ManagedShader.DefaultPassName).UseColor(Color.Transparent).UseOpacity(0f), EffectPriority.VeryHigh);
             }
 

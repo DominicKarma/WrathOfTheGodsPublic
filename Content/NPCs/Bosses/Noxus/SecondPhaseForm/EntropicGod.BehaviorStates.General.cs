@@ -68,7 +68,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
 
                     SoundEngine.PlaySound(ExplosionTeleportSound);
                     if (Main.netMode != NetmodeID.MultiplayerClient)
-                        NewProjectileBetter(NPC.Center + HeadOffset, Vector2.Zero, ModContent.ProjectileType<DarkWave>(), 0, 0f);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center + HeadOffset, Vector2.Zero, ModContent.ProjectileType<DarkWave>(), 0, 0f);
                 }
 
                 HeadRotation = 0f;
@@ -132,7 +132,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
 
                     SoundEngine.PlaySound(ExplosionTeleportSound with { Volume = 1.5f });
                     if (Main.netMode != NetmodeID.MultiplayerClient)
-                        NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<DarkWave>(), 0, 0f);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<DarkWave>(), 0, 0f);
                 }
 
                 // Temporarily disable the music.
@@ -147,8 +147,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
                 // Make the camera zoom in on Noxus.
                 float cameraPanInterpolant = InverseLerp(5f, 11f, AttackTimer);
                 float cameraZoom = InverseLerp(11f, 60f, AttackTimer) * 0.2f;
-                CameraPanSystem.CameraFocusPoint = NPC.Center;
-                CameraPanSystem.CameraPanInterpolant = cameraPanInterpolant;
+                CameraPanSystem.PanTowards(NPC.Center, cameraPanInterpolant);
                 CameraPanSystem.Zoom = cameraZoom;
 
                 // Make the boss bar close.
@@ -170,7 +169,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
 
                     SoundEngine.PlaySound(ExplosionTeleportSound);
                     if (Main.netMode != NetmodeID.MultiplayerClient)
-                        NewProjectileBetter(NPC.Center + HeadOffset, Vector2.Zero, ModContent.ProjectileType<DarkWave>(), 0, 0f);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center + HeadOffset, Vector2.Zero, ModContent.ProjectileType<DarkWave>(), 0, 0f);
                 }
 
                 // Reset the head being rotated.
@@ -206,7 +205,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
                 if (Main.netMode != NetmodeID.MultiplayerClient && AttackTimer % 5f == 4f)
                 {
                     Vector2 explosionSpawnPosition = Target.Center + Main.rand.NextVector2Unit() * Main.rand.NextFloat(250f, 720f);
-                    NewProjectileBetter(explosionSpawnPosition, Vector2.Zero, ModContent.ProjectileType<NoxusExplosion>(), 0, 0f);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), explosionSpawnPosition, Vector2.Zero, ModContent.ProjectileType<NoxusExplosion>(), 0, 0f);
                 }
 
                 leftHandDestination.Y += TeleportVisualsAdjustedScale.Y * 75f;
@@ -235,7 +234,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
             if (AttackTimer == 1f)
             {
                 TeleportTo(Target.Center - Vector2.UnitY * 200f);
-                NPC.velocity = NPC.DirectionToSafe(Target.Center).RotatedByRandom(0.66f) * -8f;
+                NPC.velocity = NPC.SafeDirectionTo(Target.Center).RotatedByRandom(0.66f) * -8f;
                 SoundEngine.PlaySound(BrainRotSound with { Volume = 0.55f });
             }
 
@@ -284,7 +283,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
             {
                 SoundEngine.PlaySound(ExplosionTeleportSound, Target.Center);
                 if (Main.netMode != NetmodeID.MultiplayerClient)
-                    NewProjectileBetter((Hands[0].Center + Hands[1].Center) * 0.5f, Vector2.Zero, ModContent.ProjectileType<DarkWave>(), 0, 0f);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), (Hands[0].Center + Hands[1].Center) * 0.5f, Vector2.Zero, ModContent.ProjectileType<DarkWave>(), 0, 0f);
                 ScreenEffectSystem.SetChromaticAberrationEffect(NPC.Center, 2.8f, 60);
                 SelectNextAttack();
             }

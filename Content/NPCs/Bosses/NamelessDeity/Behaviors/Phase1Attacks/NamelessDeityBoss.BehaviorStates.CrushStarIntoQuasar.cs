@@ -102,7 +102,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
             if (star is not null)
             {
                 Vector2 starHoverDestination = Target.Center + new Vector2((Target.Center.X < star.Center.X).ToDirectionInt() * 450f, -20f);
-                star.velocity = Vector2.Lerp(star.velocity, star.DirectionToSafe(starHoverDestination) * 8f, 0.04f);
+                star.velocity = Vector2.Lerp(star.velocity, star.SafeDirectionTo(starHoverDestination) * 8f, 0.04f);
             }
 
             // Have Nameless rapidly attempt to hover above the player at first, with a bit of a horizontal offset.
@@ -138,7 +138,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
                 // The hands jitter a bit during this, as a way of indicating that they're fighting slightly to collapse the star.
                 if (star is not null)
                 {
-                    float starScale = Remap(pressureInterpolant, 0.1f, 0.8f, ControlledStar.MaxScale, 0.8f);
+                    float starScale = Utils.Remap(pressureInterpolant, 0.1f, 0.8f, ControlledStar.MaxScale, 0.8f);
                     star.scale = starScale;
                     star.ai[1] = pressureInterpolant;
                     handOrbitOffset += Sin(AttackTimer / 4f) * pressureInterpolant * 8f;
@@ -175,9 +175,9 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
                 SoundEngine.PlaySound(Supernova2Sound);
                 if (star is not null && Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    NewProjectileBetter(star.Center, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
-                    NewProjectileBetter(star.Center, Vector2.Zero, ModContent.ProjectileType<Supernova>(), 0, 0f);
-                    NewProjectileBetter(star.Center, Vector2.Zero, ModContent.ProjectileType<Quasar>(), QuasarDamage, 0f, -1, 0f, 0f, Supernova.Lifetime);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), star.Center, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), star.Center, Vector2.Zero, ModContent.ProjectileType<Supernova>(), 0, 0f);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), star.Center, Vector2.Zero, ModContent.ProjectileType<Quasar>(), QuasarDamage, 0f, -1, 0f, 0f, Supernova.Lifetime);
                 }
 
                 if (star is not null)
@@ -210,7 +210,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
                     while (Target.Center.WithinRange(plasmaSpawnPosition, 1040f))
                         plasmaSpawnPosition -= plasmaVelocity;
 
-                    NewProjectileBetter(plasmaSpawnPosition, plasmaVelocity, ModContent.ProjectileType<ConvergingSupernovaEnergy>(), SupernovaEnergyDamage, 0f);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), plasmaSpawnPosition, plasmaVelocity, ModContent.ProjectileType<ConvergingSupernovaEnergy>(), SupernovaEnergyDamage, 0f);
                 }
             }
         }

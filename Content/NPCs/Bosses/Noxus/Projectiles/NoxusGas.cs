@@ -1,7 +1,7 @@
-﻿using Microsoft.Xna.Framework;
-using NoxusBoss.Common.DataStructures;
+﻿using Luminance.Common.DataStructures;
+using Microsoft.Xna.Framework;
 using NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm;
-using NoxusBoss.Core.Graphics.Metaballs;
+using NoxusBoss.Content.Particles.Metaballs;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -36,7 +36,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.Projectiles
         {
             float gasSize = InverseLerp(-3f, 25f, Time) * Projectile.width * 0.68f;
             float angularOffset = Sin(Time / 5f) * 0.77f;
-            NoxusGasMetaball.CreateParticle(Projectile.Center + Projectile.velocity * 3f, Main.rand.NextVector2Circular(2f, 2f) + Projectile.velocity.RotatedBy(angularOffset).RotatedByRandom(0.6f) * 0.26f, gasSize);
+            ModContent.GetInstance<NoxusGasMetaball>().CreateParticle(Projectile.Center + Projectile.velocity * 3f, Main.rand.NextVector2Circular(2f, 2f) + Projectile.velocity.RotatedBy(angularOffset).RotatedByRandom(0.6f) * 0.26f, gasSize);
 
             // Dissipate if on top of the nearest player.
             Player closest = Main.player[Player.FindClosest(Projectile.Center, 1, 1)];
@@ -45,7 +45,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.Projectiles
                 for (int i = 0; i < 25; i++)
                 {
                     Vector2 gasParticleVelocity = Main.rand.NextVector2Circular(3.2f, 3.2f) + Projectile.velocity * 0.2f;
-                    NoxusGasMetaball.CreateParticle(Projectile.Center, gasParticleVelocity, gasSize * Main.rand.NextFloat(0.2f, 0.46f));
+                    ModContent.GetInstance<NoxusGasMetaball>().CreateParticle(Projectile.Center, gasParticleVelocity, gasSize * Main.rand.NextFloat(0.2f, 0.46f));
                 }
 
                 Projectile.Kill();

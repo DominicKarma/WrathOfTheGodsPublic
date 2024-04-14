@@ -1,35 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Luminance.Core.ModCalls;
 using static NoxusBoss.Core.CrossCompatibility.Outbound.GetBossDefeatedModCall;
 
 namespace NoxusBoss.Core.CrossCompatibility.Outbound
 {
-    public class SetBossDefeatedModCall : ModCallProvider
+    public class SetBossDefeatedModCall : ModCall
     {
-        public override IEnumerable<string> CallCommands
+        public override IEnumerable<string> GetCallCommands()
         {
-            get
-            {
-                yield return "GetBossDefeated";
-            }
+            yield return "GetBossDefeated";
         }
 
-        public override string Name => "GetBossDefeated";
-
-        public override IEnumerable<Type> InputTypes
+        public override IEnumerable<Type> GetInputTypes()
         {
-            get
-            {
-                yield return typeof(string);
-                yield return typeof(bool);
-            }
+            yield return typeof(string);
+            yield return typeof(bool);
         }
 
-        protected override object Process(params object[] args)
+        protected override object SafeProcess(params object[] argsWithoutCommand)
         {
-            string caseInvariantInput = ((string)args[0]).ToLower();
-            bool setValue = (bool)args[1];
+            string caseInvariantInput = ((string)argsWithoutCommand[0]).ToLower();
+            bool setValue = (bool)argsWithoutCommand[1];
 
             if (GodlessSpawnNames.Contains(caseInvariantInput))
                 WorldSaveSystem.HasDefeatedNoxusEgg = setValue;
@@ -40,7 +33,7 @@ namespace NoxusBoss.Core.CrossCompatibility.Outbound
             if (NamelessDeityNames.Contains(caseInvariantInput))
                 WorldSaveSystem.HasDefeatedNamelessDeity = setValue;
 
-            return null;
+            return new();
         }
     }
 }

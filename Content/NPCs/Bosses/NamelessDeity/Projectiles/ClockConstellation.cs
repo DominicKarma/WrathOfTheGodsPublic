@@ -1,13 +1,14 @@
 ﻿using System.IO;
+using Luminance.Assets;
+using Luminance.Common.DataStructures;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Common.DataStructures;
+using NoxusBoss.Common.BaseEntities;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Core.Configuration;
 using NoxusBoss.Core.Graphics.Shaders.Keyboard;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using NoxusBoss.Core.ShapeCurves;
-using ReLogic.Content;
 using ReLogic.Utilities;
 using Terraria;
 using Terraria.Audio;
@@ -20,9 +21,9 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
     {
         private static bool timeIsStopped;
 
-        private static Asset<Texture2D> hourHandAsset;
+        private static LazyAsset<Texture2D> hourHandAsset;
 
-        private static Asset<Texture2D> minuteHandAsset;
+        private static LazyAsset<Texture2D> minuteHandAsset;
 
         public override int ConvergeTime => ConvergenceDuration;
 
@@ -151,8 +152,8 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
             if (Main.netMode == NetmodeID.Server)
                 return;
 
-            hourHandAsset = ModContent.Request<Texture2D>("NoxusBoss/Content/NPCs/Bosses/NamelessDeity/Projectiles/ClockHourHand");
-            minuteHandAsset = ModContent.Request<Texture2D>("NoxusBoss/Content/NPCs/Bosses/NamelessDeity/Projectiles/ClockMinuteHand");
+            hourHandAsset = LazyAsset<Texture2D>.Request("NoxusBoss/Content/NPCs/Bosses/NamelessDeity/Projectiles/ClockHourHand");
+            minuteHandAsset = LazyAsset<Texture2D>.Request("NoxusBoss/Content/NPCs/Bosses/NamelessDeity/Projectiles/ClockMinuteHand");
         }
 
         public override void SetDefaults()
@@ -184,7 +185,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
         {
             // Fade in at first. If the final toll has happened, fade out.
             if (TollCounter >= MaxTolls)
-                Projectile.Opacity = Clamp(Projectile.Opacity - FadeOutIncrement, 0f, 1f);
+                Projectile.Opacity = Saturate(Projectile.Opacity - FadeOutIncrement);
             else
                 Projectile.Opacity = InverseLerp(0f, 45f, Time);
 
@@ -206,7 +207,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
                         if (p.type == starburstID && p.active)
                         {
                             p.ai[2] = 1f;
-                            p.velocity = p.DirectionToSafe(Projectile.Center) * p.velocity.Length() * 0.31f;
+                            p.velocity = p.SafeDirectionTo(Projectile.Center) * p.velocity.Length() * 0.31f;
                             if (!p.WithinRange(Projectile.Center, ReversedTimeSpinDuration * 16f))
                                 p.Kill();
 
@@ -230,7 +231,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
                 }
             }
 
-            // Kill all starbursts that are going back in time and are close to the c lock.
+            // Kill all starbursts that are going back in time and are close to the clock.
             for (int i = 0; i < Main.maxProjectiles; i++)
             {
                 Projectile p = Main.projectile[i];
@@ -244,7 +245,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
             else
             {
                 float approachSpeed = Pow(InverseLerp(ConvergeTime, 0f, Time), 2f) * 19f + 3f;
-                Projectile.velocity = Projectile.DirectionToSafe(target.Center) * approachSpeed;
+                Projectile.velocity = Projectile.SafeDirectionTo(target.Center) * approachSpeed;
             }
 
             // Make the hands move quickly as they fade in before moving more gradually.
@@ -314,8 +315,8 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
                         foreach (var starburst in AllProjectilesByID(starburstID))
                             starburst.Kill();
 
-                        NewProjectileBetter(Projectile.Center - minuteHandDirection * telegraphLineLength * 0.5f, minuteHandDirection, ModContent.ProjectileType<TelegraphedScreenSlice>(), 0, 0f, -1, telegraphTime, telegraphLineLength);
-                        NewProjectileBetter(Projectile.Center - hourHandDirection * telegraphLineLength * 0.5f, hourHandDirection, ModContent.ProjectileType<TelegraphedScreenSlice>(), 0, 0f, -1, telegraphTime, telegraphLineLength);
+                        NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center - minuteHandDirection * telegraphLineLength * 0.5f, minuteHandDirection, ModContent.ProjectileType<TelegraphedScreenSlice>(), 0, 0f, -1, telegraphTime, telegraphLineLength);
+                        NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center - hourHandDirection * telegraphLineLength * 0.5f, hourHandDirection, ModContent.ProjectileType<TelegraphedScreenSlice>(), 0, 0f, -1, telegraphTime, telegraphLineLength);
                     }
                 }
             }
@@ -374,7 +375,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
                     for (int i = 0; i < starburstCount; i++)
                     {
                         Vector2 starburstVelocity = (TwoPi * i / starburstCount + shootOffsetAngle + Projectile.AngleTo(target.Center)).ToRotationVector2() * starburstShootSpeed;
-                        NewProjectileBetter(Projectile.Center, starburstVelocity, starburstID, NamelessDeityBoss.StarburstDamage, 0f, -1, 0f, 2f);
+                        NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center, starburstVelocity, starburstID, NamelessDeityBoss.StarburstDamage, 0f, -1, 0f, 2f);
                     }
                 }
             }

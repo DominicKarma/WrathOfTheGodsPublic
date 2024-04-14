@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Core.Graphics.Shaders;
 using NoxusBoss.Core.Graphics.Shaders.Screen;
 using ReLogic.Content;
 using Terraria;
@@ -12,7 +11,7 @@ namespace NoxusBoss.Content.CustomWorldSeeds
     {
         private void LoadNightScreenShader()
         {
-            Ref<Effect> s = new(Mod.Assets.Request<Effect>("Assets/Effects/SkyAndZoneEffects/NoxusMoonlightShader", AssetRequestMode.ImmediateLoad).Value);
+            Ref<Effect> s = new(Mod.Assets.Request<Effect>("Assets/AutoloadedEffects/Shaders/SkyAndZoneEffects/NoxusMoonlightShader", AssetRequestMode.ImmediateLoad).Value);
             Filters.Scene[EerieNoxusNightShaderData.ShaderKey] = new Filter(new EerieNoxusNightShaderData(s, ManagedShader.DefaultPassName), EffectPriority.VeryHigh);
         }
     }

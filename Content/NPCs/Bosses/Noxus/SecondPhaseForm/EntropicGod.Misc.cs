@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using NoxusBoss.Common.DataStructures;
+using Luminance.Common.DataStructures;
 using NoxusBoss.Content.NPCs.Bosses.NamelessDeity;
 using NoxusBoss.Core;
 using Terraria;

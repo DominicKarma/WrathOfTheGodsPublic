@@ -5,7 +5,7 @@ using NoxusBoss.Content.NPCs.Bosses.Noxus.Projectiles;
 using NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm;
 using NoxusBoss.Content.NPCs.Bosses.Noxus.SpecificEffectManagers;
 using NoxusBoss.Content.Particles;
-using NoxusBoss.Core.Graphics.Metaballs;
+using NoxusBoss.Content.Particles.Metaballs;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
 using Terraria.Audio;
@@ -98,17 +98,6 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.PreFightForm
                     break;
             }
 
-            // Emit heat particles while on fire.
-            if (BurnIntensity > 0f)
-            {
-                for (int i = 0; i < BurnIntensity * 15f; i++)
-                {
-                    Color fireMistColor = Color.Lerp(Color.Red, Color.Gray, Main.rand.NextFloat(0.5f, 0.85f));
-                    var smoke = new MediumMistParticle(NPC.Center + Main.rand.NextVector2Circular(124f, 124f) * NPC.scale, Main.rand.NextVector2Circular(4.5f, 4.5f) - Vector2.UnitY * 3f, fireMistColor, Color.Gray, Main.rand.NextFloat(0.5f, 0.8f), 198 - Main.rand.Next(50), 0.02f);
-                    smoke.Spawn();
-                }
-            }
-
             NPC.ShowNameOnHover = NPC.scale >= 0.7f;
             AITimer++;
         }
@@ -131,14 +120,14 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.PreFightForm
                 bool openAir = PlayerToFollow.ZoneForest && !PlayerToFollow.ZoneSkyHeight;
                 for (int dy = 4; dy < 36; dy++)
                 {
-                    Tile t = ParanoidTileRetrieval((int)(PlayerToFollow.Center.X / 16f), (int)(PlayerToFollow.Center.Y / 16f) - dy);
+                    Tile t = Framing.GetTileSafely((int)(PlayerToFollow.Center.X / 16f), (int)(PlayerToFollow.Center.Y / 16f) - dy);
                     if (t.HasUnactuatedTile && WorldGen.SolidTile(t))
                     {
                         openAir = false;
                         break;
                     }
 
-                    t = ParanoidTileRetrieval((int)(startingPosition.X / 16f), (int)(startingPosition.Y / 16f) - dy);
+                    t = Framing.GetTileSafely((int)(startingPosition.X / 16f), (int)(startingPosition.Y / 16f) - dy);
                     if (t.HasUnactuatedTile && WorldGen.SolidTile(t))
                     {
                         openAir = false;
@@ -172,14 +161,14 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.PreFightForm
                 if (Twinkle.Time >= 16)
                 {
                     Twinkle.Time = 15;
-                    Twinkle.ScaleFactor *= Remap(AITimer, Twinkle.Time, crashDelay - 10f, 1f, 1.05f);
+                    Twinkle.ScaleFactor *= Utils.Remap(AITimer, Twinkle.Time, crashDelay - 10f, 1f, 1.05f);
                 }
             }
 
             // Crash in front of the player after the twinkle is gone.
             if (AITimer == crashDelay)
             {
-                NPC.velocity = NPC.DirectionToSafe(PlayerToFollow.Center - Vector2.UnitX * NPC.ai[3] * 200f) * startingCrashSpeed;
+                NPC.velocity = NPC.SafeDirectionTo(PlayerToFollow.Center - Vector2.UnitX * NPC.ai[3] * 200f) * startingCrashSpeed;
                 NPC.netUpdate = true;
             }
 
@@ -197,7 +186,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.PreFightForm
 
             // Collide with the ground.
             Rectangle actualHitbox = Utils.CenteredRectangle(NPC.Center, NPC.Size * NPC.scale);
-            if (AITimer >= crashDelay && actualHitbox.Bottom >= PlayerToFollow.Bottom.Y + 8f && TileCollision(actualHitbox.BottomLeft() - Vector2.UnitY * NPC.scale * 108f, NPC.width, NPC.scale * 108f, out _) && NPC.velocity.Y != 0f)
+            if (AITimer >= crashDelay && actualHitbox.Bottom >= PlayerToFollow.Bottom.Y + 8f && Collision.SolidCollision(actualHitbox.BottomLeft() - Vector2.UnitY * NPC.scale * 108f, NPC.width, (int)(NPC.scale * 108f), true) && NPC.velocity.Y != 0f)
             {
                 SoundEngine.PlaySound(EntropicGod.ExplosionTeleportSound);
                 ScreenEffectSystem.SetBlurEffect(NPC.Center, 0.5f, 10);
@@ -212,7 +201,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.PreFightForm
                 for (int i = 0; i < NPC.width; i += Main.rand.Next(2, 6))
                 {
                     Point p = new((int)(NPC.BottomLeft.X + i) / 16, (int)(NPC.BottomLeft.Y / 16f) - 1);
-                    Tile t = ParanoidTileRetrieval(p.X, p.Y);
+                    Tile t = Framing.GetTileSafely(p.X, p.Y);
                     if (t.HasUnactuatedTile)
                     {
                         for (int j = 0; j < 3; j++)
@@ -229,8 +218,8 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.PreFightForm
                 // Create a shock effect over tiles.
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    NewProjectileBetter(NPC.Bottom - Vector2.UnitY * 40f, Vector2.Zero, ModContent.ProjectileType<GroundStompShock>(), 0, 0f);
-                    NewProjectileBetter(NPC.Bottom - Vector2.UnitY * 40f, Vector2.Zero, ModContent.ProjectileType<DarkWave>(), 0, 0f);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Bottom - Vector2.UnitY * 40f, Vector2.Zero, ModContent.ProjectileType<GroundStompShock>(), 0, 0f);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Bottom - Vector2.UnitY * 40f, Vector2.Zero, ModContent.ProjectileType<DarkWave>(), 0, 0f);
                 }
             }
         }
@@ -275,7 +264,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.PreFightForm
             NPC.velocity *= 0.97f;
 
             // Randomly make the sky glitch.
-            int glitchChance = (int)Remap(AITimer, 60f, glitchBuildupTime, 44f, 18f);
+            int glitchChance = (int)Utils.Remap(AITimer, 60f, glitchBuildupTime, 44f, 18f);
             if (AITimer >= glitchMaximizationDelay)
                 glitchChance = 1;
 
@@ -290,7 +279,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.PreFightForm
                 for (int i = 0; i < 40; i++)
                 {
                     Vector2 cometShootVelocity = Main.rand.NextVector2Unit() * Main.rand.NextFloat(4f, 20f);
-                    NoxusGasMetaball.CreateParticle(NPC.Center + cometShootVelocity.RotatedByRandom(0.98f) * Main.rand.NextFloat(1.3f), cometShootVelocity.RotatedByRandom(0.68f) * Main.rand.NextFloat(1.1f), Main.rand.NextFloat(13f, 56f));
+                    ModContent.GetInstance<NoxusGasMetaball>().CreateParticle(NPC.Center + cometShootVelocity.RotatedByRandom(0.98f) * Main.rand.NextFloat(1.3f), cometShootVelocity.RotatedByRandom(0.68f) * Main.rand.NextFloat(1.1f), Main.rand.NextFloat(13f, 56f));
                 }
 
                 if (AITimer < glitchMaximizationDelay || AITimer % 12f == 11f)
@@ -316,7 +305,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.PreFightForm
                     NPC.netUpdate = true;
 
                     for (int i = 0; i < 26; i++)
-                        NewProjectileBetter(NPC.Center, Main.rand.NextVector2Circular(60f, 60f), ModContent.ProjectileType<DarkComet>(), 0, 0f);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Main.rand.NextVector2Circular(60f, 60f), ModContent.ProjectileType<DarkComet>(), 0, 0f);
                 }
 
                 // Teleport away in a flash after enough time has passed.

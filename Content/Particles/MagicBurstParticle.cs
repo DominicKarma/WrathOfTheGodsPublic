@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Core.Graphics.Particles;
 using Terraria;
 
 namespace NoxusBoss.Content.Particles
@@ -9,16 +8,16 @@ namespace NoxusBoss.Content.Particles
     {
         public float ScaleExpandRate;
 
-        public override BlendState DrawBlendState => BlendState.Additive;
+        public override BlendState BlendState => BlendState.Additive;
 
-        public override string TexturePath => "NoxusBoss/Content/Particles/MagicBurst";
+        public override string AtlasTextureName => "NoxusBoss.MagicBurstParticle.png";
 
         public MagicBurstParticle(Vector2 position, Vector2 velocity, Color color, int lifetime, float scale, float scaleExpandRate = 0f)
         {
             Position = position;
             Velocity = velocity;
-            Color = color;
-            Scale = scale;
+            DrawColor = color;
+            Scale = Vector2.One * scale;
             Lifetime = lifetime;
             ScaleExpandRate = scaleExpandRate;
         }
@@ -26,13 +25,13 @@ namespace NoxusBoss.Content.Particles
         public override void Update()
         {
             Opacity = InverseLerp(0f, 4f, Lifetime - Time);
-            Scale += ScaleExpandRate;
+            Scale += Vector2.One * ScaleExpandRate;
         }
 
-        public override void Draw()
+        public override void Draw(SpriteBatch spriteBatch)
         {
-            Rectangle frame = Texture.Frame(1, 5, 0, (int)(LifetimeRatio * 4.999f));
-            Main.spriteBatch.Draw(Texture, Position - Main.screenPosition, frame, Color * Opacity, Rotation, frame.Size() * 0.5f, Scale * 0.8f, 0, 0f);
+            Rectangle frame = Texture.Frame.Subdivide(1, 5, 0, (int)(LifetimeRatio * 4.999f));
+            spriteBatch.Draw(Texture, Position - Main.screenPosition, frame, DrawColor * Opacity, Rotation, null, Scale * 0.8f, 0);
         }
     }
 }

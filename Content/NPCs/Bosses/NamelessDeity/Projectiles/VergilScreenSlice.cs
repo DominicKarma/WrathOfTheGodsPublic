@@ -1,7 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Luminance.Common.DataStructures;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Common.DataStructures;
-using NoxusBoss.Core.Graphics.Automators;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
 using Terraria.ID;

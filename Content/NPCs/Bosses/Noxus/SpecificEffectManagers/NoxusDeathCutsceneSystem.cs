@@ -1,16 +1,15 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Luminance.Common.Easings;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Common.Easings;
 using NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles;
 using NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm;
+using NoxusBoss.Content.Particles.Metaballs;
 using NoxusBoss.Core;
-using NoxusBoss.Core.Graphics;
-using NoxusBoss.Core.Graphics.Metaballs;
-using NoxusBoss.Core.Graphics.Shaders;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using ReLogic.Content;
 using Terraria;
 using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -96,10 +95,10 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SpecificEffectManagers
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
 
             // Draw Noxus' metaballs.
-            MetaballManager.DrawMetaballs(MetaballDrawLayer.BeforeBlack);
+            ModContent.GetInstance<NoxusGasMetaball>().RenderLayerWithShader();
 
             // Apply the black silhoette shader.
-            var blackShader = ShaderManager.GetShader("BlackShader");
+            var blackShader = ShaderManager.GetShader("NoxusBoss.BlackShader");
             blackShader.Apply();
 
             // Draw Nameless' eye with the silhoette.
@@ -109,7 +108,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SpecificEffectManagers
                 Texture2D eyeTexture = EyeAsset.Value;
                 Vector2 eyeDrawPosition = EntropicGod.Myself.Center - Vector2.UnitY * Lerp(450f, 400f, EyeAppearInterpolant) - Main.screenPosition;
 
-                float cartoonPopout = ElasticEasing.Default.Evaluate(EasingType.InOut, EyeAppearInterpolant);
+                float cartoonPopout = EasingCurves.Elastic.Evaluate(EasingType.InOut, EyeAppearInterpolant);
 
                 Vector2 baseScale = Vector2.One * Pow(cartoonPopout, 5f) + Vector2.One * Clamp(handTimer * 0.004f, 0f, 0.7f);
                 Main.spriteBatch.Draw(eyeTexture, eyeDrawPosition, null, Color.White * Pow(EyeAppearInterpolant, 3f) * generalOpacity, 0f, eyeTexture.Size() * 0.5f, baseScale * 0.6f, 0, 0f);
@@ -159,7 +158,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SpecificEffectManagers
             AnimationTimer = 1;
 
             // Disable the player's inputs and UI.
-            InputAndUIBlockerSystem.Start(true, true, () => AnimationTimer >= 1);
+            BlockerSystem.Start(true, true, () => AnimationTimer >= 1);
         }
 
         public override void PostUpdateProjectiles()
@@ -200,7 +199,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SpecificEffectManagers
                     SoundEngine.PlaySound(EntropicGod.ScreamSound with { Volume = 0.9f, Pitch = -0.15f });
 
                 if (Main.netMode != NetmodeID.MultiplayerClient)
-                    NewProjectileBetter(EntropicGod.Myself.Center + Main.rand.NextVector2Circular(100f, 60f), Vector2.Zero, ModContent.ProjectileType<LightSlash>(), 0, 0f, -1, Main.rand.NextFloat(TwoPi));
+                    NewProjectileBetter(new EntitySource_WorldEvent(), EntropicGod.Myself.Center + Main.rand.NextVector2Circular(100f, 60f), Vector2.Zero, ModContent.ProjectileType<LightSlash>(), 0, 0f, -1, Main.rand.NextFloat(TwoPi));
             }
 
             if (SlashTimer >= SlashDuration)
@@ -216,7 +215,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SpecificEffectManagers
                 {
                     Vector2 gasSpawnPosition = EntropicGod.Myself.Center + Main.rand.NextVector2Circular(82f, 82f);
                     float gasSize = EntropicGod.Myself.width * EntropicGod.Myself.Opacity * Main.rand.NextFloat(0.4f, 0.96f);
-                    PitchBlackMetaball.CreateParticle(gasSpawnPosition, Main.rand.NextVector2Circular(19f, 19f), gasSize);
+                    ModContent.GetInstance<NoxusGasMetaball>().CreateParticle(gasSpawnPosition, Main.rand.NextVector2Circular(19f, 19f), gasSize);
                 }
             }
         }

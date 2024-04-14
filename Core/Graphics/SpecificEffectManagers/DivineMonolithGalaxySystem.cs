@@ -49,7 +49,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
                 Rotation += Velocity.X * 0.003f;
                 SpinRotation += Velocity.X * 0.04f;
 
-                int dustCount = (int)Remap(Velocity.Length(), 4f, 0.1f, 1f, 5f) + (int)Lerp(1f, 19f, Pow(LifetimeCompletion, 3f));
+                int dustCount = (int)Utils.Remap(Velocity.Length(), 4f, 0.1f, 1f, 5f) + (int)Lerp(1f, 19f, Pow(LifetimeCompletion, 3f));
 
                 for (int i = 0; i < dustCount; i++)
                 {
@@ -108,7 +108,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
                 // Draw galaxies.
                 Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.AnisotropicClamp, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
 
-                var galaxyShader = ShaderManager.GetShader("GalaxyShader");
+                var galaxyShader = ShaderManager.GetShader("NoxusBoss.GalaxyShader");
                 foreach (Galaxy g in ActiveGalaxies)
                 {
                     Matrix flatScale = new()

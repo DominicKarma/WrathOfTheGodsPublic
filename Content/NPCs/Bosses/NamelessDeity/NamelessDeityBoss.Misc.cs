@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using Luminance.Common.DataStructures;
 using Microsoft.Xna.Framework;
-using NoxusBoss.Common.DataStructures;
 using NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm;
 using Terraria;
 using Terraria.Audio;

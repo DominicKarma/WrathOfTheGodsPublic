@@ -1,7 +1,7 @@
 ﻿using System;
+using Luminance.Common.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Core.Graphics.Particles;
 using Terraria;
 
 namespace NoxusBoss.Content.Particles
@@ -10,18 +10,18 @@ namespace NoxusBoss.Content.Particles
     {
         public Color InitialColor;
 
-        public override BlendState DrawBlendState => BlendState.Additive;
+        public override BlendState BlendState => BlendState.NonPremultiplied;
 
-        public override string TexturePath => "NoxusBoss/Content/Particles/Blood";
+        public override string AtlasTextureName => "NoxusBoss.BloodParticle.png";
 
         public BloodParticle(Vector2 relativePosition, Vector2 velocity, int lifetime, float scale, Color color)
         {
             Position = relativePosition;
             Velocity = velocity;
-            Scale = scale;
+            Scale = Vector2.One * scale;
             Lifetime = lifetime;
             InitialColor = color;
-            Color = color;
+            DrawColor = color;
         }
 
         public override void Update()
@@ -29,16 +29,16 @@ namespace NoxusBoss.Content.Particles
             Scale *= 0.98f;
             Velocity.X *= 0.97f;
             Velocity.Y = Clamp(Velocity.Y + 0.9f, -22f, 22f);
-            Color = Color.Lerp(InitialColor, Color.Transparent, Pow(LifetimeRatio, 3f));
+            DrawColor = Color.Lerp(InitialColor, Color.Transparent, LifetimeRatio.Cubed());
             Rotation = Velocity.ToRotation() + PiOver2;
         }
 
-        public override void Draw()
+        public override void Draw(SpriteBatch spriteBatch)
         {
             float verticalStretch = Utils.GetLerpValue(0f, 24f, Math.Abs(Velocity.Y), true) * 0.84f;
-            float brightness = (float)Math.Pow((double)Lighting.Brightness((int)(Position.X / 16f), (int)(Position.Y / 16f)), 0.15);
+            float brightness = Pow(Lighting.Brightness((int)(Position.X / 16f), (int)(Position.Y / 16f)), 0.15f);
             Vector2 scale = new Vector2(1f, verticalStretch + 1f) * Scale * 0.1f;
-            Main.spriteBatch.Draw(Texture, Position - Main.screenPosition, null, Color * brightness, Rotation, Texture.Size() * 0.5f, scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(Texture, Position - Main.screenPosition, null, DrawColor * brightness, Rotation, null, scale, SpriteEffects.None);
         }
     }
 }

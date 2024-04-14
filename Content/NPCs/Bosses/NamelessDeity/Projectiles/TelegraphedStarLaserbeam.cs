@@ -1,13 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Luminance.Common.DataStructures;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Common.BaseEntities;
-using NoxusBoss.Common.DataStructures;
-using NoxusBoss.Content.Particles;
 using NoxusBoss.Core.Graphics.Automators;
-using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -35,9 +33,9 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
 
         public override float LaserExtendSpeedInterpolant => 0.07f;
 
-        public override ManagedShader TelegraphShader => ShaderManager.GetShader("SunLaserTelegraphShader");
+        public override ManagedShader TelegraphShader => ShaderManager.GetShader("NoxusBoss.SunLaserTelegraphShader");
 
-        public override ManagedShader LaserShader => ShaderManager.GetShader("NamelessDeityStarLaserShader");
+        public override ManagedShader LaserShader => ShaderManager.GetShader("NoxusBoss.NamelessDeityStarLaserShader");
 
         public override void SetStaticDefaults()
         {
@@ -118,15 +116,6 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
             // Fade out when the laser is about to die.
             Projectile.Opacity = InverseLerp(TelegraphTime + LaserShootTime - 1f, TelegraphTime + LaserShootTime - 12f, Time);
 
-            // Emit smoke before the laser fires.
-            if (Time <= TelegraphTime - 9f)
-            {
-                float speenSpeed = Main.rand.NextFloatDirection() * 0.04f;
-                Color smokeColor = new(Main.rand.Next(210, 255), Main.rand.Next(108, 255), 10);
-                HeavySmokeParticle smoke = new(Projectile.Center + Main.rand.NextVector2Circular(20f, 20f), Projectile.velocity.RotatedByRandom(0.2f) * Main.rand.NextFloat(4f, 30f), smokeColor, 20, 1.02f, 0.6f, speenSpeed, true);
-                smoke.Spawn();
-            }
-
             return true;
         }
 
@@ -147,14 +136,14 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
         public override float TelegraphWidthFunction(float completionRatio)
         {
             float telegraphCompletion = InverseLerp(0f, TelegraphTime, Time);
-            float scaleFactor = Remap(telegraphCompletion, 0.78f, 0.94f, 1f, 2f) * Lerp(0.6f, 1f, TelegraphSizeInterpolant);
+            float scaleFactor = Utils.Remap(telegraphCompletion, 0.78f, 0.94f, 1f, 2f) * Lerp(0.6f, 1f, TelegraphSizeInterpolant);
             return Projectile.Opacity * Projectile.width * scaleFactor;
         }
 
         public override Color TelegraphColorFunction(float completionRatio)
         {
             float telegraphCompletion = InverseLerp(0f, TelegraphTime, Time);
-            float timeBasedOpacity = Remap(telegraphCompletion, 0.6f, 0.9f, 0.55f, 0.8f);
+            float timeBasedOpacity = Utils.Remap(telegraphCompletion, 0.6f, 0.9f, 0.55f, 0.8f);
             float endFadeOpacity = InverseLerpBump(0f, 0.15f, 0.67f, 1f, completionRatio);
             return Color.LightGoldenrodYellow * endFadeOpacity * Projectile.Opacity * timeBasedOpacity;
         }
@@ -166,30 +155,30 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
         public override void PrepareTelegraphShader(ManagedShader telegraphShader)
         {
             float telegraphCompletion = InverseLerp(0f, TelegraphTime, Time);
-            float startThreshold = Remap(telegraphCompletion, 0.92f, 1f, 0f, 0.074f);
-            float endThreshold = Remap(telegraphCompletion, 0f, 0.3f, 0.03f, 0.67f);
+            float startThreshold = Utils.Remap(telegraphCompletion, 0.92f, 1f, 0f, 0.074f);
+            float endThreshold = Utils.Remap(telegraphCompletion, 0f, 0.3f, 0.03f, 0.67f);
 
             telegraphShader.TrySetParameter("generalOpacity", Projectile.Opacity);
             telegraphShader.TrySetParameter("verticalCutoffStartThreshold", startThreshold);
             telegraphShader.TrySetParameter("verticalCutoffEndThreshold", endThreshold);
             telegraphShader.TrySetParameter("highlightScrollOffset", Vector2.UnitX * Projectile.identity * 0.148f);
             telegraphShader.TrySetParameter("brightnessNoiseScrollOffset", Vector2.UnitX * Projectile.identity * 0.205f);
-            telegraphShader.SetTexture(DendriticNoiseZoomedOut, 1);
-            telegraphShader.SetTexture(DendriticNoise, 2);
+            telegraphShader.SetTexture(DendriticNoiseZoomedOut, 1, SamplerState.LinearWrap);
+            telegraphShader.SetTexture(DendriticNoise, 2, SamplerState.LinearWrap);
         }
 
         public override void PrepareLaserShader(ManagedShader laserShader)
         {
             laserShader.TrySetParameter("uStretchReverseFactor", LaserLengthFactor * 0.7f);
-            laserShader.SetTexture(WavyBlotchNoise, 1);
+            laserShader.SetTexture(WavyBlotchNoise, 1, SamplerState.LinearWrap);
         }
 
         public override List<Vector2> GenerateTelegraphControlPoints()
         {
             float telegraphCompletion = InverseLerp(0f, TelegraphTime, Time);
-            float telegraphLengthFactor = MaxLaserLength * (InverseLerp(0.9f, 1f, telegraphCompletion) * 0.06f + 0.135f) * Lerp(0.64f, 1.1f, TelegraphSizeInterpolant) * 1.25f;
+            float telegraphLengthFactor = MaxLaserLength * (InverseLerp(0.9f, 1f, telegraphCompletion) * 0.09f + 0.135f) * Lerp(0.64f, 1.1f, TelegraphSizeInterpolant) * 1.25f;
 
-            List<Vector2> controlPoints = new();
+            List<Vector2> controlPoints = [];
 
             for (int i = 0; i < 8; i++)
             {
@@ -204,7 +193,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
         public void DrawWithShader(SpriteBatch spriteBatch)
         {
             // Draw the regular telegraph/laser stuff.
-            DrawTelegraphOrLaser();
+            DrawTelegraphOrLaser(false);
         }
     }
 }

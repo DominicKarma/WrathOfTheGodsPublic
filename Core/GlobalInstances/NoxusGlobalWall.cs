@@ -1,4 +1,5 @@
 ﻿using System;
+using Terraria;
 using Terraria.ModLoader;
 
 namespace NoxusBoss.Core.GlobalItems
@@ -21,7 +22,7 @@ namespace NoxusBoss.Core.GlobalItems
             if (IsWallUnbreakableEvent is null)
                 return false;
 
-            int wallID = ParanoidTileRetrieval(x, y).WallType;
+            int wallID = Framing.GetTileSafely(x, y).WallType;
             bool result = false;
             foreach (Delegate d in IsWallUnbreakableEvent.GetInvocationList())
                 result |= ((WallConditionDelegate)d).Invoke(x, y, wallID);

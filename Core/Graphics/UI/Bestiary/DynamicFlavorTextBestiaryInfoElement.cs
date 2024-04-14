@@ -70,7 +70,7 @@ namespace NoxusBoss.Core.Graphics.UI.Bestiary
 
             // Apply the aberration dye effect on top of the text.
             float aberrationPower = Pow(AperiodicSin(Main.GlobalTimeWrappedHourly * 32f), 2f) * 0.4f;
-            var aberrationShader = ShaderManager.GetShader("ChromaticAberrationShader");
+            var aberrationShader = ShaderManager.GetShader("NoxusBoss.ChromaticAberrationShader");
             aberrationShader.TrySetParameter("splitIntensity", aberrationPower);
             aberrationShader.TrySetParameter("impactPoint", Vector2.One * 0.5f);
             aberrationShader.Apply();

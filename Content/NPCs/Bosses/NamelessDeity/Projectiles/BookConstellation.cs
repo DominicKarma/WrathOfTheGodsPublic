@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
+using Luminance.Assets;
+using Luminance.Common.DataStructures;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Common.DataStructures;
+using NoxusBoss.Common.BaseEntities;
 using NoxusBoss.Content.Particles;
-using NoxusBoss.Core.Graphics.Shaders;
 using NoxusBoss.Core.ShapeCurves;
-using ReLogic.Content;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -14,9 +14,9 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
 {
     public class BookConstellation : BaseNamelessDeityConstellationProjectile, IProjOwnedByBoss<NamelessDeityBoss>
     {
-        private static Asset<Texture2D> magicCircleAsset;
+        private static LazyAsset<Texture2D> magicCircleAsset;
 
-        private static Asset<Texture2D> magicCircleCenterAsset;
+        private static LazyAsset<Texture2D> magicCircleCenterAsset;
 
         public float MagicCircleOpacity => InverseLerp(45f, 105f, Time - ConvergeTime);
 
@@ -59,8 +59,8 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
 
             if (Main.netMode != NetmodeID.Server)
             {
-                magicCircleAsset = ModContent.Request<Texture2D>("NoxusBoss/Content/NPCs/Bosses/NamelessDeity/Projectiles/CosmicLightCircle");
-                magicCircleCenterAsset = ModContent.Request<Texture2D>("NoxusBoss/Content/NPCs/Bosses/NamelessDeity/Projectiles/CosmicLightCircleCenter");
+                magicCircleAsset = LazyAsset<Texture2D>.Request("NoxusBoss/Content/NPCs/Bosses/NamelessDeity/Projectiles/CosmicLightCircle");
+                magicCircleCenterAsset = LazyAsset<Texture2D>.Request("NoxusBoss/Content/NPCs/Bosses/NamelessDeity/Projectiles/CosmicLightCircleCenter");
             }
         }
 
@@ -104,7 +104,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
             }
 
             // Make the magic circle glow when the cosmic beam is out.
-            GlowInterpolant = Clamp(GlowInterpolant + AnyProjectiles(ModContent.ProjectileType<SuperCosmicBeam>()).ToDirectionInt() * 0.1f, 0f, 1f);
+            GlowInterpolant = Saturate(GlowInterpolant + AnyProjectiles(ModContent.ProjectileType<SuperCosmicBeam>()).ToDirectionInt() * 0.1f);
         }
 
         public void DrawBloom()
@@ -148,8 +148,8 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
             Color circleColor = Projectile.GetAlpha(new(92, 40, 204)) * MagicCircleOpacity;
 
             // Apply the shader.
-            var magicCircleShader = ShaderManager.GetShader("MagicCircleShader");
-            CalculatePrimitivePerspectiveMatricies(out Matrix viewMatrix, out Matrix projectionMatrix);
+            var magicCircleShader = ShaderManager.GetShader("NoxusBoss.MagicCircleShader");
+            CalculatePrimitiveMatrices(Main.screenWidth, Main.screenHeight, out Matrix viewMatrix, out Matrix projectionMatrix);
             magicCircleShader.TrySetParameter("orientationRotation", Projectile.rotation);
             magicCircleShader.TrySetParameter("spinRotation", -Main.GlobalTimeWrappedHourly * 3.87f);
             magicCircleShader.TrySetParameter("flip", Projectile.direction == -1f);

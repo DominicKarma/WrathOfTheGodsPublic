@@ -4,8 +4,6 @@ using NoxusBoss.Content.NPCs.Bosses.NamelessDeity.SpecificEffectManagers;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Core;
 using NoxusBoss.Core.Configuration;
-using NoxusBoss.Core.Graphics.Automators;
-using NoxusBoss.Core.Graphics.Shaders;
 using NoxusBoss.Core.ShapeCurves;
 using ReLogic.Content;
 using Terraria;
@@ -243,7 +241,7 @@ namespace NoxusBoss.Common.Subworlds
 
             // Prepare the stardust shader.
             Vector2 screenArea = Main.ScreenSize.ToVector2();
-            var stardustShader = ShaderManager.GetShader("GardenStardustBackground");
+            var stardustShader = ShaderManager.GetShader("NoxusBoss.GardenStardustBackground");
             stardustShader.TrySetParameter("zoom", 0.6f + layerIndex * 0.54f);
             stardustShader.TrySetParameter("brightColor", new Color(71 + layerIndex * 12, 55, 150 + layerIndex * 15));
             stardustShader.TrySetParameter("spaceColor", new Color(10, 7, 15));
@@ -267,7 +265,7 @@ namespace NoxusBoss.Common.Subworlds
             // Prepare the aurora shader.
             float verticalSquish = 0.25f;
             Vector2 screenArea = Main.ScreenSize.ToVector2();
-            var auroraShader = ShaderManager.GetShader("AuroraShader");
+            var auroraShader = ShaderManager.GetShader("NoxusBoss.AuroraShader");
             auroraShader.TrySetParameter("verticalSquish", verticalSquish);
             auroraShader.TrySetParameter("scrollSpeedFactor", 0.05f);
             auroraShader.TrySetParameter("accentApplicationStrength", 2.81f);

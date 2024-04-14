@@ -1,23 +1,15 @@
 ﻿using System.IO;
+using Luminance.Common.DataStructures;
 using Microsoft.Xna.Framework;
-using NoxusBoss.Common.DataStructures;
-using NoxusBoss.Core.Graphics.Automators;
-using NoxusBoss.Core.Graphics.Primitives;
-using NoxusBoss.Core.Graphics.Shaders;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
 {
-    public class StarPatterenedStarburst : ModProjectile, IDrawPixelated, IProjOwnedByBoss<NamelessDeityBoss>
+    public class StarPatterenedStarburst : ModProjectile, IPixelatedPrimitiveRenderer, IProjOwnedByBoss<NamelessDeityBoss>
     {
-        public PrimitiveTrail TrailDrawer
-        {
-            get;
-            private set;
-        }
-
         public Vector2 ClosestPlayerHoverDestination
         {
             get;
@@ -124,14 +116,14 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
                 // Perform the convergence behavior.
                 float idealDirection = Projectile.AngleTo(ClosestPlayerHoverDestination);
                 Projectile.velocity = Projectile.velocity.ToRotation().AngleLerp(idealDirection, 0.075f).ToRotationVector2() * Projectile.velocity.Length();
-                Projectile.velocity = Vector2.Lerp(Projectile.velocity, Projectile.DirectionToSafe(ClosestPlayerHoverDestination) * 17.5f, 0.017f);
+                Projectile.velocity = Vector2.Lerp(Projectile.velocity, Projectile.SafeDirectionTo(ClosestPlayerHoverDestination) * 17.5f, 0.017f);
 
                 if (Projectile.WithinRange(ClosestPlayerHoverDestination, 35f))
                 {
                     if (!AnyProjectiles(ModContent.ProjectileType<ExplodingStar>()))
                     {
-                        NewProjectileBetter(ClosestPlayerHoverDestination, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
-                        NewProjectileBetter(ClosestPlayerHoverDestination, Vector2.Zero, ModContent.ProjectileType<ExplodingStar>(), NamelessDeityBoss.ExplodingStarDamage, 0f, -1, 1.112f);
+                        NewProjectileBetter(Projectile.GetSource_FromThis(), ClosestPlayerHoverDestination, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
+                        NewProjectileBetter(Projectile.GetSource_FromThis(), ClosestPlayerHoverDestination, Vector2.Zero, ModContent.ProjectileType<ExplodingStar>(), NamelessDeityBoss.ExplodingStarDamage, 0f, -1, 1.112f);
 
                         int starburstCount = 9;
                         float angularOffset = OffsetAngle + Main.rand.NextFloatDirection() * 0.6f;
@@ -147,7 +139,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
                         for (int i = 0; i < starburstCount; i++)
                         {
                             Vector2 starburstVelocity = (TwoPi * i / starburstCount + angularOffset).ToRotationVector2() * starburstSpeed;
-                            NewProjectileBetter(ClosestPlayerHoverDestination, starburstVelocity, ModContent.ProjectileType<Starburst>(), NamelessDeityBoss.StarburstDamage, 0f, -1, 0f, 2f);
+                            NewProjectileBetter(Projectile.GetSource_FromThis(), ClosestPlayerHoverDestination, starburstVelocity, ModContent.ProjectileType<Starburst>(), NamelessDeityBoss.StarburstDamage, 0f, -1, 0f, 2f);
                         }
                     }
 
@@ -196,14 +188,13 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
             return false;
         }
 
-        public void DrawWithPixelation()
+        public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
         {
-            var fireTrailShader = ShaderManager.GetShader("GenericFlameTrail");
-            TrailDrawer ??= new(FlameTrailWidthFunction, FlameTrailColorFunction, null, true, fireTrailShader);
-
-            // Draw a flame trail.
+            var fireTrailShader = ShaderManager.GetShader("NoxusBoss.GenericFlameTrail");
             fireTrailShader.SetTexture(StreakMagma, 1);
-            TrailDrawer.Draw(Projectile.oldPos, Projectile.Size * 0.5f - Main.screenPosition, 5);
+
+            PrimitiveSettings settings = new(FlameTrailWidthFunction, FlameTrailColorFunction, _ => Projectile.Size * 0.5f, Pixelate: true, Shader: fireTrailShader);
+            PrimitiveRenderer.RenderTrail(Projectile.oldPos, settings, 6);
         }
 
         public override bool ShouldUpdatePosition() => Time >= DelayUntilFreeMovement;

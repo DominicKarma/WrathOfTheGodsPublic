@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Luminance.Common.DataStructures;
+using Luminance.Common.Easings;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Common.DataStructures;
-using NoxusBoss.Common.Easings;
 using NoxusBoss.Content.NPCs.Bosses.NamelessDeity.SpecificEffectManagers;
 using NoxusBoss.Core;
 using NoxusBoss.Core.CrossCompatibility.Inbound;
-using NoxusBoss.Core.Graphics.Automators;
 using NoxusBoss.Core.Graphics.Shaders.Screen;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
@@ -45,7 +44,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
 
         public LoopedSoundInstance BrrrrrSound;
 
-        public List<EnergySuckParticle> Particles = new();
+        public List<EnergySuckParticle> Particles = [];
 
         public ref float Time => ref Projectile.ai[0];
 
@@ -82,7 +81,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
             }
 
             // Grow over time.
-            Projectile.scale = ExponentialEasing.Default.Evaluate(EasingType.In, InverseLerp(0f, 35f, Time)) * 10f;
+            Projectile.scale = EasingCurves.Quartic.Evaluate(EasingType.In, InverseLerp(0f, 35f, Time)) * 10f;
 
             // Accelerate towards the target.
             NPCAimedTarget target = NamelessDeityBoss.Myself.GetTargetData();
@@ -94,7 +93,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
             }
             else if (!Projectile.WithinRange(target.Center, 380f) && Time >= 56f)
             {
-                Vector2 force = Projectile.DirectionToSafe(target.Center) * Projectile.scale * 0.0765f;
+                Vector2 force = Projectile.SafeDirectionTo(target.Center) * Projectile.scale * 0.0765f;
                 if (AllProjectilesByID(Projectile.type).Count() >= 2)
                     force *= 0.56f;
 
@@ -109,12 +108,12 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
                 Projectile.velocity += force;
 
                 // Make the black hole go faster if it's moving away from the target.
-                if (Vector2.Dot(Projectile.DirectionToSafe(target.Center), Projectile.velocity) < 0f)
+                if (Vector2.Dot(Projectile.SafeDirectionTo(target.Center), Projectile.velocity) < 0f)
                     Projectile.velocity += force * 1.3f;
 
                 // Zip towards the target if they're not moving much.
                 if (target.Velocity.Length() <= 4f)
-                    Projectile.velocity = Vector2.Lerp(Projectile.velocity, Projectile.DirectionToSafe(target.Center) * 22f, 0.08f);
+                    Projectile.velocity = Vector2.Lerp(Projectile.velocity, Projectile.SafeDirectionTo(target.Center) * 22f, 0.08f);
             }
 
             // Enforce a hard limit on the velocity.
@@ -166,8 +165,8 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
 
                 // If the other projectile is indeed the same owned by the same player and they're too close, nudge them away.
                 bool sameProjType = otherProj.type == Projectile.type;
-                float taxicabDist = Math.Abs(Projectile.position.X - otherProj.position.X) + Math.Abs(Projectile.position.Y - otherProj.position.Y);
-                if (sameProjType && taxicabDist < Projectile.width * 1.458f)
+                float taxicabDistance = Math.Abs(Projectile.position.X - otherProj.position.X) + Math.Abs(Projectile.position.Y - otherProj.position.Y);
+                if (sameProjType && taxicabDistance < Projectile.width * 1.458f)
                 {
                     if (Projectile.position.X < otherProj.position.X)
                         Projectile.velocity.X -= pushForce;

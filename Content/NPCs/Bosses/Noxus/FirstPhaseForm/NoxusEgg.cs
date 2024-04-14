@@ -4,9 +4,9 @@ using NoxusBoss.Content.NPCs.Bosses.Noxus.Projectiles;
 using NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm;
 using NoxusBoss.Content.NPCs.Bosses.Noxus.SpecificEffectManagers;
 using NoxusBoss.Content.Particles;
+using NoxusBoss.Content.Particles.Metaballs;
 using NoxusBoss.Core;
 using NoxusBoss.Core.CrossCompatibility.Inbound;
-using NoxusBoss.Core.Graphics.Metaballs;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using ReLogic.Content;
 using Terraria;
@@ -261,7 +261,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.FirstPhaseForm
                 TeleportTo(NPC.Center + Vector2.UnitY * 50f);
 
                 if (Main.netMode != NetmodeID.MultiplayerClient)
-                    NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<DarkWave>(), 0, 0f);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<DarkWave>(), 0, 0f);
             }
 
             // Roar after appearing.
@@ -332,9 +332,9 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.FirstPhaseForm
             if (wrappedAttackTimer == chargeDelay)
             {
                 SoundEngine.PlaySound(ExplosionTeleportSound, NPC.Center);
-                NPC.velocity = NPC.DirectionToSafe(Target.Center) * initialChargeSpeed;
+                NPC.velocity = NPC.SafeDirectionTo(Target.Center) * initialChargeSpeed;
                 if (Main.netMode != NetmodeID.MultiplayerClient)
-                    NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<DarkWave>(), 0, 0f);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<DarkWave>(), 0, 0f);
             }
 
             // Accelerate.
@@ -349,13 +349,13 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.FirstPhaseForm
                     SoundEngine.PlaySound(FireballShootSound, NPC.Center);
 
                     // Create gas particles.
-                    Vector2 cometShootVelocity = NPC.DirectionToSafe(Target.Center) * cometShootSpeed;
+                    Vector2 cometShootVelocity = NPC.SafeDirectionTo(Target.Center) * cometShootSpeed;
                     SoundEngine.PlaySound(SoundID.Item104, NPC.Center);
                     for (int i = 0; i < 40; i++)
-                        NoxusGasMetaball.CreateParticle(NPC.Center + cometShootVelocity.RotatedByRandom(0.98f) * Main.rand.NextFloat(1.3f), cometShootVelocity.RotatedByRandom(0.68f) * Main.rand.NextFloat(1.1f), Main.rand.NextFloat(13f, 56f));
+                        ModContent.GetInstance<NoxusGasMetaball>().CreateParticle(NPC.Center + cometShootVelocity.RotatedByRandom(0.98f) * Main.rand.NextFloat(1.3f), cometShootVelocity.RotatedByRandom(0.68f) * Main.rand.NextFloat(1.1f), Main.rand.NextFloat(13f, 56f));
 
                     if (Main.netMode != NetmodeID.MultiplayerClient)
-                        NewProjectileBetter(NPC.Center, cometShootVelocity, ModContent.ProjectileType<DarkComet>(), CometDamage, 0f);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, cometShootVelocity, ModContent.ProjectileType<DarkComet>(), CometDamage, 0f);
                 }
             }
 
@@ -402,7 +402,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.FirstPhaseForm
                 bloom.Spawn();
 
                 if (Main.netMode != NetmodeID.MultiplayerClient)
-                    NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<DistortionField>(), DistortionFieldDamage, 0f);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<DistortionField>(), DistortionFieldDamage, 0f);
             }
 
             // Teleport behind the player and release comets at the end.
@@ -411,7 +411,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.FirstPhaseForm
                 Vector2 teleportOffsetDirection = Target.velocity.SafeNormalize(Main.rand.NextVector2Unit());
 
                 // Make the offset taper off if the target is moving slowly.
-                teleportOffsetDirection *= Remap(NPC.Distance(Target.Center), 3f, 6f, 0.4f, 1f);
+                teleportOffsetDirection *= Utils.Remap(NPC.Distance(Target.Center), 3f, 6f, 0.4f, 1f);
 
                 TeleportTo(Target.Center - teleportOffsetDirection * 600f);
 
@@ -419,16 +419,16 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.FirstPhaseForm
                 SoundEngine.PlaySound(ExplosionTeleportSound, NPC.Center);
 
                 // Create gas particles.
-                Vector2 cometShootVelocity = NPC.DirectionToSafe(Target.Center) * cometShootSpeed;
+                Vector2 cometShootVelocity = NPC.SafeDirectionTo(Target.Center) * cometShootSpeed;
                 SoundEngine.PlaySound(SoundID.Item104, NPC.Center);
                 for (int i = 0; i < 40; i++)
-                    NoxusGasMetaball.CreateParticle(NPC.Center + cometShootVelocity.RotatedByRandom(0.98f) * Main.rand.NextFloat(1.3f), cometShootVelocity.RotatedByRandom(0.68f) * Main.rand.NextFloat(1.1f), Main.rand.NextFloat(13f, 56f));
+                    ModContent.GetInstance<NoxusGasMetaball>().CreateParticle(NPC.Center + cometShootVelocity.RotatedByRandom(0.98f) * Main.rand.NextFloat(1.3f), cometShootVelocity.RotatedByRandom(0.68f) * Main.rand.NextFloat(1.1f), Main.rand.NextFloat(13f, 56f));
 
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<DarkWave>(), 0, 0f);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<DarkWave>(), 0, 0f);
                     for (int i = 0; i < cometCount; i++)
-                        NewProjectileBetter(NPC.Center, cometShootVelocity.RotatedByRandom(1.22f) + Main.rand.NextVector2Circular(3.2f, 3.2f), ModContent.ProjectileType<DarkComet>(), CometDamage, 0f);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, cometShootVelocity.RotatedByRandom(1.22f) + Main.rand.NextVector2Circular(3.2f, 3.2f), ModContent.ProjectileType<DarkComet>(), CometDamage, 0f);
                 }
             }
 
@@ -472,7 +472,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.FirstPhaseForm
                         angularOffset = Main.rand.NextFloatDirection() * 0.55f;
 
                     Vector2 portalSpawnPosition = Target.Center + Target.velocity.SafeNormalize(Main.rand.NextVector2Unit()).RotatedBy(angularOffset) * Main.rand.NextFloat(720f, 750f);
-                    NewProjectileBetter(portalSpawnPosition, (Target.Center - portalSpawnPosition).SafeNormalize(Vector2.UnitY), ModContent.ProjectileType<DarkPortal>(), 0, 0f, -1, portalScale, portalLingerTime);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), portalSpawnPosition, (Target.Center - portalSpawnPosition).SafeNormalize(Vector2.UnitY), ModContent.ProjectileType<DarkPortal>(), 0, 0f, -1, portalScale, portalLingerTime);
                 }
             }
 
@@ -533,10 +533,10 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.FirstPhaseForm
                     for (float dx = 200f; dx < 1700f; dx += minSpikeGap * Main.rand.NextFloat(1f, 1.263f))
                     {
                         Vector2 spikeSpawnOffset = new(dx, -700f);
-                        NewProjectileBetter(NPC.Center + spikeSpawnOffset, Vector2.UnitY.RotatedByRandom(0.018f) * 0.0001f, ModContent.ProjectileType<NoxSpike>(), SpikeDamage, 0f);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center + spikeSpawnOffset, Vector2.UnitY.RotatedByRandom(0.018f) * 0.0001f, ModContent.ProjectileType<NoxSpike>(), SpikeDamage, 0f);
 
                         spikeSpawnOffset = new(-dx, -700f);
-                        NewProjectileBetter(NPC.Center + spikeSpawnOffset, Vector2.UnitY.RotatedByRandom(0.018f) * 0.0001f, ModContent.ProjectileType<NoxSpike>(), SpikeDamage, 0f);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center + spikeSpawnOffset, Vector2.UnitY.RotatedByRandom(0.018f) * 0.0001f, ModContent.ProjectileType<NoxSpike>(), SpikeDamage, 0f);
                     }
                 }
 
@@ -546,7 +546,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.FirstPhaseForm
             }
 
             // Collide with the ground.
-            if (wrappedAttackTimer >= slamDelay && NPC.Bottom.Y >= Target.Bottom.Y + 8f && TileCollision(NPC.BottomLeft - Vector2.UnitY * 108f, NPC.width, 108f, out _) && NPC.velocity.Y != 0f)
+            if (wrappedAttackTimer >= slamDelay && NPC.Bottom.Y >= Target.Bottom.Y + 8f && Collision.SolidCollision(NPC.BottomLeft - Vector2.UnitY * 108f, NPC.width, 108, true) && NPC.velocity.Y != 0f)
             {
                 ScreenEffectSystem.SetBlurEffect(NPC.Center, 0.5f, 10);
                 StartShakeAtPoint(NPC.Center, 15f, TwoPi / 9f, Vector2.UnitY);
@@ -559,7 +559,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.FirstPhaseForm
                 for (int i = 0; i < NPC.width; i += Main.rand.Next(2, 6))
                 {
                     Point p = new((int)(NPC.BottomLeft.X + i) / 16, (int)(NPC.BottomLeft.Y / 16f) - 1);
-                    Tile t = ParanoidTileRetrieval(p.X, p.Y);
+                    Tile t = Framing.GetTileSafely(p.X, p.Y);
 
                     // Create tile impact dust particles.
                     if (t.HasUnactuatedTile)
@@ -577,7 +577,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.FirstPhaseForm
 
                 // Create a shock effect over tiles.
                 if (Main.netMode != NetmodeID.MultiplayerClient)
-                    NewProjectileBetter(NPC.Bottom - Vector2.UnitY * 40f, Vector2.Zero, ModContent.ProjectileType<GroundStompShock>(), 0, 0f);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Bottom - Vector2.UnitY * 40f, Vector2.Zero, ModContent.ProjectileType<GroundStompShock>(), 0, 0f);
             }
 
             // Accelerate after slamming.
@@ -658,10 +658,10 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.FirstPhaseForm
 
                 // Release the dark energy comets.
                 for (int i = 0; i < 3; i++)
-                    NoxusGasMetaball.CreateParticle(NPC.Center, Main.rand.NextVector2Circular(5f, 5f), Main.rand.NextFloat(13f, 56f) + NoxusSky.SkyIntensityOverride * 50f);
+                    ModContent.GetInstance<NoxusGasMetaball>().CreateParticle(NPC.Center, Main.rand.NextVector2Circular(5f, 5f), Main.rand.NextFloat(13f, 56f) + NoxusSky.SkyIntensityOverride * 50f);
 
                 if (Main.netMode != NetmodeID.MultiplayerClient)
-                    NewProjectileBetter(NPC.Center, Main.rand.NextVector2Circular(40f, 40f), ModContent.ProjectileType<DarkComet>(), 0, 0f);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Main.rand.NextVector2Circular(40f, 40f), ModContent.ProjectileType<DarkComet>(), 0, 0f);
             }
 
             // Enter the second phase by transforming into the Entropic God.
@@ -679,7 +679,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.FirstPhaseForm
                     NPC.NewNPC(NPC.GetSource_Death(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<EntropicGod>(), 1);
 
                     // Create a wave effect.
-                    NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<DarkWave>(), 0, 0f);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<DarkWave>(), 0, 0f);
                 }
 
                 // Shake the screen.
@@ -731,10 +731,6 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.FirstPhaseForm
 
         public void TeleportTo(Vector2 teleportPosition)
         {
-            // Leave behind a decal afterimage at the old position.
-            NoxusEggDecalParticle decal = new(NPC.Center, NPC.rotation, Color.MediumPurple * 0.5f, 24, NPC.scale);
-            decal.Spawn();
-
             NPC.Center = teleportPosition;
             NPC.velocity = Vector2.Zero;
             NPC.netUpdate = true;

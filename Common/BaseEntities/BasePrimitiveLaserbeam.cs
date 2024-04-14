@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using Microsoft.Xna.Framework;
-using NoxusBoss.Core.Graphics.Primitives;
-using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -10,15 +8,9 @@ namespace NoxusBoss.Common.BaseEntities
 {
     public abstract class BasePrimitiveLaserbeam : ModProjectile
     {
-        public PrimitiveTrail LaserDrawer
-        {
-            get;
-            protected set;
-        }
-
         // This determines whether standard, automatic drawing via PreDraw should be performed. When enabled, PreDraw will handle draw effects on their own.
         // When disabled, it is the derived class' responsibility to draw things when necessary.
-        // This exists primarily for the purpose of allowing drawing in special interfaces, such as IDrawPixelated.
+        // This exists primarily for the purpose of allowing drawing in special interfaces, such as IPixelatedPrimitiveRenderer.
         public virtual bool UseStandardDrawing => true;
 
         public abstract int LaserPointCount
@@ -91,18 +83,16 @@ namespace NoxusBoss.Common.BaseEntities
             return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), start, end, Projectile.scale * Projectile.width * 0.9f, ref _);
         }
 
-        public void DrawLaser()
+        public void DrawLaser(bool pixelate)
         {
-            // Initialize the laser drawer.
-            LaserDrawer ??= new(LaserWidthFunction, LaserColorFunction, null, true, LaserShader);
-
             // Calculate laser control points.
             Vector2 laserDirection = Projectile.velocity.SafeNormalize(Vector2.UnitY);
             List<Vector2> laserControlPoints = Projectile.GetLaserControlPoints(10, LaserLengthFactor * MaxLaserLength, laserDirection);
 
             // Draw the laser.
             PrepareLaserShader(LaserShader);
-            LaserDrawer.Draw(laserControlPoints, -Main.screenPosition, LaserPointCount);
+            PrimitiveSettings settings = new(LaserWidthFunction, LaserColorFunction, Pixelate: pixelate, Shader: LaserShader);
+            PrimitiveRenderer.RenderTrail(laserControlPoints, settings, LaserPointCount);
         }
 
         public override bool PreDraw(ref Color lightColor)
@@ -112,7 +102,7 @@ namespace NoxusBoss.Common.BaseEntities
                 return false;
 
             // Draw the laser manually if standard drawing is enabled.
-            DrawLaser();
+            DrawLaser(false);
             return false;
         }
 

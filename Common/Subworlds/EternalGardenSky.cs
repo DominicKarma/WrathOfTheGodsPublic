@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.NPCs.Bosses.NamelessDeity.SpecificEffectManagers;
 using NoxusBoss.Content.Waters;
 using NoxusBoss.Core.Configuration;
-using NoxusBoss.Core.Graphics.Shaders;
 using ReLogic.Content;
 using Terraria;
 using Terraria.Graphics.Effects;
@@ -157,7 +156,7 @@ namespace NoxusBoss.Common.Subworlds
                 }
 
                 // Prepare the lake reflection shader.
-                var reflectionShader = ShaderManager.GetShader("LakeReflectionShader");
+                var reflectionShader = ShaderManager.GetShader("NoxusBoss.LakeReflectionShader");
                 if (drawWithShader)
                 {
                     float horizontalDrawOffset = (Main.screenWidth - EternalGardenSkyTargetManager.SkyTarget.Width) / (float)EternalGardenSkyTargetManager.SkyTarget.Width * 0.585f;

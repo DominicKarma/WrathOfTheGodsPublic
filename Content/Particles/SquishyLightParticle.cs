@@ -1,6 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Luminance.Common.Utilities;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Core.Graphics.Particles;
 using Terraria;
 
 namespace NoxusBoss.Content.Particles
@@ -13,20 +13,20 @@ namespace NoxusBoss.Content.Particles
 
         public float HueShift;
 
-        public override BlendState DrawBlendState => BlendState.Additive;
+        public override BlendState BlendState => BlendState.Additive;
 
-        public override string TexturePath => "NoxusBoss/Assets/ExtraTextures/GreyscaleTextures/ParticleLight";
+        public override string AtlasTextureName => "NoxusBoss.SquishyLightParticle.png";
 
-        public SquishyLightParticle(Vector2 position, Vector2 velocity, float scale, Color color, int lifetime, float opacity = 1f, float squishStrenght = 1f, float maxSquish = 3f, float hueShift = 0f)
+        public SquishyLightParticle(Vector2 position, Vector2 velocity, float scale, Color color, int lifetime, float opacity = 1f, float squishStrength = 1f, float maxSquish = 3f, float hueShift = 0f)
         {
             Position = position;
             Velocity = velocity;
-            Scale = scale;
-            Color = color;
+            Scale = Vector2.One * scale;
+            DrawColor = color;
             Opacity = opacity;
             Rotation = 0f;
             Lifetime = lifetime;
-            SquishStrength = squishStrenght;
+            SquishStrength = squishStrength;
             MaxSquish = maxSquish;
             HueShift = hueShift;
         }
@@ -36,20 +36,18 @@ namespace NoxusBoss.Content.Particles
             Velocity *= (LifetimeRatio >= 0.34f) ? 0.93f : 1.02f;
             Opacity = LifetimeRatio > 0.5f ? (Convert01To010(LifetimeRatio) * 0.2f + 0.8f) : Convert01To010(LifetimeRatio);
             Scale *= 0.95f;
-            Color = Main.hslToRgb(Main.rgbToHsl(Color).X + HueShift, Main.rgbToHsl(Color).Y, Main.rgbToHsl(Color).Z, byte.MaxValue);
+            DrawColor = Main.hslToRgb(Main.rgbToHsl(DrawColor).X + HueShift, Main.rgbToHsl(DrawColor).Y, Main.rgbToHsl(DrawColor).Z, byte.MaxValue);
         }
 
-        public override void Draw()
+        public override void Draw(SpriteBatch spriteBatch)
         {
             float squish = Clamp(Velocity.Length() / 10f * SquishStrength, 1f, MaxSquish);
             float rotation = Velocity.ToRotation() + PiOver2;
-            Vector2 origin = Texture.Size() / 2f;
-            Vector2 scale = new(Scale - Scale * squish * 0.3f, Scale * squish);
-            float properBloomSize = Texture.Height / (float)BloomCircleSmall.Height;
+            Vector2 scale = new Vector2(1f - 1f * squish * 0.3f, squish) * Scale;
             Vector2 drawPosition = Position - Main.screenPosition;
-            Main.spriteBatch.Draw(BloomCircleSmall, drawPosition, null, Color * Opacity * 0.8f, rotation, BloomCircleSmall.Size() / 2f, scale * 2f * properBloomSize, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(Texture, drawPosition, null, Color * Opacity * 0.8f, rotation, origin, scale * 1.1f, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(Texture, drawPosition, null, Color.White * Opacity * 0.9f, rotation, origin, scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(BloomCircleSmall, drawPosition, null, DrawColor * Opacity * 0.8f, rotation, BloomCircleSmall.Size() * 0.5f, scale * 2f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(Texture, drawPosition, null, DrawColor * Opacity * 0.8f, rotation, null, scale * 1.1f, SpriteEffects.None);
+            spriteBatch.Draw(Texture, drawPosition, null, Color.White * Opacity * 0.9f, rotation, null, scale, SpriteEffects.None);
         }
     }
 }

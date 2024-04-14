@@ -1,10 +1,12 @@
-﻿global using static System.MathF;
+﻿global using Luminance.Core.Graphics;
+global using static System.MathF;
+global using static Luminance.Common.Utilities.Utilities;
+global using static Luminance.Core.Graphics.ScreenShakeSystem;
 global using static Microsoft.Xna.Framework.MathHelper;
 global using static NoxusBoss.Assets.CommonSoundsRegistry;
 global using static NoxusBoss.Assets.MiscTexturesRegistry;
 global using static NoxusBoss.Common.Utilities.Utilities;
-global using static NoxusBoss.Core.Graphics.SpecificEffectManagers.ScreenShakeSystem;
-using NoxusBoss.Core.CrossCompatibility.Outbound;
+using Luminance.Core.ModCalls;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -58,6 +60,6 @@ namespace NoxusBoss
         }
 
         // Defer mod-call interpretation to a separate class.
-        public override object Call(params object[] args) => ModCallManager.Call(args);
+        public override object Call(params object[] args) => ModCallManager.ProcessAllModCalls(this, args);
     }
 }

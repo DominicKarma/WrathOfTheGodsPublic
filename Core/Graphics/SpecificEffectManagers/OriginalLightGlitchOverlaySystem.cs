@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.NPCs.Bosses.NamelessDeity;
 using NoxusBoss.Core.Configuration;
-using NoxusBoss.Core.Graphics.Shaders;
 using ReLogic.Content;
 using Terraria;
 using Terraria.ID;
@@ -135,7 +134,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 
         private static void PrepareNoiseShader()
         {
-            var glitchShader = ShaderManager.GetShader("GlitchShader");
+            var glitchShader = ShaderManager.GetShader("NoxusBoss.GlitchShader");
             glitchShader.SetTexture(SharpNoise, 1);
             glitchShader.TrySetParameter("coordinateZoomFactor", Vector2.One * 0.5f);
             glitchShader.TrySetParameter("glitchInterpolant", GlitchIntensity);

@@ -1,7 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Luminance.Common.DataStructures;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Common.DataStructures;
-using NoxusBoss.Core.Graphics.Automators;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
 using Terraria.Audio;
@@ -101,8 +100,8 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
                         Vector2 left = Projectile.Center + Projectile.velocity * d - daggerStartingVelocity * 3f;
                         Vector2 right = Projectile.Center + Projectile.velocity * d + daggerStartingVelocity * 3f;
 
-                        NewProjectileBetter(left, daggerStartingVelocity, ModContent.ProjectileType<LightDagger>(), NamelessDeityBoss.DaggerDamage, 0f, -1, ShotProjectileTelegraphTime, hueInterpolant, daggerIndex);
-                        NewProjectileBetter(right, -daggerStartingVelocity, ModContent.ProjectileType<LightDagger>(), NamelessDeityBoss.DaggerDamage, 0f, -1, ShotProjectileTelegraphTime, hueInterpolant, daggerIndex + 1);
+                        NewProjectileBetter(Projectile.GetSource_FromThis(), left, daggerStartingVelocity, ModContent.ProjectileType<LightDagger>(), NamelessDeityBoss.DaggerDamage, 0f, -1, ShotProjectileTelegraphTime, hueInterpolant, daggerIndex);
+                        NewProjectileBetter(Projectile.GetSource_FromThis(), right, -daggerStartingVelocity, ModContent.ProjectileType<LightDagger>(), NamelessDeityBoss.DaggerDamage, 0f, -1, ShotProjectileTelegraphTime, hueInterpolant, daggerIndex + 1);
                         daggerIndex += 2;
                     }
                 }

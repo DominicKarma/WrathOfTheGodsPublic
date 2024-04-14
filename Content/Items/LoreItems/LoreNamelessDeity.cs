@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Luminance.Common.Easings;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using NoxusBoss.Assets.Fonts;
-using NoxusBoss.Common.Easings;
 using NoxusBoss.Common.SentenceGeneration;
 using NoxusBoss.Content.Items.Placeable.Trophies;
 using NoxusBoss.Core.CrossCompatibility.Inbound;
@@ -148,7 +148,7 @@ namespace NoxusBoss.Content.Items.LoreItems
             ContextFreeGrammar sentenceGenerator = new(NamelessDeityLoreManager.Seed2 + lineNumber, grammar);
             string alternateSentence = sentenceGenerator.GenerateSentence(line.Font);
 
-            float opacityInterpolant = PolynomialEasing.Quintic.Evaluate(EasingType.In, NamelessDeityLoreManager.SeedInterpolant);
+            float opacityInterpolant = EasingCurves.Quintic.Evaluate(EasingType.In, NamelessDeityLoreManager.SeedInterpolant);
             Color lineColor = line.OverrideColor ?? Color.White;
 
             // Draw the text. It will interpolate between the two values.

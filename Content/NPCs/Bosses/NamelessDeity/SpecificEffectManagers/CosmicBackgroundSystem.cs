@@ -4,8 +4,6 @@ using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Core.Configuration;
-using NoxusBoss.Core.Graphics.Automators;
-using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
@@ -126,7 +124,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.SpecificEffectManagers
                 backStarColor = Color.Lerp(Color.Magenta.HueShift(Sin01(Main.GlobalTimeWrappedHourly * 5f) * 0.07f) * 0.8f, Color.Yellow, DifferentStarsInterpolant);
             }
 
-            var cosmicShader = ShaderManager.GetShader("CosmicBackgroundShader");
+            var cosmicShader = ShaderManager.GetShader("NoxusBoss.CosmicBackgroundShader");
             cosmicShader.TrySetParameter("zoom", StarZoomIncrement + 0.12f);
             cosmicShader.TrySetParameter("brightness", intensity);
             cosmicShader.TrySetParameter("scrollSpeedFactor", 0.0015f);

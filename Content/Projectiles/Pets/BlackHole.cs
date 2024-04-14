@@ -33,12 +33,12 @@ namespace NoxusBoss.Content.Projectiles.Pets
 
             // Hover near the owner.
             Vector2 hoverDestination = Owner.Center + new Vector2(Owner.direction * 50f, -36f);
-            Projectile.velocity = (Projectile.velocity + Projectile.DirectionToSafe(hoverDestination) * 0.3f).ClampLength(0f, 25f);
-            if (Vector2.Dot(Projectile.velocity, Projectile.DirectionToSafe(hoverDestination)) < 0f)
+            Projectile.velocity = (Projectile.velocity + Projectile.SafeDirectionTo(hoverDestination) * 0.3f).ClampLength(0f, 25f);
+            if (Vector2.Dot(Projectile.velocity, Projectile.SafeDirectionTo(hoverDestination)) < 0f)
                 Projectile.velocity *= 0.96f;
 
             // Fly away from the owner if too close, so that it doesn't obscure them with the distortion effects.
-            Projectile.velocity -= Projectile.DirectionToSafe(Owner.Center) * InverseLerp(145f, 70f, Projectile.Distance(Owner.Center)) * 2f;
+            Projectile.velocity -= Projectile.SafeDirectionTo(Owner.Center) * InverseLerp(145f, 70f, Projectile.Distance(Owner.Center)) * 2f;
 
             // Teleport near the player if they're very far away.
             if (!Projectile.WithinRange(Owner.Center, 2000f))

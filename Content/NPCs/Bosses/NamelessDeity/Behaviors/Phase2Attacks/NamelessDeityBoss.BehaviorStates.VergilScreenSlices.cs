@@ -144,7 +144,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
                         sliceSpawnCenter = Target.Center + Main.rand.NextVector2Circular(10f, 10f);
 
                     Vector2 sliceDirection = new Vector2(Main.rand.NextFloat(-10f, 10f), Main.rand.NextFloat(-6f, 6f)).SafeNormalize(Vector2.UnitX);
-                    NewProjectileBetter(sliceSpawnCenter - sliceDirection * sliceLength * 0.5f, sliceDirection, ModContent.ProjectileType<VergilScreenSlice>(), ScreenSliceDamage, 0f, -1, telegraphTime, sliceLength);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), sliceSpawnCenter - sliceDirection * sliceLength * 0.5f, sliceDirection, ModContent.ProjectileType<VergilScreenSlice>(), ScreenSliceDamage, 0f, -1, telegraphTime, sliceLength);
                 }
 
                 sliceCounter++;

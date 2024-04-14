@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Common.Subworlds;
 using NoxusBoss.Common.Utilities;
 using NoxusBoss.Core.Configuration;
-using NoxusBoss.Core.Graphics.Shaders;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using ReLogic.Content;
 using Terraria;
@@ -368,7 +367,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.SpecificEffectManagers
                 float distortionRadius = NamelessDeityBoss.Myself.width * NamelessDeityBoss.Myself.Opacity * Pow(scale, 2f) * 2.09f;
                 Vector2 distortionCenter = (NamelessDeityBoss.Myself.Center - Main.screenPosition) / starTexture.Size();
 
-                var behindStarsShader = ShaderManager.GetShader("BehindStarsShader");
+                var behindStarsShader = ShaderManager.GetShader("NoxusBoss.BehindStarsShader");
                 behindStarsShader.TrySetParameter("aspectRatio", starTexture.Height / (float)starTexture.Width);
                 behindStarsShader.TrySetParameter("distortionRadius", distortionRadius / starTexture.Width);
                 behindStarsShader.TrySetParameter("distortionCenter", distortionCenter);
@@ -394,7 +393,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.SpecificEffectManagers
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullNone, null, perspectiveMatrix);
 
             // Draw a glowing orb over the moon.
-            float glowDissipateFactor = Remap(SkyEyeOpacity, 0.2f, 1f, 1f, 0.74f);
+            float glowDissipateFactor = Utils.Remap(SkyEyeOpacity, 0.2f, 1f, 1f, 0.74f);
             Vector2 backglowOrigin = BloomCircleSmall.Size() * 0.5f;
             Vector2 baseScale = Vector2.One * SkyEyeOpacity * Lerp(1.9f, 2f, Cos01(Main.GlobalTimeWrappedHourly * 4f)) * SkyEyeScale * 1.4f;
 

@@ -123,16 +123,16 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
 
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        NewProjectileBetter(CensorPosition, (TwoPi * spinCompletionRatio).ToRotationVector2() * 8f, ModContent.ProjectileType<StarPatterenedStarburst>(), StarburstDamage, 0f, -1, 0f, movementDelay + 5);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), CensorPosition, (TwoPi * spinCompletionRatio).ToRotationVector2() * 8f, ModContent.ProjectileType<StarPatterenedStarburst>(), StarburstDamage, 0f, -1, 0f, movementDelay + 5);
 
-                        int star = NewProjectileBetter(CensorPosition, (TwoPi * spinCompletionRatio + Pi / 5f).ToRotationVector2() * 8f, ModContent.ProjectileType<StarPatterenedStarburst>(), StarburstDamage, 0f, -1, 0f, movementDelay + 9);
+                        int star = NewProjectileBetter(NPC.GetSource_FromAI(), CensorPosition, (TwoPi * spinCompletionRatio + Pi / 5f).ToRotationVector2() * 8f, ModContent.ProjectileType<StarPatterenedStarburst>(), StarburstDamage, 0f, -1, 0f, movementDelay + 9);
                         if (Main.projectile.IndexInRange(star))
                         {
                             Main.projectile[star].As<StarPatterenedStarburst>().RadiusOffset = 400f;
                             Main.projectile[star].As<StarPatterenedStarburst>().ConvergenceAngleOffset = Pi / 5f;
                         }
 
-                        star = NewProjectileBetter(CensorPosition, (TwoPi * spinCompletionRatio + TwoPi / 5f).ToRotationVector2() * 8f, ModContent.ProjectileType<StarPatterenedStarburst>(), StarburstDamage, 0f, -1, 0f, movementDelay + 16);
+                        star = NewProjectileBetter(NPC.GetSource_FromAI(), CensorPosition, (TwoPi * spinCompletionRatio + TwoPi / 5f).ToRotationVector2() * 8f, ModContent.ProjectileType<StarPatterenedStarburst>(), StarburstDamage, 0f, -1, 0f, movementDelay + 16);
                         if (Main.projectile.IndexInRange(star))
                         {
                             Main.projectile[star].As<StarPatterenedStarburst>().RadiusOffset = 900f;

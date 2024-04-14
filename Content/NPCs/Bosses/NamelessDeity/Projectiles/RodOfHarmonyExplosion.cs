@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.Particles;
-using NoxusBoss.Core.Graphics.Automators;
-using NoxusBoss.Core.Graphics.Shaders;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
 using Terraria.DataStructures;
@@ -9,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
 {
-    public class RodOfHarmonyExplosion : ModProjectile, IDrawPixelated
+    public class RodOfHarmonyExplosion : ModProjectile, IPixelatedPrimitiveRenderer
     {
         public static int Lifetime => SecondsToFrames(0.2f);
 
@@ -57,12 +56,12 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
             }
         }
 
-        public void DrawWithPixelation()
+        public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
         {
             Main.spriteBatch.PrepareForShaders();
             DrawData explosionDrawData = new(ViscousNoise, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.White * Projectile.Opacity);
 
-            var shockwaveShader = ShaderManager.GetShader("ShockwaveShader");
+            var shockwaveShader = ShaderManager.GetShader("NoxusBoss.ShockwaveShader");
             shockwaveShader.TrySetParameter("shockwaveColor", Color.Lerp(Color.BlueViolet, Color.LightGoldenrodYellow, Pow(1f - LifetimeRatio, 1.45f) * 0.95f));
             shockwaveShader.TrySetParameter("screenSize", Main.ScreenSize.ToVector2());
             shockwaveShader.TrySetParameter("explosionDistance", Radius * Projectile.scale * 0.5f);

@@ -1,6 +1,6 @@
 ﻿using System;
+using Luminance.Common.DataStructures;
 using Microsoft.Xna.Framework;
-using NoxusBoss.Common.DataStructures;
 using NoxusBoss.Content.Particles;
 using Terraria;
 using Terraria.Audio;
@@ -49,7 +49,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
 
             // Propel the hands away from the center of Noxus, to prevent them from being unseeable.
             if (CurrentAttack is not EntropicGodAttackType.MigraineAttack and not EntropicGodAttackType.RapidExplosiveTeleports and not EntropicGodAttackType.BrainFogAndThreeDimensionalCharges and not EntropicGodAttackType.Phase2Transition)
-                idealVelocity += NPC.DirectionToSafe(hand.Center) * Remap(NPC.Distance(hand.Center) / NPC.scale, 200f, 50f, 0f, 27f);
+                idealVelocity += NPC.SafeDirectionTo(hand.Center) * Utils.Remap(NPC.Distance(hand.Center) / NPC.scale, 200f, 50f, 0f, 27f);
 
             if (idealVelocity.Length() >= maxFlySpeed)
                 idealVelocity = idealVelocity.SafeNormalize(Vector2.UnitY) * maxFlySpeed;
@@ -175,10 +175,6 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
 
         public void TeleportToWithDecal(Vector2 teleportPosition)
         {
-            // Create the decal particle at the old position before teleporting.
-            NoxusDecalParticle decal = new(NPC.Center, NPC.rotation, Color.Lerp(Color.Cyan, Color.HotPink, 0.7f), 27, NPC.scale);
-            decal.Spawn();
-
             NPC.Center = teleportPosition;
             NPC.velocity = Vector2.Zero;
             NPC.netUpdate = true;

@@ -121,7 +121,7 @@ namespace NoxusBoss.Core.Graphics.Shaders.Keyboard
                 {
                     float signedDistanceToLine = SignedDistanceToLine(uvPositionOfIndex, new Vector2(0.5f, 0.5f), Vector2.UnitX);
                     float distanceToLine = Abs(signedDistanceToLine);
-                    float brightnessTaper = Remap(SeamScale, 4f, 50f, 3f, 0.9f);
+                    float brightnessTaper = Utils.Remap(SeamScale, 4f, 50f, 3f, 0.9f);
                     gridColor = Vector4.Lerp(gridColor, Vector4.One, Clamp((1f - distanceToLine * brightnessTaper) * SeamScale * 0.33f, 0f, 1f) * (1f - HeavenlyBackgroundIntensity));
                 }
 

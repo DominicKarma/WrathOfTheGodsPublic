@@ -34,7 +34,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
 
                 SoundEngine.PlaySound(GenericBurstSound);
                 if (Main.netMode != NetmodeID.MultiplayerClient)
-                    NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
             }
 
             // Bring the music.

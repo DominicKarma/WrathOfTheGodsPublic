@@ -1,8 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Core.Configuration;
-using NoxusBoss.Core.Graphics.Automators;
-using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.Graphics.Effects;
 using Terraria.ID;
@@ -124,9 +122,9 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
                 if (Main.netMode == NetmodeID.Server)
                     return;
 
-                BlurRenderTarget = new(true, RenderTargetManager.CreateScreenSizedTarget);
-                FlashRenderTarget = new(true, RenderTargetManager.CreateScreenSizedTarget);
-                AberrationTarget = new(true, RenderTargetManager.CreateScreenSizedTarget);
+                BlurRenderTarget = new(true, ManagedRenderTarget.CreateScreenSizedTarget);
+                FlashRenderTarget = new(true, ManagedRenderTarget.CreateScreenSizedTarget);
+                AberrationTarget = new(true, ManagedRenderTarget.CreateScreenSizedTarget);
             });
 
             On_FilterManager.EndCapture += EndCaptureManager;
@@ -262,7 +260,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
                 screenTarget1.SwapToRenderTarget();
                 Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
 
-                var aberrationShader = ShaderManager.GetShader("ChromaticAberrationShader");
+                var aberrationShader = ShaderManager.GetShader("NoxusBoss.ChromaticAberrationShader");
                 aberrationShader.TrySetParameter("splitIntensity", (1f - AberrationLifetimeRatio) * AberrationIntensity);
                 aberrationShader.TrySetParameter("impactPoint", AberrationPosition / Main.ScreenSize.ToVector2());
                 aberrationShader.Apply();

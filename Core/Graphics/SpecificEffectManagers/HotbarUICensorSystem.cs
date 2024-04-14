@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.NPCs.Bosses.NamelessDeity;
 using NoxusBoss.Core.CrossCompatibility.Inbound;
 using NoxusBoss.Core.GlobalItems;
-using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
@@ -26,11 +25,11 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             {
                 // Censor the first and last inventory slots by default.
                 // These slots can be moved around by the player if desired.
-                List<int> result = new()
-                {
+                List<int> result =
+                [
                     0,
                     9
-                };
+                ];
 
                 int normalityID = Main.LocalPlayer.FindItem(ModReferences.BaseCalamity?.Find<ModItem>("NormalityRelocator")?.Type ?? -1000);
 
@@ -127,7 +126,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
         public static void DrawCensor(Vector2 drawPosition)
         {
             // Apply a static shader.
-            var censorShader = ShaderManager.GetShader("StaticOverlayShader");
+            var censorShader = ShaderManager.GetShader("NoxusBoss.StaticOverlayShader");
             censorShader.SetTexture(ModContent.Request<Texture2D>("Terraria/Images/Misc/noise"), 1, SamplerState.PointWrap);
             censorShader.Apply();
 

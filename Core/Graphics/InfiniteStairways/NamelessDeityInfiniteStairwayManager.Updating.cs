@@ -143,7 +143,7 @@ namespace NoxusBoss.Core.Graphics.InfiniteStairways
             if (GardenStartX != 0f && pastGarden && !NamelessDeityInfiniteStairwayTopAnimationManager.AnimationActive)
             {
                 NamelessDeityInfiniteStairwayTopAnimationManager.AnimationTimer = 1;
-                InputAndUIBlockerSystem.Start(true, ModReferences.CalamityRemix is null, () => NamelessDeityInfiniteStairwayTopAnimationManager.AnimationActive);
+                BlockerSystem.Start(true, ModReferences.CalamityRemix is null, () => NamelessDeityInfiniteStairwayTopAnimationManager.AnimationActive);
                 Main.LocalPlayer.velocity.X = 0f;
             }
         }

@@ -274,12 +274,12 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             {
                 Vector2 smokeVelocity = -Vector2.UnitY.RotatedByRandom(0.93f) * Main.rand.NextFloat(3f, 19f);
                 Color rageSmokeColor = Color.Lerp(Color.OrangeRed, Color.DarkRed, Main.rand.NextFloat(0.7f));
-                MediumMistParticle smoke = new(rageBarPositionWorld + Main.rand.NextVector2Circular(50f, 18f), smokeVelocity, rageSmokeColor, Color.Gray, 1.8f, 255f, 0.004f);
+                HeavySmokeParticle smoke = new(rageBarPositionWorld + Main.rand.NextVector2Circular(50f, 18f), smokeVelocity, rageSmokeColor, 60, 0.7f, 1f);
                 smoke.Spawn();
 
                 smokeVelocity = -Vector2.UnitY.RotatedByRandom(0.93f) * Main.rand.NextFloat(3f, 19f);
                 Color adrenalineSmokeColor = Color.Lerp(Color.Lime, Color.Cyan, Main.rand.NextFloat(0.25f, 0.8f));
-                smoke = new(adrenalineBarPositionWorld + Main.rand.NextVector2Circular(50f, 18f), smokeVelocity, adrenalineSmokeColor, Color.LightGray, 1.8f, 255f, 0.004f);
+                smoke = new(adrenalineBarPositionWorld + Main.rand.NextVector2Circular(50f, 18f), smokeVelocity, adrenalineSmokeColor, 60, 0.7f, 1f);
                 smoke.Spawn();
             }
 

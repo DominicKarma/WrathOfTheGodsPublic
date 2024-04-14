@@ -149,7 +149,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
                 ripperDestructionAnimationTime = 1;
 
             int daggerShootRate = (int)(60f - daggerShootCounter * 4.6f);
-            float daggerSpacing = Remap(daggerShootTimer, 0f, 7f, 216f, 141f);
+            float daggerSpacing = Utils.Remap(daggerShootTimer, 0f, 7f, 216f, 141f);
             if (daggerShootRate < 42)
                 daggerShootRate = 42;
             if (CommonCalamityVariables.DeathModeActive)
@@ -209,7 +209,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
             // Enter the background and dissapear.
             if (AttackTimer < backgroundEnterTime + cooldownTime)
             {
-                ZPosition = MathF.Max(ZPosition, Remap(AttackTimer, 0f, backgroundEnterTime, 0f, 11f));
+                ZPosition = MathF.Max(ZPosition, Utils.Remap(AttackTimer, 0f, backgroundEnterTime, 0f, 11f));
                 NPC.Opacity = InverseLerp(backgroundEnterTime - 1f, backgroundEnterTime * 0.56f, AttackTimer);
                 KaleidoscopeInterpolant = 1f - NPC.Opacity;
                 NPC.dontTakeDamage = true;
@@ -234,8 +234,8 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
                         Vector2 left = daggerSpawnPosition - perpendicularDirection * d;
                         Vector2 right = daggerSpawnPosition + perpendicularDirection * d;
 
-                        NewProjectileBetter(left, daggerStartingVelocity, ModContent.ProjectileType<LightDagger>(), DaggerDamage, 0f, -1, sliceTelegraphTime, hueInterpolant, daggerIndex);
-                        NewProjectileBetter(right, daggerStartingVelocity, ModContent.ProjectileType<LightDagger>(), DaggerDamage, 0f, -1, sliceTelegraphTime, hueInterpolant, daggerIndex + 1f);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), left, daggerStartingVelocity, ModContent.ProjectileType<LightDagger>(), DaggerDamage, 0f, -1, sliceTelegraphTime, hueInterpolant, daggerIndex);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), right, daggerStartingVelocity, ModContent.ProjectileType<LightDagger>(), DaggerDamage, 0f, -1, sliceTelegraphTime, hueInterpolant, daggerIndex + 1f);
                         daggerIndex += 2;
                     }
                 }
@@ -281,7 +281,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
                 SoundEngine.PlaySound(Phase3TransitionSound);
 
                 // Disable the UI and inputs for the duration of the attack.
-                InputAndUIBlockerSystem.Start(true, true, () => CurrentState == NamelessAIType.EnterPhase3);
+                BlockerSystem.Start(true, true, () => CurrentState == NamelessAIType.EnterPhase3);
 
                 // Create a white overlay effect.
                 OriginalLightGlitchOverlaySystem.WhiteOverlayInterpolant = 1f;

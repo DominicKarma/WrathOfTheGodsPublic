@@ -1,30 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.NPCs.Bosses.NamelessDeity;
-using NoxusBoss.Core.Graphics;
-using NoxusBoss.Core.Graphics.Automators;
-using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Projectiles.Visuals
 {
-    public class WindStreakVisual : ModProjectile, IDrawGroupedPrimitives
+    public class WindStreakVisual : ModProjectile, IPixelatedPrimitiveRenderer
     {
-        public int MaxVertices => 3072; // 1024 + 2048
-
-        public int MaxIndices => 8192;
-
-        public PrimitiveTrailInstance PrimitiveInstance
-        {
-            get;
-            private set;
-        }
-
-        public PrimitiveGroupDrawContext DrawContext => PrimitiveGroupDrawContext.Pixelated;
-
-        public ManagedShader Shader => ShaderManager.GetShader("GenericTrailStreak");
-
         public ref float Time => ref Projectile.ai[0];
 
         public ref float LoopInterpolant => ref Projectile.ai[1];
@@ -50,7 +34,6 @@ namespace NoxusBoss.Content.Projectiles.Visuals
             Projectile.Opacity = 0f;
             Projectile.tileCollide = false;
             Projectile.netImportant = true;
-            PrimitiveInstance = (this as IDrawGroupedPrimitives).GenerateInstance(Projectile);
         }
 
         public override void AI()
@@ -112,19 +95,13 @@ namespace NoxusBoss.Content.Projectiles.Visuals
 
         public Color WindColorFunction(float completionRatio) => Projectile.GetAlpha(Color.White) with { A = 0 } * (1f - completionRatio) * Projectile.Opacity;
 
-        public void PrepareShaderForPrimitives()
+        public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
         {
-            Shader.SetTexture(StreakBloomLine, 1);
-        }
+            ManagedShader shader = ShaderManager.GetShader("NoxusBoss.GenericTrailStreak");
+            shader.SetTexture(StreakBloomLine, 1, SamplerState.LinearWrap);
 
-        public override bool PreDraw(ref Color lightColor)
-        {
-            // Queue index and vertex data to the group.
-            PrimitiveInstance.PrimitiveDrawer ??= new(WindWidthFunction, WindColorFunction, null, true, Shader);
-            PrimitiveInstance.UpdateBuffers(Projectile.oldPos, Projectile.Size * 0.5f - Main.screenPosition, 7);
-            return false;
+            PrimitiveSettings settings = new(WindWidthFunction, WindColorFunction, _ => Projectile.Size * 0.5f, Pixelate: true, Shader: shader);
+            PrimitiveRenderer.RenderTrail(Projectile.oldPos, settings, 7);
         }
-
-        public override void OnKill(int timeLeft) => PrimitiveInstance?.Destroy();
     }
 }

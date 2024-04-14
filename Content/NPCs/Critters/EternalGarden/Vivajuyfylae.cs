@@ -4,12 +4,12 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Assets.Fonts;
+using NoxusBoss.Common.BaseEntities;
 using NoxusBoss.Common.Biomes;
 using NoxusBoss.Common.Utilities;
 using NoxusBoss.Content.NPCs.Bosses.NamelessDeity;
 using NoxusBoss.Core.Graphics.InfiniteStairways;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
-using NoxusBoss.Core.Music;
 using NoxusBoss.Core.ShapeCurves;
 using ReLogic.Content;
 using Terraria;
@@ -347,7 +347,7 @@ namespace NoxusBoss.Content.NPCs.Critters.EternalGarden
             // Slowly err towards the player if far away.
             Player closestPlayer = Main.player[Player.FindClosest(NPC.Center, 1, 1)];
             float playerErrInterpolant = InverseLerp(960f, 1380f, NPC.Distance(closestPlayer.Center));
-            NPC.velocity += NPC.DirectionToSafe(closestPlayer.Center) * playerErrInterpolant * 0.5f;
+            NPC.velocity += NPC.SafeDirectionTo(closestPlayer.Center) * playerErrInterpolant * 0.5f;
 
             // Occasionally start a constellation formation. This does not happen if this is a thumbs up variant, as that animation is based on a timer.
             if (!ThumbsUpAnimationVariant && Main.rand.NextBool(195000))
@@ -457,7 +457,7 @@ namespace NoxusBoss.Content.NPCs.Critters.EternalGarden
         {
             // Fly away from the closest player and vanish after enough time has passed.
             Player closestPlayer = Main.player[Player.FindClosest(NPC.Center, 1, 1)];
-            NPC.velocity.X = Lerp(NPC.velocity.X, NPC.DirectionToSafe(closestPlayer.Center).X * -6f, 0.15f);
+            NPC.velocity.X = Lerp(NPC.velocity.X, NPC.SafeDirectionTo(closestPlayer.Center).X * -6f, 0.15f);
             NPC.velocity.Y = Clamp(NPC.velocity.Y - 0.5f, -39f, 1f);
 
             // Update the current direction.

@@ -146,7 +146,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
             NPC.SmoothFlyNearWithSlowdownRadius(hoverDestination, 0.17f, 0.89f, slowdownRadius);
 
             // Slow down rapidly if flying past the hover destination. If this happens when Nameless is moving really, really fast a sonic boom of sorts is created.
-            if (Vector2.Dot(NPC.velocity, NPC.DirectionToSafe(hoverDestination)) < 0f)
+            if (Vector2.Dot(NPC.velocity, NPC.SafeDirectionTo(hoverDestination)) < 0f)
             {
                 // Create the sonic boom if necessary.
                 if (NPC.velocity.Length() >= 75f)
@@ -159,7 +159,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
                     ScreenEffectSystem.SetFlashEffect(NPC.Center, 4f, 54);
 
                     if (Main.netMode != NetmodeID.MultiplayerClient)
-                        NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
                 }
 
                 NPC.velocity *= 0.67f;
@@ -207,7 +207,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     foreach (Vector2 starSpawnOffset in StarSpawnOffsets)
-                        NewProjectileBetter(Target.Center + starSpawnOffset, Vector2.Zero, ModContent.ProjectileType<ExplodingStar>(), ExplodingStarDamage, 0f, -1, 0f, 0.6f);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), Target.Center + starSpawnOffset, Vector2.Zero, ModContent.ProjectileType<ExplodingStar>(), ExplodingStarDamage, 0f, -1, 0f, 0.6f);
 
                     StarSpawnOffsets.Clear();
                     NPC.netSpam = 0;

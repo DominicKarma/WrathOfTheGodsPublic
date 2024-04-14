@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using Luminance.Common.DataStructures;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Common.DataStructures;
 using NoxusBoss.Common.Utilities;
 using NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm;
 using NoxusBoss.Core.Graphics.Primitives;
-using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -208,7 +207,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.Projectiles
 
         public void DrawLaser()
         {
-            var laserShader = ShaderManager.GetShader("NoxusLaserShader");
+            var laserShader = ShaderManager.GetShader("NoxusBoss.NoxusLaserShader");
             BeamDrawer ??= new PrimitiveTrail3D(WidthFunction, ColorFunction, null, true, laserShader);
 
             laserShader.SetTexture(StreakNightmareDeathray, 1);

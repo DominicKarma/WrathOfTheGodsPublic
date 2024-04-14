@@ -1,6 +1,6 @@
 ﻿using System;
+using Luminance.Common.Easings;
 using MonoMod.Cil;
-using NoxusBoss.Common.Easings;
 using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -57,7 +57,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
                     float deathTimerInterpolant = modPlayer.DeathTimerOverride / (float)NamelessDeityPlayerDeathVisualsPlayer.DeathTimerMax;
                     ulong start = 5;
                     ulong end = int.MaxValue * 2uL;
-                    float smoothInterpolant = new PolynomialEasing(20f).Evaluate(EasingType.InOut, deathTimerInterpolant);
+                    float smoothInterpolant = EasingCurves.MakePoly(20f).Evaluate(EasingType.InOut, deathTimerInterpolant);
                     long textValue = (long)Lerp(start, end, smoothInterpolant);
                     if (textValue >= int.MaxValue)
                         textValue -= int.MaxValue * 2L + 2;

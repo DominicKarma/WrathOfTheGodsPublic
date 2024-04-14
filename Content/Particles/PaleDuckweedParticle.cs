@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Core.Graphics.Particles;
 using Terraria;
 
 namespace NoxusBoss.Content.Particles
@@ -9,20 +8,22 @@ namespace NoxusBoss.Content.Particles
     {
         public int UniqueID;
 
-        public override BlendState DrawBlendState => BlendState.Additive;
+        public int FrameY;
 
-        public override string TexturePath => "NoxusBoss/Content/Particles/PaleDuckweedParticle";
+        public override BlendState BlendState => BlendState.Additive;
+
+        public override string AtlasTextureName => "NoxusBoss.PaleDuckweedParticle.png";
 
         public PaleDuckweedParticle(Vector2 position, Vector2 velocity, Color color, int lifetime)
         {
-            Frame = Main.rand.Next(3);
+            FrameY = Main.rand.Next(3);
             Position = position;
             Velocity = velocity;
-            Color = color;
+            DrawColor = color;
             Lifetime = lifetime;
             Direction = Main.rand.NextFromList(-1, 1);
             UniqueID = Main.rand.Next(100000);
-            Scale = Main.rand.NextFloat(0.45f, 0.7f);
+            Scale = Vector2.One * Main.rand.NextFloat(0.45f, 0.7f);
         }
 
         public override void Update()
@@ -31,7 +32,7 @@ namespace NoxusBoss.Content.Particles
             Opacity = InverseLerpBump(0f, 120f, Lifetime - 60f, Lifetime, Time);
 
             // Rise upward in water and bob in place above it.
-            if (Collision.WetCollision(Position - Vector2.One * Scale * 6f, (int)(Scale * 12f), (int)(Scale * 12f)))
+            if (Collision.WetCollision(Position - Vector2.One * Scale * 6f, (int)(Scale.X * 12f), (int)(Scale.Y * 12f)))
             {
                 if (Collision.SolidCollision(Position + Vector2.UnitX * Direction * 100f, 1, 1))
                     Direction *= -1;
@@ -45,27 +46,27 @@ namespace NoxusBoss.Content.Particles
                 Velocity.Y = Clamp(Velocity.Y + 0.1f, -1f, 5f);
             }
 
-            // Get pushed aroud by players.
+            // Get pushed around by players.
             Velocity += Main.LocalPlayer.velocity / (Pow(Main.LocalPlayer.Distance(Position), 2f) * 0.1f + 4f);
             Velocity = Velocity.ClampLength(0f, 12f);
             if (Velocity.Length() >= 8f)
                 Velocity *= 0.96f;
 
             // Emit a pale light.
-            Lighting.AddLight(Position, Color.ToVector3() * 0.33f);
+            Lighting.AddLight(Position, DrawColor.ToVector3() * 0.33f);
         }
 
-        public override void Draw()
+        public override void Draw(SpriteBatch spriteBatch)
         {
-            Rectangle frame = Texture.Frame(1, 3, 0, Frame);
+            Rectangle frame = Texture.Frame.Subdivide(1, 3, 0, FrameY);
             Vector2 origin = frame.Size() * 0.5f;
             SpriteEffects spriteDirection = Direction.ToSpriteDirection();
 
             // Draw a weakly pulsating backglow behind the duckweed.
             float pulse = (Main.GlobalTimeWrappedHourly * 0.5f + UniqueID * 0.21586f) % 1f;
-            Main.spriteBatch.Draw(BloomCircleSmall, Position - Main.screenPosition, null, Color * Opacity * 0.4f, Rotation, BloomCircleSmall.Size() * 0.5f, Scale * 0.34f, 0, 0f);
-            Main.spriteBatch.Draw(Texture, Position - Main.screenPosition, frame, Color * Opacity * (1f - pulse) * 0.61f, Rotation, origin, Scale * (pulse * 1.1f + 1f), spriteDirection, 0f);
-            Main.spriteBatch.Draw(Texture, Position - Main.screenPosition, frame, Color * Opacity, Rotation, origin, Scale, spriteDirection, 0f);
+            spriteBatch.Draw(BloomCircleSmall, Position - Main.screenPosition, null, DrawColor * Opacity * 0.4f, Rotation, BloomCircleSmall.Size() * 0.5f, Scale * 0.34f, 0, 0f);
+            spriteBatch.Draw(Texture, Position - Main.screenPosition, frame, DrawColor * Opacity * (1f - pulse) * 0.61f, Rotation, origin, Scale * (pulse * 1.1f + 1f), spriteDirection);
+            spriteBatch.Draw(Texture, Position - Main.screenPosition, frame, DrawColor * Opacity, Rotation, origin, Scale, spriteDirection);
         }
     }
 }

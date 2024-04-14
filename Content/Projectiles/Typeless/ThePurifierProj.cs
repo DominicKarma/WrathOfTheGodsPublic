@@ -8,9 +8,6 @@ using NoxusBoss.Content.Items.MiscOPTools;
 using NoxusBoss.Content.NPCs.Bosses.NamelessDeity;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Core.Graphics;
-using NoxusBoss.Core.Graphics.Automators;
-using NoxusBoss.Core.Graphics.Primitives;
-using NoxusBoss.Core.Graphics.Shaders;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
 using Terraria.Audio;
@@ -21,7 +18,7 @@ using Terraria.WorldBuilding;
 
 namespace NoxusBoss.Content.Projectiles.Typeless
 {
-    public class ThePurifierProj : ModProjectile, IDrawAdditive, IDrawPixelated
+    public class ThePurifierProj : ModProjectile, IDrawAdditive, IPixelatedPrimitiveRenderer
     {
         public class ChargingEnergyStreak
         {
@@ -37,8 +34,6 @@ namespace NoxusBoss.Content.Projectiles.Typeless
 
             public Vector2 StartingOffset;
 
-            public PrimitiveTrail EnergyStreakDrawer;
-
             public ChargingEnergyStreak(float speedInterpolant, float baseWidth, Color generalColor, Vector2 startingOffset)
             {
                 // Initialize things.
@@ -47,14 +42,6 @@ namespace NoxusBoss.Content.Projectiles.Typeless
                 GeneralColor = generalColor;
                 CurrentOffset = startingOffset;
                 StartingOffset = startingOffset;
-
-                // Don't attempt to load shaders serverside.
-                if (Main.netMode == NetmodeID.Server)
-                    return;
-
-                // Initialize the streak drawer.
-                var streakShader = ShaderManager.GetShader("GenericTrailStreak");
-                EnergyStreakDrawer ??= new(EnergyWidthFunction, EnergyColorFunction, null, true, ShaderManager.GetShader("GenericTrailStreak"));
             }
 
             public void Update()
@@ -65,16 +52,16 @@ namespace NoxusBoss.Content.Projectiles.Typeless
                 if (CurrentOffset.Length() <= 8f)
                 {
                     StartingOffset = Vector2.Lerp(StartingOffset, Vector2.Zero, SpeedInterpolant * 1.4f);
-                    Opacity = Clamp(Opacity * 0.94f - 0.09f, 0f, 1f);
+                    Opacity = Saturate(Opacity * 0.94f - 0.09f);
                 }
             }
 
             public float EnergyWidthFunction(float completionRatio) => BaseWidth - (1f - completionRatio) * 3f;
 
-            public Color EnergyColorFunction(float completionRatio) => GeneralColor with { A = 0 } * Opacity;
+            public Color EnergyColorFunction(float _) => GeneralColor with { A = 0 } * Opacity;
         }
 
-        public List<ChargingEnergyStreak> EnergyStreaks = new();
+        public List<ChargingEnergyStreak> EnergyStreaks = [];
 
         public float AnimationCompletion => Time / Lifetime;
 
@@ -212,7 +199,7 @@ namespace NoxusBoss.Content.Projectiles.Typeless
             }
 
             // Block player inputs.
-            InputAndUIBlockerSystem.Start(true, false, () => WorldGen.generatingWorld);
+            BlockerSystem.Start(true, false, () => WorldGen.generatingWorld);
 
             GenerationProgress _ = new();
             new Thread(context =>
@@ -238,25 +225,28 @@ namespace NoxusBoss.Content.Projectiles.Typeless
             spriteBatch.Draw(ChromaticBurst, Projectile.Center - Main.screenPosition, null, suckColor, suckRotation, ChromaticBurst.Size() * 0.5f, Vector2.One * suckPulse * 2.6f, 0, 0f);
         }
 
-        public void DrawWithPixelation()
+        public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
         {
             // Configure the streak shader's texture.
-            var streakShader = ShaderManager.GetShader("GenericTrailStreak");
+            var streakShader = ShaderManager.GetShader("NoxusBoss.GenericTrailStreak");
             streakShader.SetTexture(StreakBloomLine, 1);
 
             // Draw energy streaks as primitives.
-            Vector2 drawCenter = Projectile.Center - Vector2.UnitY.RotatedBy(Projectile.rotation) * Projectile.scale * 6f - Main.screenPosition;
+            Vector2 drawCenter = Projectile.Center - Vector2.UnitY.RotatedBy(Projectile.rotation) * Projectile.scale * 6f;
             for (int i = 0; i < EnergyStreaks.Count; i++)
             {
                 ChargingEnergyStreak streak = EnergyStreaks[i];
                 Vector2 start = streak.StartingOffset;
                 Vector2 end = streak.CurrentOffset;
-                Vector2 midpoint1 = Vector2.Lerp(start, end, 0.33f);
-                Vector2 midpoint2 = Vector2.Lerp(start, end, 0.67f);
-                streak.EnergyStreakDrawer.Draw(new Vector2[]
+                Vector2 midpoint1 = Vector2.Lerp(start, end, 0.2f);
+                Vector2 midpoint2 = Vector2.Lerp(start, end, 0.4f);
+                Vector2 midpoint3 = Vector2.Lerp(start, end, 0.6f);
+                Vector2 midpoint4 = Vector2.Lerp(start, end, 0.8f);
+                PrimitiveSettings settings = new(streak.EnergyWidthFunction, streak.EnergyColorFunction, _ => drawCenter, Pixelate: true, Shader: streakShader);
+                PrimitiveRenderer.RenderTrail(new Vector2[]
                 {
-                    end, midpoint2, midpoint1, start
-                }, drawCenter, 27);
+                    end, midpoint4, midpoint3, midpoint2, midpoint1, start
+                }, settings, 27);
             }
         }
     }

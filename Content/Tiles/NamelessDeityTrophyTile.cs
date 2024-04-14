@@ -64,7 +64,7 @@ namespace NoxusBoss.Content.Tiles
 
         public override void HitWire(int i, int j)
         {
-            Tile t = ParanoidTileRetrieval(i, j);
+            Tile t = Framing.GetTileSafely(i, j);
             int left = i - t.TileFrameX / 18;
             int top = j - t.TileFrameY / 18;
 
@@ -123,7 +123,7 @@ namespace NoxusBoss.Content.Tiles
             int pupilFrame = 0;
             float pupilFrameTime = (Main.GlobalTimeWrappedHourly * 1.9f + i * 0.44f + j * 0.13f) % 15f;
             if (pupilFrameTime >= 14f)
-                pupilFrame = (int)Remap(pupilFrameTime, 14f, 14.8f, 0f, 8f);
+                pupilFrame = (int)Utils.Remap(pupilFrameTime, 14f, 14.8f, 0f, 8f);
 
             // Check if the tile is activated by wiring. This is represented under the hood as whether FrameX is 54 or greater.
             // This is a LITTLE bit weird but it makes for the easiest packet syncing, since frame information is already a part of tile data syncing packets.
@@ -145,7 +145,7 @@ namespace NoxusBoss.Content.Tiles
                 }
                 else
                 {
-                    pupilFrame = (int)Remap(AwakenTimer, 0f, 24f, 6f, 8f);
+                    pupilFrame = (int)Utils.Remap(AwakenTimer, 0f, 24f, 6f, 8f);
                     AwakenTimer++;
                 }
 
@@ -166,10 +166,10 @@ namespace NoxusBoss.Content.Tiles
             if (drawEye)
             {
                 float eyeScale = 0.37f;
-                float pupilScaleFactor = Remap(offsetFromPlayer.Length(), 30f, 142f, Sin(Main.GlobalTimeWrappedHourly * 50f + i + j * 13f) * 0.012f + 0.6f, 0.9f);
+                float pupilScaleFactor = Utils.Remap(offsetFromPlayer.Length(), 30f, 142f, Sin(Main.GlobalTimeWrappedHourly * 50f + i + j * 13f) * 0.012f + 0.6f, 0.9f);
 
                 if (activatedByWire)
-                    pupilScaleFactor *= Remap(AwakenTimer, 0f, 30f, 0.3f, 1f);
+                    pupilScaleFactor *= Utils.Remap(AwakenTimer, 0f, 30f, 0.3f, 1f);
 
                 Texture2D sclera = scleraTexture.Value;
                 Texture2D pupil = pupilTexture.Value;

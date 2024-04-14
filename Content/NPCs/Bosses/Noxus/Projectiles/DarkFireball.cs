@@ -1,5 +1,5 @@
-﻿using Microsoft.Xna.Framework;
-using NoxusBoss.Common.DataStructures;
+﻿using Luminance.Common.DataStructures;
+using Microsoft.Xna.Framework;
 using NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm;
 using NoxusBoss.Content.Particles;
 using Terraria;
@@ -88,7 +88,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.Projectiles
         {
             // Explode on death.
             if (Main.netMode != NetmodeID.MultiplayerClient)
-                NewProjectileBetter(Projectile.Center, Vector2.Zero, ModContent.ProjectileType<NoxusExplosion>(), EntropicGod.ExplosionDamage, 0f);
+                NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<NoxusExplosion>(), EntropicGod.ExplosionDamage, 0f);
         }
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)

@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.Particles;
-using NoxusBoss.Core.Graphics.Automators;
 using ReLogic.Content;
 using Terraria;
 using Terraria.Audio;
@@ -123,7 +122,7 @@ namespace NoxusBoss.Content.NPCs.Enemies.NoxusWorld.DismalSeekers
             float arcInterpolant = InverseLerp(0f, 90f, Time - FastAccelerationDelay);
             float arcForce = arcInterpolant * 0.18f;
             Player closest = Main.player[Player.FindClosest(Projectile.Center, 1, 1)];
-            Projectile.velocity = (Projectile.velocity + Projectile.DirectionToSafe(closest.Center) * arcForce).ClampLength(0f, 19f);
+            Projectile.velocity = (Projectile.velocity + Projectile.SafeDirectionTo(closest.Center) * arcForce).ClampLength(0f, 19f);
 
             Time++;
         }

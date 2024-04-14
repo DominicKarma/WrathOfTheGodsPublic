@@ -1,10 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Luminance.Assets;
+using Luminance.Common.DataStructures;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Common.DataStructures;
-using NoxusBoss.Core.Graphics.Automators;
-using NoxusBoss.Core.Graphics.Primitives;
-using NoxusBoss.Core.Graphics.Shaders;
-using ReLogic.Content;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -12,15 +9,9 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
 {
-    public class ArcingStarburst : ModProjectile, IDrawPixelated, IDrawAdditive, IProjOwnedByBoss<NamelessDeityBoss>
+    public class ArcingStarburst : ModProjectile, IDrawAdditive, IPixelatedPrimitiveRenderer, IProjOwnedByBoss<NamelessDeityBoss>
     {
-        public static Asset<Texture2D> MyTexture
-        {
-            get;
-            private set;
-        }
-
-        public PrimitiveTrail TrailDrawer
+        public static LazyAsset<Texture2D> MyTexture
         {
             get;
             private set;
@@ -37,7 +28,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
             ProjectileID.Sets.TrailCacheLength[Type] = 13;
 
             if (Main.netMode != NetmodeID.Server)
-                MyTexture = ModContent.Request<Texture2D>(Texture);
+                MyTexture = LazyAsset<Texture2D>.Request(Texture);
         }
 
         public override void SetDefaults()
@@ -82,12 +73,12 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
             Projectile.frameCounter++;
             Projectile.frame = Projectile.frameCounter / 4 % Main.projFrames[Type];
 
-            // Hande arcing behaviors.
+            // Handle arcing behaviors.
             int slowdownTime = 53;
             int redirectTime = 27;
             int fastHomeTime = 86;
             NPCAimedTarget target = NamelessDeityBoss.Myself.GetTargetData();
-            Vector2 directionToTarget = Projectile.DirectionToSafe(target.Center);
+            Vector2 directionToTarget = Projectile.SafeDirectionTo(target.Center);
             if (Time <= slowdownTime)
                 Projectile.velocity *= 0.84f;
             else if (Time <= slowdownTime + redirectTime)
@@ -133,7 +124,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
 
         public Color FlameTrailColorFunction(float completionRatio)
         {
-            // Make the trail fade out at the end and fade in shparly at the start, to prevent the trail having a definitive, flat "start".
+            // Make the trail fade out at the end and fade in sharply at the start, to prevent the trail having a definitive, flat "start".
             float trailOpacity = InverseLerpBump(0f, 0.067f, 0.27f, 0.75f, completionRatio) * 0.9f;
 
             // Interpolate between a bunch of colors based on the completion ratio.
@@ -170,14 +161,13 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
             Main.spriteBatch.Draw(texture, drawPosition, frame, color, Projectile.rotation, frame.Size() * 0.5f, Projectile.scale, 0, 0f);
         }
 
-        public void DrawWithPixelation()
+        public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
         {
-            var fireTrailShader = ShaderManager.GetShader("GenericFlameTrail");
-            TrailDrawer ??= new(FlameTrailWidthFunction, FlameTrailColorFunction, null, true, fireTrailShader);
+            ManagedShader shader = ShaderManager.GetShader("NoxusBoss.GenericFlameTrail");
+            shader.SetTexture(StreakMagma, 1, SamplerState.LinearWrap);
 
-            // Draw a flame trail.
-            fireTrailShader.SetTexture(StreakMagma, 1);
-            TrailDrawer.Draw(Projectile.oldPos, Projectile.Size * 0.5f - Main.screenPosition, 7);
+            PrimitiveSettings settings = new(FlameTrailWidthFunction, FlameTrailColorFunction, _ => Projectile.Size * 0.5f, Pixelate: true, Shader: shader);
+            PrimitiveRenderer.RenderTrail(Projectile.oldPos, settings, 7);
         }
     }
 }

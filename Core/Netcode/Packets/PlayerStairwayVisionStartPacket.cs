@@ -7,7 +7,7 @@ using static NoxusBoss.Core.FixUnconsciousPlayersBeingVisibleInMP;
 
 namespace NoxusBoss.Core.Netcode.Packets
 {
-    public class PlayerStairwayVisionStartPacket : BaseCustomPacket
+    public class PlayerStairwayVisionStartPacket : Packet
     {
         public override void Write(ModPacket packet, params object[] context)
         {

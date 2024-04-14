@@ -99,14 +99,13 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
 
             // Perform some camera effects.
             float zoomOutInterpolant = InverseLerp(starRecedeDelay + starRecedeTime + eyeAppearTime + eyeObserveTime + pupilContractDelay - 17f, starRecedeDelay + starRecedeTime + eyeAppearTime + eyeObserveTime + pupilContractDelay - 4f, AttackTimer);
-            CameraPanSystem.CameraFocusPoint = new Vector2(Main.LocalPlayer.Center.X, 3000f);
-            CameraPanSystem.CameraPanInterpolant = Pow(StarRecedeInterpolant * (1f - zoomOutInterpolant), 0.17f);
-            CameraPanSystem.Zoom = Pow(StarRecedeInterpolant * (1f - zoomOutInterpolant), 0.4f) * 0.6f;
+            CameraPanSystem.PanTowards(new Vector2(Main.LocalPlayer.Center.X, 3000f), Pow(StarRecedeInterpolant * (1f - zoomOutInterpolant), 0.17f));
+            CameraPanSystem.ZoomIn(Pow(StarRecedeInterpolant * (1f - zoomOutInterpolant), 0.4f) * 0.6f);
 
             // Inputs are disabled and UIs are hidden during the camera effects. This is safely undone once Nameless begins screaming, or if he goes away for some reason.
             if (AttackTimer == starRecedeDelay + 1f)
             {
-                InputAndUIBlockerSystem.Start(true, true, () =>
+                BlockerSystem.Start(true, true, () =>
                 {
                     // The block should immediately terminate if Nameless leaves for some reason.
                     if (!NPC.active)

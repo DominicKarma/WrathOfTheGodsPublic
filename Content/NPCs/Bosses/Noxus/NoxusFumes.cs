@@ -7,7 +7,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus
 {
     public class NoxusFumes : ModBuff
     {
-        public static Color IllusionColor => new(120, 24, 116, 0);
+        public static Color IllusionColor => new(120, 24, 116);
 
         public override void SetStaticDefaults()
         {

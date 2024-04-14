@@ -1,13 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using Luminance.Common.DataStructures;
+using Luminance.Common.Easings;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Common.DataStructures;
-using NoxusBoss.Common.Easings;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Core.Graphics.Automators;
-using NoxusBoss.Core.Graphics.Primitives;
-using NoxusBoss.Core.Graphics.Shaders;
 using NoxusBoss.Core.Graphics.Shaders.Keyboard;
 using Terraria;
 using Terraria.Audio;
@@ -20,12 +18,6 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
     public class FallingGalaxy : ModProjectile, IDrawsWithShader, IProjOwnedByBoss<NamelessDeityBoss>
     {
         public bool SetActiveFalseInsteadOfKill => true;
-
-        public PrimitiveTrail TelegraphDrawer
-        {
-            get;
-            private set;
-        }
 
         public ref float Time => ref Projectile.ai[0];
 
@@ -55,7 +47,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
             Projectile.ignoreWater = true;
             Projectile.hostile = true;
             Projectile.timeLeft = Lifetime;
-            Projectile.hide = true;
+            Projectile.hide = false;
             Projectile.scale = Main.rand?.NextFloat(0.5f, 2f) ?? 1f;
         }
 
@@ -132,7 +124,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
             Projectile.Center += Vector2.UnitY * Projectile.scale * 100f;
 
             // Play an explosion sound.
-            float explosionPitch = Remap(Projectile.scale, 0.5f, 2f, -0.6f, 0.25f);
+            float explosionPitch = Utils.Remap(Projectile.scale, 0.5f, 2f, -0.6f, 0.25f);
             SoundEngine.PlaySound(NamelessDeityBoss.GalaxyExplodeSound with { Volume = 1.4f }, Projectile.Center);
 
             // Create a bunch of stars.
@@ -190,7 +182,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
             float baseWidth = Projectile.width * 1.96f;
 
             // Make it so that the width expands outward in a cute, slightly cartoonish way as it appears.
-            float fadeInScale = Clamp(ElasticEasing.Default.Evaluate(EasingType.Out, InverseLerp(0f, 0.25f, telegraphCompletion)), 0f, 10f);
+            float fadeInScale = Clamp(EasingCurves.Elastic.Evaluate(EasingType.Out, InverseLerp(0f, 0.25f, telegraphCompletion)), 0f, 10f);
 
             // Make the width increase as the telegraph nears its completion. This corresponds with a decrease in opacity, as though the telegraph is dissipating.
             float fadeOutScale = InverseLerp(0.7f, 1f, telegraphCompletion) * 2f;
@@ -219,21 +211,28 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
             return color;
         }
 
-        public void DrawWithShader(SpriteBatch spriteBatch)
+        public override bool PreDraw(ref Color lightColor)
         {
             // Draw the telegraph at first.
             if (Time < TelegraphTime)
             {
                 // Configure the streak shader's texture.
-                var streakShader = ShaderManager.GetShader("GenericTrailStreak");
+                var streakShader = ShaderManager.GetShader("NoxusBoss.GenericTrailStreak");
                 streakShader.SetTexture(StreakBloomLine, 1);
+                streakShader.Apply();
 
-                TelegraphDrawer ??= new(TelegraphWidthFunction, TelegraphColorFunction, null, false, streakShader);
-                List<Vector2> telegraphPoints = Projectile.GetLaserControlPoints(6, 3200f, Vector2.UnitY);
-
-                TelegraphDrawer.Draw(telegraphPoints, -Main.screenPosition, 6);
-                return;
+                List<Vector2> telegraphPoints = Projectile.GetLaserControlPoints(7, 3200f, Vector2.UnitY);
+                PrimitiveSettings settings = new(TelegraphWidthFunction, TelegraphColorFunction, Shader: streakShader);
+                PrimitiveRenderer.RenderTrail(telegraphPoints, settings, 6);
             }
+
+            return false;
+        }
+
+        public void DrawWithShader(SpriteBatch spriteBatch)
+        {
+            if (Time < TelegraphTime)
+                return;
 
             // Draw the galaxy after the telegraph is gone.
             for (float i = 1f; i > 0f; i -= 0.1f)
@@ -253,7 +252,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
                 M21 = 0f,
                 M22 = 1.7f
             };
-            var galaxyShader = ShaderManager.GetShader("GalaxyShader");
+            var galaxyShader = ShaderManager.GetShader("NoxusBoss.GalaxyShader");
             Matrix spinInPlaceRotation = Matrix.CreateRotationZ(SpinRotation);
             Matrix orientationRotation = Matrix.CreateRotationZ(Projectile.rotation);
             galaxyShader.TrySetParameter("transformation", orientationRotation * flatScale * spinInPlaceRotation);

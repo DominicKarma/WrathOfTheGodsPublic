@@ -21,7 +21,6 @@ using NoxusBoss.Core;
 using NoxusBoss.Core.Autoloaders;
 using NoxusBoss.Core.CrossCompatibility.Inbound;
 using NoxusBoss.Core.GlobalItems;
-using NoxusBoss.Core.Graphics.Shaders;
 using NoxusBoss.Core.Graphics.UI.Bestiary;
 using NoxusBoss.Core.MiscSceneManagers;
 using Terraria;
@@ -228,7 +227,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
 
         private static bool DrawPhase3MusicBoxTile(int x, int y)
         {
-            Tile t = ParanoidTileRetrieval(x, y);
+            Tile t = Framing.GetTileSafely(x, y);
 
             // Calculate the top left of the tile.
             int left = x - t.TileFrameX % 32 / 16;
@@ -279,7 +278,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
                 Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, Main.UIScaleMatrix);
 
                 // Prepare the static shader.
-                var staticShader = ShaderManager.GetShader("StaticOverlayShader");
+                var staticShader = ShaderManager.GetShader("NoxusBoss.StaticOverlayShader");
                 staticShader.TrySetParameter("staticInterpolant", 1f);
                 staticShader.TrySetParameter("staticZoomFactor", 0.5f);
                 staticShader.SetTexture(ModContent.Request<Texture2D>("Terraria/Images/Misc/noise"), 1, SamplerState.PointWrap);

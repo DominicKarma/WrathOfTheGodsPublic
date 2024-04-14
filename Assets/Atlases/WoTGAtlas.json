@@ -1,0 +1,591 @@
+{
+  "frames": {
+    "DeltaruneExplosionParticle.png": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 183,
+        "h": 2926
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 17,
+        "y": 138,
+        "w": 183,
+        "h": 2926
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 3232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "ExpandingChromaticBurstParticle.png": {
+      "frame": {
+        "x": 0,
+        "y": 2926,
+        "w": 1024,
+        "h": 1024
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 1024,
+        "h": 1024
+      },
+      "sourceSize": {
+        "w": 1024,
+        "h": 1024
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "MetalSparkParticleGlow.png": {
+      "frame": {
+        "x": 0,
+        "y": 3950,
+        "w": 40,
+        "h": 113
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 40,
+        "h": 113
+      },
+      "sourceSize": {
+        "w": 40,
+        "h": 113
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "GoodAppleParticle.png": {
+      "frame": {
+        "x": 0,
+        "y": 4063,
+        "w": 30,
+        "h": 32
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 30,
+        "h": 32
+      },
+      "sourceSize": {
+        "w": 30,
+        "h": 32
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "GlowyShardParticle.png": {
+      "frame": {
+        "x": 30,
+        "y": 4063,
+        "w": 8,
+        "h": 26
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 1,
+        "y": 2,
+        "w": 8,
+        "h": 26
+      },
+      "sourceSize": {
+        "w": 10,
+        "h": 30
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "SmallSmokeParticle.png": {
+      "frame": {
+        "x": 38,
+        "y": 4063,
+        "w": 22,
+        "h": 24
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 22,
+        "h": 24
+      },
+      "sourceSize": {
+        "w": 24,
+        "h": 24
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "MetalSparkParticle.png": {
+      "frame": {
+        "x": 40,
+        "y": 3950,
+        "w": 26,
+        "h": 96
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 26,
+        "h": 96
+      },
+      "sourceSize": {
+        "w": 26,
+        "h": 96
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "PaleDuckweedParticle.png": {
+      "frame": {
+        "x": 60,
+        "y": 4046,
+        "w": 14,
+        "h": 38
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 2,
+        "w": 14,
+        "h": 38
+      },
+      "sourceSize": {
+        "w": 14,
+        "h": 42
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "PartyHatParticle.png": {
+      "frame": {
+        "x": 66,
+        "y": 3950,
+        "w": 26,
+        "h": 94
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 6,
+        "y": 0,
+        "w": 26,
+        "h": 94
+      },
+      "sourceSize": {
+        "w": 34,
+        "h": 96
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "SquishyLightParticle.png": {
+      "frame": {
+        "x": 92,
+        "y": 3950,
+        "w": 72,
+        "h": 72
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 72,
+        "h": 72
+      },
+      "sourceSize": {
+        "w": 72,
+        "h": 72
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "BasicMetaballCircle.png": {
+      "frame": {
+        "x": 92,
+        "y": 4022,
+        "w": 64,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 64,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 64,
+        "h": 64
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "MagicBurstParticle.png": {
+      "frame": {
+        "x": 183,
+        "y": 0,
+        "w": 353,
+        "h": 1559
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 50,
+        "w": 353,
+        "h": 1559
+      },
+      "sourceSize": {
+        "w": 353,
+        "h": 1620
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "VerticalLightStreakParticle.png": {
+      "frame": {
+        "x": 183,
+        "y": 1559,
+        "w": 218,
+        "h": 746
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 29,
+        "y": 5,
+        "w": 218,
+        "h": 746
+      },
+      "sourceSize": {
+        "w": 276,
+        "h": 776
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "BloodParticle2.png": {
+      "frame": {
+        "x": 183,
+        "y": 2305,
+        "w": 273,
+        "h": 579
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 68,
+        "y": 56,
+        "w": 273,
+        "h": 579
+      },
+      "sourceSize": {
+        "w": 341,
+        "h": 682
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "LensFlareParticle.png": {
+      "frame": {
+        "x": 401,
+        "y": 1559,
+        "w": 1024,
+        "h": 512
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 1024,
+        "h": 512
+      },
+      "sourceSize": {
+        "w": 1024,
+        "h": 512
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "StrongBloom.png": {
+      "frame": {
+        "x": 401,
+        "y": 2071,
+        "w": 200,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 200,
+        "h": 200
+      },
+      "sourceSize": {
+        "w": 200,
+        "h": 200
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "LargeMistParticle.png": {
+      "frame": {
+        "x": 456,
+        "y": 2271,
+        "w": 128,
+        "h": 512
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 128,
+        "h": 512
+      },
+      "sourceSize": {
+        "w": 128,
+        "h": 512
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "GoodAppleTreeTopParticle.png": {
+      "frame": {
+        "x": 584,
+        "y": 2271,
+        "w": 736,
+        "h": 482
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 26,
+        "y": 0,
+        "w": 736,
+        "h": 482
+      },
+      "sourceSize": {
+        "w": 804,
+        "h": 482
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "CartoonMusicNoteParticle.png": {
+      "frame": {
+        "x": 601,
+        "y": 2071,
+        "w": 100,
+        "h": 200
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 100,
+        "h": 200
+      },
+      "sourceSize": {
+        "w": 100,
+        "h": 200
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "BloodParticle.png": {
+      "frame": {
+        "x": 701,
+        "y": 2071,
+        "w": 81,
+        "h": 199
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 15,
+        "y": 1,
+        "w": 81,
+        "h": 199
+      },
+      "sourceSize": {
+        "w": 118,
+        "h": 200
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "PulseRing.png": {
+      "frame": {
+        "x": 584,
+        "y": 2753,
+        "w": 156,
+        "h": 156
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 156,
+        "h": 156
+      },
+      "sourceSize": {
+        "w": 156,
+        "h": 156
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "HeavySmokeParticle.png": {
+      "frame": {
+        "x": 1024,
+        "y": 2753,
+        "w": 559,
+        "h": 478
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 559,
+        "h": 478
+      },
+      "sourceSize": {
+        "w": 559,
+        "h": 480
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "ExpandingGreyscaleCircleParticle.png": {
+      "frame": {
+        "x": 1320,
+        "y": 2071,
+        "w": 256,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 256,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 256,
+        "h": 256
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "GreyscaleStrikeParticle.png": {
+      "frame": {
+        "x": 1320,
+        "y": 2327,
+        "w": 240,
+        "h": 256
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 240,
+        "h": 256
+      },
+      "sourceSize": {
+        "w": 240,
+        "h": 256
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    }
+  },
+  "meta": {
+    "app": "http://free-tex-packer.com",
+    "version": "0.6.7",
+    "image": "texture.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 1583,
+      "h": 4095
+    },
+    "scale": 1
+  }
+}

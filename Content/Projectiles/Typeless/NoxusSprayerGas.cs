@@ -6,7 +6,7 @@ using NoxusBoss.Content.NPCs.Bosses.Noxus.FirstPhaseForm;
 using NoxusBoss.Content.NPCs.Bosses.Noxus.PreFightForm;
 using NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm;
 using NoxusBoss.Content.Particles;
-using NoxusBoss.Core.Graphics.Metaballs;
+using NoxusBoss.Content.Particles.Metaballs;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using SubworldLibrary;
 using Terraria;
@@ -76,7 +76,7 @@ namespace NoxusBoss.Content.Projectiles.Typeless
                 for (int j = 0; j < 4; j++)
                 {
                     float gasSize = player.width * Main.rand.NextFloat(0.1f, 0.8f);
-                    NoxusGasMetaball.CreateParticle(player.Center + Main.rand.NextVector2Circular(40f, 40f), Main.rand.NextVector2Circular(4f, 4f), gasSize);
+                    ModContent.GetInstance<NoxusGasMetaball>().CreateParticle(player.Center + Main.rand.NextVector2Circular(40f, 40f), Main.rand.NextVector2Circular(4f, 4f), gasSize);
                 }
                 typeof(SubworldSystem).GetField("current", BindingFlags.NonPublic | BindingFlags.Static).SetValue(null, null);
                 typeof(SubworldSystem).GetField("cache", BindingFlags.NonPublic | BindingFlags.Static).SetValue(null, null);
@@ -154,7 +154,7 @@ namespace NoxusBoss.Content.Projectiles.Typeless
                 for (int j = 0; j < 20; j++)
                 {
                     float gasSize = n.width * Main.rand.NextFloat(0.1f, 0.8f);
-                    NoxusGasMetaball.CreateParticle(n.Center + Main.rand.NextVector2Circular(40f, 40f), Main.rand.NextVector2Circular(4f, 4f), gasSize);
+                    ModContent.GetInstance<NoxusGasMetaball>().CreateParticle(n.Center + Main.rand.NextVector2Circular(40f, 40f), Main.rand.NextVector2Circular(4f, 4f), gasSize);
                 }
             }
         }

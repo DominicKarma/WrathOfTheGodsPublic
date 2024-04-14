@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.NPCs.Bosses.NamelessDeity.SpecificEffectManagers;
-using NoxusBoss.Core.Graphics.Automators;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

@@ -1,12 +1,11 @@
 ﻿using System;
+using Luminance.Common.Easings;
 using Microsoft.Xna.Framework;
-using NoxusBoss.Common.Easings;
 using NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles;
 using NoxusBoss.Content.NPCs.Bosses.NamelessDeity.SpecificEffectManagers;
 using NoxusBoss.Core;
 using NoxusBoss.Core.Graphics.Shaders.Keyboard;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
-using NoxusBoss.Core.Music;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -49,7 +48,6 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
                 ZPosition = 0f;
                 NPC.Center = Target.Center - Vector2.UnitY * 700f;
                 NPC.velocity = Vector2.UnitY * 9f;
-                MusicVolumeManipulationSystem.MuffleFactor = 1f;
                 NPC.netUpdate = true;
             });
         }
@@ -78,9 +76,6 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
                 slashSpeed = 39f;
             }
 
-            // Make music go away.
-            MusicVolumeManipulationSystem.MuffleFactor = InverseLerp(backgroundEnterTime, 0f, AttackTimer);
-
             // Flap wings.
             UpdateWings(AttackTimer / 50f % 1f);
 
@@ -89,7 +84,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
             {
                 // Move into the background.
                 float fadeIntoBackgroundInterpolant = AttackTimer / backgroundEnterTime;
-                ZPosition = PolynomialEasing.Quadratic.Evaluate(EasingType.In, 0f, 7f, fadeIntoBackgroundInterpolant);
+                ZPosition = EasingCurves.Quadratic.Evaluate(EasingType.In, 0f, 7f, fadeIntoBackgroundInterpolant);
 
                 // Move up higher and higher above the target based on how far Nameless is in the background.
                 float verticalOffset = ZPosition * 25f + 300f;
@@ -176,7 +171,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
                 Vector2 slashSpawnOffset = Target.Velocity.SafeNormalize(Main.rand.NextVector2Unit()).RotatedByRandom(0.6f);
                 LightSlashPosition = Target.Center + slashSpawnOffset * slashStartingOffset + Main.rand.NextVector2Circular(slashStartingOffsetVariance, slashStartingOffsetVariance) + Target.Velocity * 22f;
                 NPC.netUpdate = true;
-                NewProjectileBetter(LightSlashPosition, Vector2.Zero, ModContent.ProjectileType<LightSlashTelegraph>(), 0, 0f, -1, slashTelegraphTime);
+                NewProjectileBetter(NPC.GetSource_FromAI(), LightSlashPosition, Vector2.Zero, ModContent.ProjectileType<LightSlashTelegraph>(), 0, 0f, -1, slashTelegraphTime);
             }
 
             // Prepare the scream sound and create sudden visuals at the slash telegraph.
@@ -194,7 +189,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
 
                 // Create a light wave.
                 if (Main.netMode != NetmodeID.MultiplayerClient)
-                    NewProjectileBetter(LightSlashPosition, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), LightSlashPosition, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
             }
 
             // Create slashes.
@@ -221,7 +216,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
                             slashDirection = Main.rand.NextFloat(TwoPi);
 
                         // Calculate the slash draw position. This is randomized a bit to create variety.
-                        float randomOffset = Remap(LightSlashPosition.Distance(Target.Center), 100f, 250f, 10f, 90f);
+                        float randomOffset = Utils.Remap(LightSlashPosition.Distance(Target.Center), 100f, 250f, 10f, 90f);
                         Vector2 slashSpawnPosition = LightSlashPosition + (Target.Center - LightSlashPosition).SafeNormalize(Main.rand.NextVector2Unit()) * offset;
                         if (LightSlashPosition.WithinRange(Target.Center, 80f))
                         {
@@ -230,7 +225,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
                         }
 
                         // Create the slash.
-                        NewProjectileBetter(slashSpawnPosition + Main.rand.NextVector2Unit() * randomOffset, Vector2.Zero, ModContent.ProjectileType<LightSlash>(), LightSlashDamage, 0f, -1, slashDirection);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), slashSpawnPosition + Main.rand.NextVector2Unit() * randomOffset, Vector2.Zero, ModContent.ProjectileType<LightSlash>(), LightSlashDamage, 0f, -1, slashDirection);
                     }
                 }
             }

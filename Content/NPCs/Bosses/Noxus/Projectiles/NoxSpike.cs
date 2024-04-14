@@ -1,9 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Luminance.Common.DataStructures;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Common.DataStructures;
 using NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm;
 using NoxusBoss.Core.CrossCompatibility.Inbound;
-using NoxusBoss.Core.Graphics.Automators;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
@@ -84,7 +83,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.Projectiles
         public override bool PreDraw(ref Color lightColor)
         {
             Color drawColor = Color.White;
-            drawColor.A = (byte)Remap(Projectile.velocity.Length(), 3f, 13f, 255f, 0f);
+            drawColor.A = (byte)Utils.Remap(Projectile.velocity.Length(), 3f, 13f, 255f, 0f);
             DrawAfterimagesCentered(Projectile, ProjectileID.Sets.TrailingMode[Projectile.type], drawColor);
 
             // Draw a pulsating overlay if moving very slowly.

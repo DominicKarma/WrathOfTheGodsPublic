@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using NoxusBoss.Common.Tools.Utilities.Mathematics;
 using NoxusBoss.Common.Utilities;
 using NoxusBoss.Content.NPCs.Bosses.NamelessDeity;
 using NoxusBoss.Core.Configuration;
-using NoxusBoss.Core.Graphics.Automators;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
@@ -109,7 +109,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
                 if (Main.netMode == NetmodeID.Server)
                     return;
 
-                ContentsBeforeShattering = new(false, RenderTargetManager.CreateScreenSizedTarget);
+                ContentsBeforeShattering = new(false, ManagedRenderTarget.CreateScreenSizedTarget);
                 DrawShader = new(Main.instance.GraphicsDevice)
                 {
                     TextureEnabled = true,
@@ -172,7 +172,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
 
             if (shardVertices.Any())
             {
-                CalculatePrimitivePerspectiveMatricies(out Matrix effectView, out Matrix effectProjection);
+                CalculatePrimitivePerspectiveMatrices(out Matrix effectView, out Matrix effectProjection);
 
                 // Calculate a universal scale factor for all shards. This is done to make them appear to be "approaching" the camera as time goes on.
                 Vector2 scaleFactor = (SmoothStep(0f, 1f, 1f - ShardOpacity) * 3f + 1f) * Vector2.One / Main.GameViewMatrix.Zoom;

@@ -1,19 +1,11 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using NoxusBoss.Core.Graphics.Primitives;
-using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 
 namespace NoxusBoss.Common.BaseEntities
 {
     public abstract class BaseTelegraphedPrimitiveLaserbeam : BasePrimitiveLaserbeam
     {
-        public PrimitiveTrail TelegraphDrawer
-        {
-            get;
-            protected set;
-        }
-
         public abstract int TelegraphPointCount
         {
             get;
@@ -74,23 +66,21 @@ namespace NoxusBoss.Common.BaseEntities
             return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), start, end, Projectile.scale * Projectile.width * 0.9f, ref _);
         }
 
-        public void DrawTelegraphOrLaser()
+        public void DrawTelegraphOrLaser(bool pixelate)
         {
-            // Initialize primitive drawers.
-            TelegraphDrawer ??= new(TelegraphWidthFunction, TelegraphColorFunction, null, true, TelegraphShader);
-            LaserDrawer ??= new(LaserWidthFunction, LaserColorFunction, null, true, LaserShader);
-
             // Draw the telegraph at first.
             Vector2 laserDirection = Projectile.velocity.SafeNormalize(Vector2.UnitY);
             if (Time <= TelegraphTime)
             {
                 PrepareTelegraphShader(TelegraphShader);
-                TelegraphDrawer.Draw(GenerateTelegraphControlPoints(), -Main.screenPosition, TelegraphPointCount);
+                PrimitiveSettings settings = new(TelegraphWidthFunction, TelegraphColorFunction, Shader: TelegraphShader, Pixelate: pixelate);
+                PrimitiveRenderer.RenderTrail(GenerateTelegraphControlPoints(), settings, TelegraphPointCount);
+
                 return;
             }
 
             // Draw the laser after the telegraph has ceased.
-            DrawLaser();
+            DrawLaser(pixelate);
         }
 
         // This overrides the behavior of BasePrimitiveLaserbeam completely.
@@ -101,7 +91,7 @@ namespace NoxusBoss.Common.BaseEntities
                 return false;
 
             // Draw the laser manually if standard drawing is enabled.
-            DrawTelegraphOrLaser();
+            DrawTelegraphOrLaser(false);
             return false;
         }
     }

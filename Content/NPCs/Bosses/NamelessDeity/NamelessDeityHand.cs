@@ -1,9 +1,6 @@
 ﻿using System.IO;
-using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Core.Graphics.Primitives;
-using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.ID;
 using static NoxusBoss.Content.NPCs.Bosses.NamelessDeity.NamelessDeityBoss;
@@ -40,15 +37,12 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
 
         public Vector2[] OldCenters = new Vector2[40];
 
-        public PrimitiveTrail HandTrailDrawer;
-
         public NamelessDeityHand(Vector2 spawnPosition, bool useHands)
         {
             if (Main.netMode == NetmodeID.Server)
                 return;
 
             Center = spawnPosition;
-            HandTrailDrawer = new(FlameTrailWidthFunction, FlameTrailColorFunction, null, true, ShaderManager.GetShader("GenericFlameTrail"));
             HasArms = useHands;
         }
 
@@ -135,7 +129,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
 
                 // Calculate arm draw positions.
                 Vector2 armStart = ownerCenter + new Vector2((Center.X - ownerCenter.X).NonZeroSign() * 120f, 40f) - screenPos;
-                Vector2 armMidpoint = IKSolve2(armStart, drawPosition, forearmLength * (1f - forearmEndRetraction), armLength, positionalDirectionInt != 1);
+                Vector2 armMidpoint = CalculateElbowPosition(armStart, drawPosition, forearmLength * (1f - forearmEndRetraction), armLength, positionalDirectionInt != 1);
 
                 // Calculate the forearm and hand origins since those vary by texture.
                 // Als calculate the hand offset.
@@ -235,14 +229,6 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
                 }
 
                 ActualCenter = drawPosition + screenPos;
-            }
-
-            // Draw hand trails if active.
-            if (TrailOpacity >= 0.01f)
-            {
-                // Draw a flame trail.
-                ShaderManager.GetShader("GenericFlameTrail").SetTexture(StreakFlamelash, 1);
-                HandTrailDrawer.Draw(OldCenters.Take(25), -screenPos, 45);
             }
 
             // Draw the glock if this hand has one.

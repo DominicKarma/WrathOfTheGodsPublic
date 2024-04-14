@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Core.Graphics.Automators;
-using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -25,7 +24,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             if (Main.netMode == NetmodeID.Server)
                 return;
 
-            Main.QueueMainThreadAction(() => OverlayableTarget = new(true, RenderTargetManager.CreateScreenSizedTarget));
+            Main.QueueMainThreadAction(() => OverlayableTarget = new(true, ManagedRenderTarget.CreateScreenSizedTarget));
             RenderTargetManager.RenderTargetUpdateLoopEvent += PrepareOverlayTarget;
             On_Main.DrawProjectiles += DrawOverlayTarget;
         }
@@ -74,7 +73,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
 
             // Prepare the overlay shader and supply it with tile information.
-            var shader = ShaderManager.GetShader("TileOverlayShader");
+            var shader = ShaderManager.GetShader("NoxusBoss.TileOverlayShader");
             shader.TrySetParameter("zoom", new Vector2(1.15f, 1.27f));
             shader.TrySetParameter("tileOverlayOffset", (Main.sceneTilePos - Main.screenPosition) / Main.ScreenSize.ToVector2() * -1f);
             shader.TrySetParameter("inversionZoom", Main.GameViewMatrix.Zoom);

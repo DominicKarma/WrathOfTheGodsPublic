@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Core.CrossCompatibility.Inbound;
-using NoxusBoss.Core.Graphics.Shaders;
 using ReLogic.Content;
 using Terraria;
 using Terraria.Graphics.Shaders;
@@ -25,7 +24,7 @@ namespace NoxusBoss.Content.Items.Dyes
 
             if (!Main.dedServ)
             {
-                Effect shader = ModContent.Request<Effect>("NoxusBoss/Assets/Effects/Dyes/NuminousDyeShader", AssetRequestMode.ImmediateLoad).Value;
+                Effect shader = ModContent.Request<Effect>("NoxusBoss/Assets/AutoloadedEffects/Shaders/Dyes/NuminousDyeShader", AssetRequestMode.ImmediateLoad).Value;
                 Asset<Texture2D> dyeTexture = ModContent.Request<Texture2D>("NoxusBoss/Content/Items/Dyes/NuminousDyeTexture", AssetRequestMode.ImmediateLoad);
                 GameShaders.Armor.BindShader(Type, new ArmorShaderData(new Ref<Effect>(shader), ManagedShader.DefaultPassName)).UseImage(dyeTexture);
             }

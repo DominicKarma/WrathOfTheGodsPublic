@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.Projectiles.Pets;
 using NoxusBoss.Core.CrossCompatibility.Inbound;
-using NoxusBoss.Core.Graphics.Shaders;
 using NoxusBoss.Core.Graphics.Shaders.Screen;
 using Terraria;
 using Terraria.ID;
@@ -45,7 +44,7 @@ namespace NoxusBoss.Content.Items.Pets
         private static void DrawBlackHole(Vector2 drawPosition)
         {
             // Draw the black hole.
-            ManagedShader lensingShader = ShaderManager.GetShader("GravitationalLensingShader");
+            ManagedShader lensingShader = ShaderManager.GetShader("NoxusBoss.GravitationalLensingShader");
             lensingShader.ResetCache();
             GravitationalLensingShaderData.DoGenericShaderPreparations(lensingShader.Shader.Value);
             lensingShader.TrySetParameter("uColor", Color.Wheat);

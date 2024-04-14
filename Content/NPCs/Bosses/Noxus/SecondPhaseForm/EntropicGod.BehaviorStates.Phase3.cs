@@ -57,8 +57,8 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     Vector2 portalSpawnPosition = Target.Center - Vector2.UnitX * Target.Velocity.X.NonZeroSign() * 350f;
-                    NewProjectileBetter(portalSpawnPosition - Vector2.UnitY * horizontalPortalOffset, Vector2.UnitY, ModContent.ProjectileType<DarkPortal>(), 0, 0f, -1, portalScale, initialPortalExistTime);
-                    NewProjectileBetter(portalSpawnPosition + Vector2.UnitY * horizontalPortalOffset, -Vector2.UnitY, ModContent.ProjectileType<DarkPortal>(), 0, 0f, -1, portalScale, initialPortalExistTime);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), portalSpawnPosition - Vector2.UnitY * horizontalPortalOffset, Vector2.UnitY, ModContent.ProjectileType<DarkPortal>(), 0, 0f, -1, portalScale, initialPortalExistTime);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), portalSpawnPosition + Vector2.UnitY * horizontalPortalOffset, -Vector2.UnitY, ModContent.ProjectileType<DarkPortal>(), 0, 0f, -1, portalScale, initialPortalExistTime);
 
                     TeleportDirection = Vector2.UnitY;
                     TeleportPosition = portalSpawnPosition - Vector2.UnitY * TeleportDirection * horizontalPortalOffset;
@@ -119,7 +119,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
 
                     TeleportDirection = (Target.Center - TeleportPosition).SafeNormalize(Vector2.UnitY);
 
-                    NewProjectileBetter(TeleportPosition, TeleportDirection, ModContent.ProjectileType<DarkPortal>(), 0, 0f, -1, portalScale + 0.3f, aimedPortalExistTime);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), TeleportPosition, TeleportDirection, ModContent.ProjectileType<DarkPortal>(), 0, 0f, -1, portalScale + 0.3f, aimedPortalExistTime);
                     NPC.netUpdate = true;
                 }
             }
@@ -134,9 +134,9 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
                 ScreenEffectSystem.SetChromaticAberrationEffect(NPC.Center, 1.9f, 20);
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<DarkWave>(), 0, 0f);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<DarkWave>(), 0, 0f);
                     for (int i = 0; i < cometCount; i++)
-                        NewProjectileBetter(NPC.Center, (TwoPi * i / cometCount).ToRotationVector2() * 4.4f, ModContent.ProjectileType<DarkComet>(), CometDamage, 0f);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, (TwoPi * i / cometCount).ToRotationVector2() * 4.4f, ModContent.ProjectileType<DarkComet>(), CometDamage, 0f);
                 }
 
                 // Reset afterimages.
@@ -289,7 +289,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
                     NPC.Center = Vector2.Lerp(NPC.Center, hoverDestination, 0.11f);
                 }
                 else
-                    NPC.velocity = Vector2.Lerp(NPC.velocity, NPC.DirectionToSafe(Target.Center) * 18f, 0.11f);
+                    NPC.velocity = Vector2.Lerp(NPC.velocity, NPC.SafeDirectionTo(Target.Center) * 18f, 0.11f);
 
                 if (AttackTimer >= delayBeforeInvisible + delayBeforeTwinklesAppear && AttackTimer % delayPerTwinkle == delayPerTwinkle - 1f)
                     CreateTwinkle(NPC.Center + Main.rand.NextVector2Circular(30f, 30f), Vector2.One * 1.35f);
@@ -323,7 +323,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
 
                 // Drift horizontally towards the target if they're sufficiently far from the twinkle, to make it so that they player can't just constantly run in one direction to avoid the charge.
                 if (Distance(NPC.Center.X, Target.Center.X) >= 100f)
-                    NPC.velocity = Vector2.Lerp(NPC.velocity, Vector2.UnitX * NPC.DirectionToSafe(Target.Center) * 16f, 0.067f);
+                    NPC.velocity = Vector2.Lerp(NPC.velocity, Vector2.UnitX * NPC.SafeDirectionTo(Target.Center) * 16f, 0.067f);
 
                 // Do damage again if zoomed in enough.
                 if (ZPosition <= 0.3f && ZPosition >= -0.8f)
@@ -342,14 +342,14 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
 
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<DarkWave>(), 0, 0f);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<DarkWave>(), 0, 0f);
 
                     if (!NPC.WithinRange(Target.Center, 350f))
                     {
                         for (int i = 0; i < 10; i++)
                         {
                             Vector2 cometVelocity = (Target.Center - NPC.Center) * 0.0098f + Main.rand.NextVector2Circular(4f, 4f);
-                            NewProjectileBetter(NPC.Center, cometVelocity, ModContent.ProjectileType<DarkComet>(), CometDamage, 0f);
+                            NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, cometVelocity, ModContent.ProjectileType<DarkComet>(), CometDamage, 0f);
                         }
                     }
                 }

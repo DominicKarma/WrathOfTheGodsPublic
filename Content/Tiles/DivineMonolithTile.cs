@@ -48,8 +48,8 @@ namespace NoxusBoss.Content.Tiles
                     Color galaxyColor = MulticolorLerp(Pow(Main.rand.NextFloat(), 2f) * 0.92f, Color.OrangeRed, Color.Coral, Color.HotPink, Color.Magenta, Color.DarkViolet, Color.Cyan) * 1.9f;
                     galaxyColor = Color.Lerp(galaxyColor, Color.Wheat, 0.55f);
 
-                    int galaxyLifetime = (int)Remap(galaxyVelocity.Length(), 10f, 19.2f, 90f, 150f) + Main.rand.Next(-30, 45);
-                    float galaxyScale = Remap(galaxyVelocity.Length(), 9.5f, 17.4f, 0.12f, 0.4f) + Pow(Main.rand.NextFloat(), 3f) * 0.8f;
+                    int galaxyLifetime = (int)Utils.Remap(galaxyVelocity.Length(), 10f, 19.2f, 90f, 150f) + Main.rand.Next(-30, 45);
+                    float galaxyScale = Utils.Remap(galaxyVelocity.Length(), 9.5f, 17.4f, 0.12f, 0.4f) + Pow(Main.rand.NextFloat(), 3f) * 0.8f;
 
                     DivineMonolithGalaxySystem.Galaxy.CreateNew(startingPoint, galaxyVelocity, galaxyColor, galaxyLifetime, Main.rand.NextFloat(TwoPi), galaxyScale);
 

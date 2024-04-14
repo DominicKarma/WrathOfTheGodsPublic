@@ -80,7 +80,7 @@ namespace NoxusBoss.Common.Subworlds
                 return;
             }
 
-            Tile t = ParanoidTileRetrieval(i, j);
+            Tile t = Framing.GetTileSafely(i, j);
             if (t.HasTile && t.TileType == TileID.Grass)
                 return;
 

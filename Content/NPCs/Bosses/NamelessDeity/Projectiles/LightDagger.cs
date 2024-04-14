@@ -1,12 +1,10 @@
 ﻿using System.IO;
+using Luminance.Assets;
+using Luminance.Common.DataStructures;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Common.DataStructures;
 using NoxusBoss.Core.GlobalItems;
-using NoxusBoss.Core.Graphics;
-using NoxusBoss.Core.Graphics.Automators;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
-using ReLogic.Content;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -28,7 +26,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
 
         public ref float Index => ref Projectile.ai[2];
 
-        public static Asset<Texture2D> MyTexture
+        public static LazyAsset<Texture2D> MyTexture
         {
             get;
             private set;
@@ -45,7 +43,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
             ProjectileID.Sets.DrawScreenCheckFluff[Type] = 2400;
 
             if (Main.netMode != NetmodeID.Server)
-                MyTexture = ModContent.Request<Texture2D>(Texture);
+                MyTexture = LazyAsset<Texture2D>.Request(Texture);
 
             NoxusPlayer.PostUpdateEvent += DecrementGrazeSoundDelay;
         }
@@ -93,7 +91,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
                 // Play a graze sound if a player was very, very close to being hit.
                 int closestIndex = Player.FindClosest(Projectile.Center, 1, 1);
                 Player closest = Main.player[closestIndex];
-                float playerDirectionAngle = Projectile.velocity.AngleBetween(closest.DirectionToSafe(Projectile.Center));
+                float playerDirectionAngle = Projectile.velocity.AngleBetween(closest.SafeDirectionTo(Projectile.Center));
                 bool aimedTowardsClosest = playerDirectionAngle >= ToRadians(16f) && playerDirectionAngle < PiOver2;
                 bool dangerouslyCloseToHit = Projectile.WithinRange(closest.Center, 57f) && aimedTowardsClosest;
                 if (newSpeed >= 40f && dangerouslyCloseToHit && Main.myPlayer == closestIndex && closest.GetValueRef<int>(GrazeEchoFieldName) <= 0 && Projectile.Opacity >= 1f)
@@ -139,7 +137,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
             // Draw bloom underneath the dagger. This is strongest when the blade itself has not yet fully faded in.
             float bloomOpacity = Lerp(0.75f, 0.51f, DaggerAppearInterpolant) * Projectile.Opacity;
 
-            Color c1 = DialogColorRegistry.NamelessDeityTextColor;
+            Color c1 = new(255, 63, 93);
             Color c2 = Color.Orange;
             if (LocalScreenSplitSystem.UseCosmicEffect)
             {

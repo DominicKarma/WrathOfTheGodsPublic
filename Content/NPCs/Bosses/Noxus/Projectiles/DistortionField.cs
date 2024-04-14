@@ -1,10 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Luminance.Common.DataStructures;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Common.DataStructures;
 using NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm;
 using NoxusBoss.Content.NPCs.Bosses.Noxus.SpecificEffectManagers;
 using NoxusBoss.Content.Particles;
-using NoxusBoss.Core.Graphics.Automators;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

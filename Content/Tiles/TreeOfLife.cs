@@ -52,13 +52,13 @@ namespace NoxusBoss.Content.Tiles
             ulong fruitSeed = (ulong)(i * 3 + j * 7);
             Vector2[] fruitOffsets = new Vector2[]
             {
-                new Vector2(-104f, -120f),
-                new Vector2(-71f, -177f),
-                new Vector2(-51f, -204f),
-                new Vector2(-35f, -172f),
-                new Vector2(12f, -148f),
-                new Vector2(30f, -175f),
-                new Vector2(67f, -139f)
+                new(-104f, -120f),
+                new(-71f, -177f),
+                new(-51f, -204f),
+                new(-35f, -172f),
+                new(12f, -148f),
+                new(30f, -175f),
+                new(67f, -139f)
             };
 
             // Draw fruits on the leaves.
@@ -75,7 +75,7 @@ namespace NoxusBoss.Content.Tiles
                 if (namelessIsPresent)
                 {
                     Vector2 fruitWorldPosition = new Point(i, j).ToWorldCoordinates() + Vector2.UnitY * 20f + properFruitOffset;
-                    FruitOfLifeParticle fruit = new(fruitWorldPosition, Vector2.UnitY.RotatedBy(fruitRotation) * Main.rand.NextFloat(2.5f, 3.2f), fruitColor, Main.rand.Next(420, 540), fruitScale);
+                    GoodAppleParticle fruit = new(fruitWorldPosition, Vector2.UnitY.RotatedBy(fruitRotation) * Main.rand.NextFloat(2.5f, 3.2f), fruitColor, Main.rand.Next(420, 540), fruitScale);
                     fruit.Spawn();
                     EternalGardenUpdateSystem.LifeFruitDroppedFromTree = true;
                 }

@@ -1,8 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles;
-using NoxusBoss.Core.Graphics.Automators;
-using NoxusBoss.Core.Graphics.Shaders;
 using NoxusBoss.Core.Graphics.Shaders.Screen;
 using Terraria;
 using Terraria.Graphics.Effects;
@@ -29,8 +27,8 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.SpecificEffectManagers
             RenderTargetManager.RenderTargetUpdateLoopEvent += PrepareAfterimageTarget;
             Main.QueueMainThreadAction(() =>
             {
-                SlashTarget = new(true, RenderTargetManager.CreateScreenSizedTarget);
-                SlashTargetPrevious ??= new(true, RenderTargetManager.CreateScreenSizedTarget);
+                SlashTarget = new(true, ManagedRenderTarget.CreateScreenSizedTarget);
+                SlashTargetPrevious ??= new(true, ManagedRenderTarget.CreateScreenSizedTarget);
             });
         }
 
@@ -82,7 +80,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.SpecificEffectManagers
             gd.Clear(Color.Transparent);
 
             // Prepare the afterimage psychedelic shader.
-            var afterimageShader = ShaderManager.GetShader("GaussianBlurShader");
+            var afterimageShader = ShaderManager.GetShader("NoxusBoss.GaussianBlurShader");
             afterimageShader.TrySetParameter("blurOffset", 0.0032f);
             afterimageShader.TrySetParameter("colorMask", Vector4.One);
             afterimageShader.Apply();

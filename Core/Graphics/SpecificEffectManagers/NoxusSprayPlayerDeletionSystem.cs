@@ -73,7 +73,7 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
                 if (DeletionTimer == 1)
                 {
                     ScreenPositionAtPointOfDeletion = Main.screenPosition;
-                    InputAndUIBlockerSystem.Start(true, true, () => PlayerWasDeleted);
+                    BlockerSystem.Start(true, true, () => PlayerWasDeleted);
                 }
 
                 DeletionTimer++;

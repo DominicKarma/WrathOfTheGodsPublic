@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using Luminance.Common.DataStructures;
 using Microsoft.Xna.Framework;
-using NoxusBoss.Common.DataStructures;
+using NoxusBoss.Common.BaseEntities;
 using NoxusBoss.Content.Particles;
-using NoxusBoss.Core.Graphics.Primitives;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using NoxusBoss.Core.ShapeCurves;
 using Terraria;
@@ -59,12 +59,6 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
             return Color.Lerp(Color.Cyan, Color.White, colorVariantInterpolant) * 0.42f;
         }
 
-        public PrimitiveTrail SlashDrawer
-        {
-            get;
-            private set;
-        }
-
         public static readonly int ConvergeTimeConst = SecondsToFrames(2f);
 
         public override void SetStaticDefaults()
@@ -110,7 +104,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
 
             // Fade in based on how long the sword has existed.
             // Also fade out based on how close the stars are to the background.
-            Projectile.Opacity = InverseLerp(0f, 30f, Time) * Remap(ZPosition, 0.2f, 9f, 3.3f, 0.45f) * GeneralSquishInterpolant;
+            Projectile.Opacity = InverseLerp(0f, 30f, Time) * Utils.Remap(ZPosition, 0.2f, 9f, 3.3f, 0.45f) * GeneralSquishInterpolant;
 
             return true;
         }
@@ -137,10 +131,6 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
 
             return false;
         }
-
-        public float SlashWidthFunction(float completionRatio) => Projectile.scale * Projectile.width * 0.7f;
-
-        public Color SlashColorFunction(float completionRatio) => Color.Orange * InverseLerp(0.9f, 0.7f, completionRatio) * Projectile.Opacity;
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
@@ -175,7 +165,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
             }
         }
 
-        // Ensure that the blade draws behing Nameless' hand. Wouldn't want the handle awkwardly protruding on top of the robe cloth.
+        // Ensure that the blade draws behind Nameless' hand. Wouldn't want the handle awkwardly protruding on top of the robe cloth.
         public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
         {
             SpecialLayeringSystem.DrawCacheBeforeBlack_Proj.Add(index);
@@ -185,7 +175,6 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
         {
             // Draw the slash.
             Main.spriteBatch.PrepareForShaders();
-            SlashDrawer ??= new(SlashWidthFunction, SlashColorFunction, null);
 
             // Draw the stars that compose the blade.
             base.PreDraw(ref lightColor);

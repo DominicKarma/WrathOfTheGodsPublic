@@ -1,11 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Luminance.Common.DataStructures;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Common.BaseEntities;
-using NoxusBoss.Common.DataStructures;
 using NoxusBoss.Content.Particles;
-using NoxusBoss.Core.Graphics.Automators;
-using NoxusBoss.Core.Graphics.Particles;
-using NoxusBoss.Core.Graphics.Shaders;
 using NoxusBoss.Core.Graphics.Shaders.Keyboard;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
@@ -14,7 +11,7 @@ using Terraria.ID;
 
 namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
 {
-    public class TelegraphedPortalLaserbeam : BaseTelegraphedPrimitiveLaserbeam, IDrawPixelated, IDrawAdditive, IProjOwnedByBoss<NamelessDeityBoss>
+    public class TelegraphedPortalLaserbeam : BaseTelegraphedPrimitiveLaserbeam, IPixelatedPrimitiveRenderer, IDrawAdditive, IProjOwnedByBoss<NamelessDeityBoss>
     {
         // This laser should be drawn with pixelation, and as such should not be drawn manually via the base projectile.
         public override bool UseStandardDrawing => false;
@@ -27,9 +24,9 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
 
         public override float LaserExtendSpeedInterpolant => 0.081f;
 
-        public override ManagedShader TelegraphShader => ShaderManager.GetShader("SideStreakShader");
+        public override ManagedShader TelegraphShader => ShaderManager.GetShader("NoxusBoss.SideStreakShader");
 
-        public override ManagedShader LaserShader => ShaderManager.GetShader("NamelessDeityPortalLaserShader");
+        public override ManagedShader LaserShader => ShaderManager.GetShader("NoxusBoss.NamelessDeityPortalLaserShader");
 
         public override void SetStaticDefaults()
         {
@@ -63,15 +60,6 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
                     PulseRing ring = new(Projectile.Center, Vector2.Zero, new(229, 60, 90), 0.5f, 2.75f, 12);
                     ring.Spawn();
                 }
-
-                // Create streaks of light.
-                for (int i = 0; i < 9; i++)
-                {
-                    Color lightColor = Color.Lerp(Color.Wheat, Color.IndianRed, Main.rand.NextFloat(0.32f));
-                    Vector2 lightDirection = Projectile.velocity.RotatedByRandom(1.23f);
-                    SparkParticle lightStreak = new(Projectile.Center + Projectile.velocity * 30f, lightDirection * Projectile.width * Main.rand.NextFloat(0.07f, 0.3f), false, 16, 1.5f, lightColor);
-                    lightStreak.Spawn();
-                }
             }
         }
 
@@ -80,21 +68,6 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
             ScreenEffectSystem.SetFlashEffect(Main.LocalPlayer.Center - Vector2.UnitY * 200f, 1.4f, 60);
             ScreenEffectSystem.SetChromaticAberrationEffect(Main.LocalPlayer.Center - Vector2.UnitY * 200f, 0.5f, 30);
             NamelessDeityKeyboardShader.BrightnessIntensity += 0.4f;
-
-            // Create particles.
-            for (int i = 0; i < Projectile.width / 4; i++)
-            {
-                int gasLifetime = Main.rand.Next(20, 24);
-                float scale = 2.3f;
-                Vector2 gasSpawnPosition = Projectile.Center + Projectile.velocity.RotatedBy(PiOver2) * Main.rand.NextFloatDirection() * 120f;
-                Vector2 gasVelocity = Projectile.velocity.RotatedByRandom(0.3f) * Main.rand.NextFloat(4f, 45f);
-                Color gasColor = Color.Lerp(Color.IndianRed, Color.Coral, Main.rand.NextFloat(0.6f));
-                Particle gas = new HeavySmokeParticle(gasSpawnPosition, gasVelocity, gasColor, gasLifetime, scale, 1f, 0f, true);
-                if (Main.rand.NextBool(3))
-                    gas = new MediumMistParticle(gasSpawnPosition, gasVelocity, gasColor, Color.Black, scale * 1.2f, 255f);
-
-                gas.Spawn();
-            }
 
             SoundEngine.PlaySound(NamelessDeityBoss.PortalLaserShootSound, Main.LocalPlayer.Center);
 
@@ -139,7 +112,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
             laserShader.SetTexture(DendriticNoiseZoomedOut, 2);
         }
 
-        public void DrawWithPixelation() => DrawTelegraphOrLaser();
+        public void RenderPixelatedPrimitives(SpriteBatch spriteBatch) => DrawTelegraphOrLaser(true);
 
         // This is unrelated to the laser's drawing itself, and serves more as stuff that exists at the point at which the laser is being fired, to give the impression of a focal point.
         public void DrawAdditive(SpriteBatch spriteBatch)

@@ -128,7 +128,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
             else if (AttackTimer <= backgroundDimTime + starCreationTime)
             {
                 // Make the hands suddenly move outward. They return to Nameless shortly before the stars being being shoved.
-                handHoverOffset = Remap(AttackTimer - backgroundDimTime, starCreationTime - 12f, starCreationTime - 4f, 1220f, defaultHandHoverOffset);
+                handHoverOffset = Utils.Remap(AttackTimer - backgroundDimTime, starCreationTime - 12f, starCreationTime - 4f, 1220f, defaultHandHoverOffset);
                 if (AttackTimer == backgroundDimTime + 1f)
                 {
                     SoundEngine.PlaySound(SoundID.DD2_GhastlyGlaivePierce with
@@ -158,14 +158,14 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
                         {
                             star.As<BackgroundStar>().ScreenDestinationOffset = destinationOffsetAngle.ToRotationVector2() * destinationOffsetArea + Main.rand.NextVector2Circular(150f, 55f);
                         });
-                        NewProjectileBetter(Target.Center, Vector2.Zero, ModContent.ProjectileType<BackgroundStar>(), 0, 0f, -1, defaultStarZPosition + Main.rand.NextFloat(3.7f), -starCreationCounter);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), Target.Center, Vector2.Zero, ModContent.ProjectileType<BackgroundStar>(), 0, 0f, -1, defaultStarZPosition + Main.rand.NextFloat(3.7f), -starCreationCounter);
 
                         // Create the star on the right.
                         ProjectileSpawnManagementSystem.PrepareProjectileForSpawning(star =>
                         {
                             star.As<BackgroundStar>().ScreenDestinationOffset = destinationOffsetAngle.ToRotationVector2() * -destinationOffsetArea + Main.rand.NextVector2Circular(150f, 55f);
                         });
-                        NewProjectileBetter(Target.Center, Vector2.Zero, ModContent.ProjectileType<BackgroundStar>(), 0, 0f, -1, defaultStarZPosition + Main.rand.NextFloat(3.7f), starCreationCounter);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), Target.Center, Vector2.Zero, ModContent.ProjectileType<BackgroundStar>(), 0, 0f, -1, defaultStarZPosition + Main.rand.NextFloat(3.7f), starCreationCounter);
 
                         // Fire an NPC state sync.
                         NPC.netSpam = 0;

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using NoxusBoss.Content.NPCs.Bosses.Noxus.Projectiles;
+using NoxusBoss.Content.Particles.Metaballs;
 using NoxusBoss.Core.CrossCompatibility.Inbound;
-using NoxusBoss.Core.Graphics.Metaballs;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
 using Terraria.Audio;
@@ -77,7 +77,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
                 // Perform the charge.
                 if (wrappedAttackTimer == DefaultTeleportDelay + chargeDelay + 1f)
                 {
-                    NPC.velocity = NPC.DirectionToSafe(Target.Center) * initialChargeSpeed;
+                    NPC.velocity = NPC.SafeDirectionTo(Target.Center) * initialChargeSpeed;
                     NPC.netUpdate = true;
                 }
 
@@ -103,7 +103,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
                 {
                     SoundEngine.PlaySound(SoundID.Item72, NPC.Center);
                     if (Main.netMode != NetmodeID.MultiplayerClient)
-                        NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<NoxusExplosion>(), ExplosionDamage, 0f);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<NoxusExplosion>(), ExplosionDamage, 0f);
                 }
 
                 ChargeAfterimageInterpolant = InverseLerp(0f, 8f, AttackTimer - DefaultTeleportDelay - chargeDelay);
@@ -180,8 +180,8 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
                 if (AttackTimer % spikeReleaseRate == spikeReleaseRate - 1f && AttackTimer >= DefaultTeleportDelay * 2f + 16f)
                 {
                     int telegraphDelay = (int)AttackTimer - (DefaultTeleportDelay * 2 + handArcTime);
-                    NewProjectileBetter(Hands[0].Center, (Hands[0].Center - NPC.Center).SafeNormalize(Vector2.UnitY) * 0.0001f, ModContent.ProjectileType<NoxSpike>(), SpikeDamage, 0f, -1, 0f, telegraphDelay);
-                    NewProjectileBetter(Hands[1].Center, (Hands[1].Center - NPC.Center).SafeNormalize(Vector2.UnitY) * 0.0001f, ModContent.ProjectileType<NoxSpike>(), SpikeDamage, 0f, -1, 0f, telegraphDelay);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), Hands[0].Center, (Hands[0].Center - NPC.Center).SafeNormalize(Vector2.UnitY) * 0.0001f, ModContent.ProjectileType<NoxSpike>(), SpikeDamage, 0f, -1, 0f, telegraphDelay);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), Hands[1].Center, (Hands[1].Center - NPC.Center).SafeNormalize(Vector2.UnitY) * 0.0001f, ModContent.ProjectileType<NoxSpike>(), SpikeDamage, 0f, -1, 0f, telegraphDelay);
                 }
             }
 
@@ -204,7 +204,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
                     ScreenEffectSystem.SetBlurEffect((Hands[0].Center + Hands[1].Center) * 0.5f, 0.7f, 27);
 
                     if (Main.netMode != NetmodeID.MultiplayerClient)
-                        NewProjectileBetter((Hands[0].Center + Hands[1].Center) * 0.5f, Vector2.Zero, ModContent.ProjectileType<DarkWave>(), 0, 0f);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), (Hands[0].Center + Hands[1].Center) * 0.5f, Vector2.Zero, ModContent.ProjectileType<DarkWave>(), 0, 0f);
                 }
 
                 // Fly around above the player after the spikes have been fired.
@@ -292,7 +292,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
                 // Charge horizontally.
                 if (wrappedAttackTimer == teleportDelay + chargeDelay + 1f)
                 {
-                    NPC.velocity = Vector2.UnitX * Sign(NPC.DirectionToSafe(Target.Center).X) * initialChargeSpeed;
+                    NPC.velocity = Vector2.UnitX * Sign(NPC.SafeDirectionTo(Target.Center).X) * initialChargeSpeed;
                     NPC.netUpdate = true;
                 }
 
@@ -316,7 +316,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
                         Vector2 fireballShootVelocity = -Vector2.UnitY.RotatedByRandom(0.2f) * teleportBelowTarget.ToDirectionInt() * fireballShootSpeed;
-                        NewProjectileBetter(NPC.Center + fireballShootVelocity * 10f, fireballShootVelocity, ModContent.ProjectileType<DarkFireball>(), FireballDamage, 0f, -1, 0f, 60f);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center + fireballShootVelocity * 10f, fireballShootVelocity, ModContent.ProjectileType<DarkFireball>(), FireballDamage, 0f, -1, 0f, 60f);
                     }
                 }
             }
@@ -364,7 +364,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
 
             NPC.Center = Vector2.Lerp(NPC.Center, Target.Center + hoverOffset, 0.027f);
             if (!NPC.WithinRange(Target.Center + hoverOffset, 100f))
-                NPC.SimpleFlyMovement(NPC.DirectionToSafe(Target.Center + hoverOffset) * hoverFlySpeed, hoverAcceleration);
+                NPC.SimpleFlyMovement(NPC.SafeDirectionTo(Target.Center + hoverOffset) * hoverFlySpeed, hoverAcceleration);
             else
                 NPC.velocity = (NPC.velocity * 1.04f).SafeNormalize(Vector2.UnitY) * Clamp(NPC.velocity.Length(), 7f, hoverFlySpeed);
 
@@ -384,14 +384,14 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
                 // Create gas particles.
                 SoundEngine.PlaySound(SoundID.Item104, NPC.Center);
                 for (int i = 0; i < 40; i++)
-                    NoxusGasMetaball.CreateParticle(Hands[0].Center + leftCometShootVelocity.RotatedByRandom(0.98f) * Main.rand.NextFloat(4f), leftCometShootVelocity.RotatedByRandom(0.68f) * Main.rand.NextFloat(3f), Main.rand.NextFloat(13f, 56f));
+                    ModContent.GetInstance<NoxusGasMetaball>().CreateParticle(Hands[0].Center + leftCometShootVelocity.RotatedByRandom(0.98f) * Main.rand.NextFloat(4f), leftCometShootVelocity.RotatedByRandom(0.68f) * Main.rand.NextFloat(3f), Main.rand.NextFloat(13f, 56f));
 
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     if (!Target.Center.WithinRange(Hands[0].Center, 330f))
-                        NewProjectileBetter(Hands[0].Center, leftCometShootVelocity, ModContent.ProjectileType<DarkComet>(), CometDamage, 0f);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), Hands[0].Center, leftCometShootVelocity, ModContent.ProjectileType<DarkComet>(), CometDamage, 0f);
                     if (!Target.Center.WithinRange(Hands[1].Center, 330f))
-                        NewProjectileBetter(Hands[1].Center, rightCometShootVelocity, ModContent.ProjectileType<DarkComet>(), CometDamage, 0f);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), Hands[1].Center, rightCometShootVelocity, ModContent.ProjectileType<DarkComet>(), CometDamage, 0f);
                 }
             }
 
@@ -446,7 +446,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
 
                 // Release an explosion at the old position prior to the teleport.
                 if (Main.netMode != NetmodeID.MultiplayerClient)
-                    NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<NoxusExplosion>(), ExplosionDamage, 0f);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<NoxusExplosion>(), ExplosionDamage, 0f);
 
                 // Make things blurrier for a short time.
                 if (NPC.WithinRange(Target.Center, 400f))
@@ -479,13 +479,13 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
 
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    NewProjectileBetter((Hands[0].Center + Hands[1].Center) * 0.5f, Vector2.Zero, ModContent.ProjectileType<DarkWave>(), 0, 0f);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), (Hands[0].Center + Hands[1].Center) * 0.5f, Vector2.Zero, ModContent.ProjectileType<DarkWave>(), 0, 0f);
 
                     Vector2 fireballSpawnPosition = (Hands[0].Center + Hands[1].Center) * 0.5f;
                     for (int i = 0; i < fireballCount; i++)
                     {
                         Vector2 fireballVelocity = (Target.Center - fireballSpawnPosition).SafeNormalize(Vector2.UnitY).RotatedByRandom(1.34f) * Main.rand.NextFloat(9.5f, 24f);
-                        NewProjectileBetter(fireballSpawnPosition, fireballVelocity, ModContent.ProjectileType<DarkFireball>(), FireballDamage, 0f, -1, 0f, Main.rand.NextFloat(18f, 36f));
+                        NewProjectileBetter(NPC.GetSource_FromAI(), fireballSpawnPosition, fireballVelocity, ModContent.ProjectileType<DarkFireball>(), FireballDamage, 0f, -1, 0f, Main.rand.NextFloat(18f, 36f));
                     }
                 }
             }
@@ -552,7 +552,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
 
             // Make the hand that's closest to the target face towards them before firing the gas.
             float aimHandAtTargetInterpolant = InverseLerp(DefaultTeleportDelay, DefaultTeleportDelay + 10f, AttackTimer);
-            closestHandToTargetDestination = Vector2.Lerp(closestHandToTargetDestination, NPC.Center + NPC.DirectionToSafe(Target.Center) * 157f, aimHandAtTargetInterpolant);
+            closestHandToTargetDestination = Vector2.Lerp(closestHandToTargetDestination, NPC.Center + NPC.SafeDirectionTo(Target.Center) * 157f, aimHandAtTargetInterpolant);
 
             // Release Noxus gas in a spread.
             if (wrappedAttackTimer == DefaultTeleportDelay * 2f - 12f)
@@ -565,7 +565,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
                     {
                         float gasShootArc = Lerp(-gasShootMaxAngle, gasShootMaxAngle, i / (float)(gasShootCount - 1f)) + Main.rand.NextFloatDirection() * 0.048f;
                         Vector2 gasShootVelocity = (Target.Center - closestHandPosition).SafeNormalize(Vector2.UnitY).RotatedBy(gasShootArc) * gasShootSpeed;
-                        NewProjectileBetter(closestHandPosition, gasShootVelocity, ModContent.ProjectileType<NoxusGas>(), NoxusGasDamage, 0f);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), closestHandPosition, gasShootVelocity, ModContent.ProjectileType<NoxusGas>(), NoxusGasDamage, 0f);
                     }
                 }
             }

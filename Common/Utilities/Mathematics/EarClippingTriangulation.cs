@@ -2,13 +2,13 @@
 using Microsoft.Xna.Framework;
 using NoxusBoss.Common.DataStructures;
 
-namespace NoxusBoss.Common.Utilities
+namespace NoxusBoss.Common.Tools.Utilities.Mathematics
 {
     public static class EarClippingTriangulation
     {
         public static List<Triangle> GenerateMesh(List<Vector2> points)
         {
-            List<Triangle> triangles = new();
+            List<Triangle> triangles = [];
 
             // Sort the points clockwise or counterclockwise based on their position.
             List<Vector2> sortedPoints = SortPoints(points);
@@ -116,8 +116,8 @@ namespace NoxusBoss.Common.Utilities
             float d2 = Sign(point, p2, p3);
             float d3 = Sign(point, p3, p1);
 
-            bool hasNegative = (d1 < 0) || (d2 < 0) || (d3 < 0);
-            bool hasPositive = (d1 > 0) || (d2 > 0) || (d3 > 0);
+            bool hasNegative = d1 < 0 || d2 < 0 || d3 < 0;
+            bool hasPositive = d1 > 0 || d2 > 0 || d3 > 0;
 
             return !(hasNegative && hasPositive);
         }

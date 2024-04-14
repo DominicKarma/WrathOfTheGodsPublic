@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using NoxusBoss.Core.Configuration;
-using NoxusBoss.Core.Graphics.Shaders;
 using NoxusBoss.Core.MiscSceneManagers;
 using ReLogic.Content;
 using Terraria;
@@ -275,7 +274,7 @@ namespace NoxusBoss.Content.Waters
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
 
             // Get and prepare the shader.
-            var cosmicShader = ShaderManager.GetShader("CosmicWaterShader");
+            var cosmicShader = ShaderManager.GetShader("NoxusBoss.CosmicWaterShader");
             cosmicShader.TrySetParameter("screenPosition", -scenePosition);
             cosmicShader.TrySetParameter("targetSize", Main.waterTarget.Size());
             cosmicShader.SetTexture(CosmicTexture.Value, 1);
@@ -338,10 +337,10 @@ namespace NoxusBoss.Content.Waters
 
         private static bool HasNeighborWithLiquid(int x, int y)
         {
-            Tile left = ParanoidTileRetrieval(x - 1, y);
-            Tile right = ParanoidTileRetrieval(x + 1, y);
-            Tile top = ParanoidTileRetrieval(x, y - 1);
-            Tile bottom = ParanoidTileRetrieval(x, y + 1);
+            Tile left = Framing.GetTileSafely(x - 1, y);
+            Tile right = Framing.GetTileSafely(x + 1, y);
+            Tile top = Framing.GetTileSafely(x, y - 1);
+            Tile bottom = Framing.GetTileSafely(x, y + 1);
             return left.LiquidAmount >= 184 || right.LiquidAmount >= 184 || top.LiquidAmount >= 184 || bottom.LiquidAmount >= 184;
         }
 

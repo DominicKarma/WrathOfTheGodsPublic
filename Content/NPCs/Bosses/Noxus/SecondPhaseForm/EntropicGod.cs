@@ -3,9 +3,9 @@ using System.IO;
 using Microsoft.Xna.Framework;
 using NoxusBoss.Content.NPCs.Bosses.NamelessDeity;
 using NoxusBoss.Content.NPCs.Bosses.Noxus.SpecificEffectManagers;
+using NoxusBoss.Content.Particles.Metaballs;
 using NoxusBoss.Core;
 using NoxusBoss.Core.CrossCompatibility.Inbound;
-using NoxusBoss.Core.Graphics.Metaballs;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
@@ -539,14 +539,14 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SecondPhaseForm
             // Emit pitch black metaballs around based on movement.
             else if (NPC.Opacity >= 0.5f)
             {
-                int metaballSpawnLoopCount = (int)Remap(NPC.Opacity, 1f, 0f, 9f, 1f) - (int)Remap(ZPosition, 0.1f, 1.2f, 0f, 5f);
+                int metaballSpawnLoopCount = (int)Utils.Remap(NPC.Opacity, 1f, 0f, 9f, 1f) - (int)Utils.Remap(ZPosition, 0.1f, 1.2f, 0f, 5f);
 
                 for (int i = 0; i < metaballSpawnLoopCount; i++)
                 {
                     Vector2 gasSpawnPosition = NPC.Center + Main.rand.NextVector2Circular(82f, 82f) * TeleportVisualsAdjustedScale + (NPC.position - NPC.oldPosition).SafeNormalize(Vector2.UnitY) * 3f;
                     float gasSize = NPC.width * TeleportVisualsAdjustedScale.X * NPC.Opacity * 0.45f;
                     float angularOffset = Sin(Main.GlobalTimeWrappedHourly * 1.1f) * 0.77f;
-                    PitchBlackMetaball.CreateParticle(gasSpawnPosition, Main.rand.NextVector2Circular(2f, 2f) + NPC.velocity.RotatedBy(angularOffset).RotatedByRandom(0.6f) * 0.26f, gasSize);
+                    ModContent.GetInstance<PitchBlackMetaball>().CreateParticle(gasSpawnPosition, Main.rand.NextVector2Circular(2f, 2f) + NPC.velocity.RotatedBy(angularOffset).RotatedByRandom(0.6f) * 0.26f, gasSize);
                 }
             }
 

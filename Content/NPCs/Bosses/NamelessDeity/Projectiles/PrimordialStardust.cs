@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
+using Luminance.Common.DataStructures;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Common.DataStructures;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Content.Waters;
 using NoxusBoss.Core.Graphics.Automators;
-using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -78,7 +77,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
 
         public void DrawWithShader(SpriteBatch spriteBatch)
         {
-            var fogShader = ShaderManager.GetShader("PrimordialStardustShader");
+            var fogShader = ShaderManager.GetShader("NoxusBoss.PrimordialStardustShader");
             fogShader.TrySetParameter("scrollSpeed", 0.09f);
             fogShader.TrySetParameter("scrollOffset", new Vector2(Projectile.identity * 8.39317f % 1f, Projectile.identity * 9.7673f % 1f));
             fogShader.TrySetParameter("greenBias", Lerp(0.04f, 0.48f, Projectile.identity / 21f % 1f));

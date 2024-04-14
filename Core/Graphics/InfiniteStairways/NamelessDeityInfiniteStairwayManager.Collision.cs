@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using NoxusBoss.Core.CrossCompatibility.Inbound;
 using NoxusBoss.Core.GlobalItems;
-using NoxusBoss.Core.Graphics.Particles;
 using NoxusBoss.Core.MiscSceneManagers;
 using Terraria;
 using Terraria.Audio;
@@ -282,10 +281,6 @@ namespace NoxusBoss.Core.Graphics.InfiniteStairways
                     if (d.active)
                         d.position += teleportOffset;
                 }
-
-                // Teleport particles.
-                foreach (Particle particle in ParticleManager.activeParticles)
-                    particle.Position += teleportOffset;
             }
         }
 

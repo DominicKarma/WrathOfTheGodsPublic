@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using NoxusBoss.Core.Netcode.Packets;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -13,22 +12,22 @@ namespace NoxusBoss.Core.Netcode
     // NOTE -- This system or more or less equivalent to the one I wrote for Infernum a while ago.
     public class PacketManager : ModSystem
     {
-        internal static Dictionary<string, BaseCustomPacket> RegisteredPackets = new();
+        internal static Dictionary<string, Packet> RegisteredPackets = [];
 
         public override void OnModLoad()
         {
-            RegisteredPackets = new();
+            RegisteredPackets = [];
             foreach (Type t in AssemblyManager.GetLoadableTypes(Mod.Code))
             {
-                if (!t.IsSubclassOf(typeof(BaseCustomPacket)) || t.IsAbstract)
+                if (!t.IsSubclassOf(typeof(Packet)) || t.IsAbstract)
                     continue;
 
-                BaseCustomPacket packet = Activator.CreateInstance(t) as BaseCustomPacket;
+                Packet packet = Activator.CreateInstance(t) as Packet;
                 RegisteredPackets[t.FullName] = packet;
             }
         }
 
-        internal static void PreparePacket(BaseCustomPacket packet, object[] context, short? sender = null)
+        internal static void PreparePacket(Packet packet, object[] context, short? sender = null)
         {
             // Don't try to send packets in singleplayer.
             if (Main.netMode == NetmodeID.SinglePlayer)
@@ -64,11 +63,11 @@ namespace NoxusBoss.Core.Netcode
             wrapperPacket.Send(-1, sender.Value);
         }
 
-        public static void SendPacket<T>(params object[] context) where T : BaseCustomPacket
+        public static void SendPacket<T>(params object[] context) where T : Packet
         {
             // Verify that the packet is registered before trying to send it.
             string packetName = typeof(T).FullName;
-            if (Main.netMode == NetmodeID.SinglePlayer || !RegisteredPackets.TryGetValue(packetName, out BaseCustomPacket packet))
+            if (Main.netMode == NetmodeID.SinglePlayer || !RegisteredPackets.TryGetValue(packetName, out Packet packet))
                 return;
 
             PreparePacket(packet, context);
@@ -82,7 +81,7 @@ namespace NoxusBoss.Core.Netcode
             // If no valid packet could be found, get out of here.
             // There will inevitably be a reader underflow error caused by TML's packet policing, but there aren't any clear-cut solutions that
             // I know of that adequately addresses that problem, and from what I can tell it's never catastrophic when it happens.
-            if (!RegisteredPackets.TryGetValue(packetName, out BaseCustomPacket packet))
+            if (!RegisteredPackets.TryGetValue(packetName, out Packet packet))
                 return;
 
             // Determine who sent this packet if it needs to resend.

@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Core.Netcode.Packets
 {
-    public class NoxusFogTimePacket : BaseCustomPacket
+    public class NoxusFogTimePacket : Packet
     {
         public override void Write(ModPacket packet, params object[] context)
         {

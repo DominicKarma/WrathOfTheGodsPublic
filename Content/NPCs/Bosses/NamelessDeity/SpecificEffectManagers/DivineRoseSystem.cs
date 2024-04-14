@@ -2,7 +2,6 @@
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Core.Graphics.Shaders;
 using ReLogic.Content;
 using Terraria;
 using Terraria.Audio;
@@ -97,7 +96,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.SpecificEffectManagers
         public static void Draw(int time)
         {
             // Calculate draw variables.
-            float scale = Remap(time, -1f, 75f, 0.01f, 1.6f);
+            float scale = Utils.Remap(time, -1f, 75f, 0.01f, 1.6f);
 
             // Draw the rose.
             float generalOpacity = InverseLerp(1f, NamelessDeityZPosition - 1f, NamelessDeityBoss.Myself.As<NamelessDeityBoss>().ZPosition);
@@ -133,8 +132,8 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.SpecificEffectManagers
                 galaxyColor = Color.Lerp(galaxyColor, Color.Wheat, 0.55f);
 
                 Vector2 galaxyVelocity = -Vector2.UnitY.RotatedByRandom(0.5f) * Main.rand.NextFloat(11f, 25f) + Main.rand.NextVector2Circular(5f, 5f);
-                int galaxyLifetime = (int)Remap(galaxyVelocity.Length(), 10f, 19.2f, 40f, 70f) + Main.rand.Next(-12, 45);
-                float galaxyScale = Remap(galaxyVelocity.Length(), 9.5f, 17.4f, 0.12f, 0.4f) + Pow(Main.rand.NextFloat(), 3f) * 0.8f;
+                int galaxyLifetime = (int)Utils.Remap(galaxyVelocity.Length(), 10f, 19.2f, 40f, 70f) + Main.rand.Next(-12, 45);
+                float galaxyScale = Utils.Remap(galaxyVelocity.Length(), 9.5f, 17.4f, 0.12f, 0.4f) + Pow(Main.rand.NextFloat(), 3f) * 0.8f;
 
                 ActiveGalaxies.Add(new()
                 {
@@ -174,7 +173,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.SpecificEffectManagers
                 Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.AnisotropicWrap, DepthStencilState.None, RasterizerState.CullNone, null, GetCustomSkyBackgroundMatrix());
 
                 // Apply a static shader.
-                var censorShader = ShaderManager.GetShader("StaticOverlayShader");
+                var censorShader = ShaderManager.GetShader("NoxusBoss.StaticOverlayShader");
                 censorShader.SetTexture(ModContent.Request<Texture2D>("Terraria/Images/Misc/noise"), 1, SamplerState.PointWrap);
                 censorShader.Apply();
 
@@ -200,7 +199,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.SpecificEffectManagers
             // Draw the rose with a cartoon shader.
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.AnisotropicWrap, DepthStencilState.None, RasterizerState.CullNone, null, GetCustomSkyBackgroundMatrix());
-            var cartoonShader = ShaderManager.GetShader("CelShader");
+            var cartoonShader = ShaderManager.GetShader("NoxusBoss.CelShader");
             cartoonShader.TrySetParameter("pixelationFactor", Vector2.One * 1.75f / rose.Size());
             cartoonShader.TrySetParameter("textureSize", rose.Size());
             cartoonShader.TrySetParameter("horizontalEdgeKernel", new Matrix()
@@ -242,7 +241,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.SpecificEffectManagers
 
         public static void DrawGalaxies()
         {
-            var galaxyShader = ShaderManager.GetShader("GalaxyShader");
+            var galaxyShader = ShaderManager.GetShader("NoxusBoss.GalaxyShader");
 
             ActiveGalaxies.RemoveAll(g => g.Time >= g.Lifetime);
             foreach (Galaxy g in ActiveGalaxies)
@@ -262,7 +261,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.SpecificEffectManagers
                 galaxyShader.Apply();
 
                 // Draw the main galaxy.
-                float galaxyScale = g.Scale * 1.3f + Pow(g.LifetimeCompletion, 1.7f) * 19f;
+                float galaxyScale = g.Scale * 3f + Pow(g.LifetimeCompletion, 1.7f) * 3f;
                 Texture2D galaxyTexture = GalaxyTextures[g.Variant];
                 Vector2 galaxyDrawPosition = g.Center;
                 Main.spriteBatch.Draw(galaxyTexture, galaxyDrawPosition, null, g.GeneralColor * g.Opacity, 0f, galaxyTexture.Size() * 0.5f, galaxyScale, 0, 0f);

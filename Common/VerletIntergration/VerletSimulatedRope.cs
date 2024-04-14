@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Core.Graphics.Primitives;
-using NoxusBoss.Core.Graphics.Shaders;
+using NoxusBoss.Common.VerletIntergration;
 using Terraria;
 
-namespace NoxusBoss.Common.VerletIntergration
+namespace NoxusBoss.Common.Tools.VerletIntergration
 {
     /// <summary>
     /// Represents a collection of verlet points as a rope.
     /// </summary>
     public class VerletSimulatedRope
     {
+        private float projectionTextureWidth;
+
         /// <summary>
         /// The ideal overall length of the rope in pixels.
         /// </summary>
@@ -36,9 +37,14 @@ namespace NoxusBoss.Common.VerletIntergration
         }
 
         /// <summary>
-        /// The primitive drawer responsible for rendering the rope.
+        /// The end position of the rope.
         /// </summary>
-        public PrimitiveTrail RopeDrawer;
+        public Vector2 EndPosition => Rope.Last().Position;
+
+        /// <summary>
+        /// The end direction of the rope.
+        /// </summary>
+        public Vector2 EndDirection => (Rope[^1].Position - Rope[^2].Position).SafeNormalize(Vector2.Zero);
 
         /// <summary>
         /// The list of rope segments.
@@ -47,52 +53,73 @@ namespace NoxusBoss.Common.VerletIntergration
 
         public VerletSimulatedRope(Vector2 position, Vector2 velocity, int totalPoints, float length)
         {
-            Rope ??= new();
+            Rope ??= [];
 
             IdealRopeLength = length;
             for (int i = 0; i < totalPoints; i++)
-                Rope?.Add(new(position + Vector2.UnitY * i, velocity, i == 0));
+                Rope?.Add(new(position + Main.rand.NextVector2Circular(2f, 2f), velocity, i == 0));
         }
 
         /// <summary>
-        /// Updates the vine, locking its first segment in place at a desired position to prevent it from falling forever.
+        /// Updates the rope, locking its first segment in place at a desired position to prevent it from falling forever.
         /// </summary>
         /// <param name="topPosition">Where the first rope segment should be locked.</param>
+        /// <param name="gravity">The gravity imposed upon the rope.</param>
         public void Update(Vector2 topPosition, float gravity)
         {
             Rope[0].Position = topPosition;
             Rope[0].Locked = true;
-            VerletSimulations.TileCollisionVerletSimulation(Rope, IdealRopeLength / Rope.Count, 10, gravity);
+            UpdateWithoutLocking(gravity);
         }
 
         /// <summary>
-        /// Draws the rope with a texture projected on top of it.
+        /// Updates the rope. This will allow the entire rope to fall forever.
         /// </summary>
-        /// <param name="projection">The texture the project onto the rope.</param>
-        /// <param name="drawOffset">The offset for drawn rope points. This typically should be a world -> screen space offset.</param>
-        /// <param name="flipHorizontally">Whether the texture should be flipped on the projection.</param>
-        /// <param name="colorFunction">The color factor function for the rope strip.</param>
-        /// <param name="projectionWidth">The area width upon which primitive screen space -> UV space projections should occur.</param>
-        /// <param name="projectionHeight">The area height upon which primitive screen space -> UV space projections should occur.</param>
-        public void DrawProjection(Texture2D projection, Vector2 drawOffset, bool flipHorizontally, Func<float, Color> colorFunction, int? projectionWidth = null, int? projectionHeight = null)
+        /// <param name="gravity">The gravity imposed upon the rope.</param>
+        /// <param name="externalForce">An optional external force applied to the entire rope.</param>
+        public void UpdateWithoutLocking(float gravity)
+        {
+            VerletSimulations.TileCollisionVerletSimulation(Rope, IdealRopeLength / Rope.Count, Rope.Count * 2 + 10, gravity);
+        }
+
+        public void DrawProjection(Texture2D projection, Vector2 drawOffset, bool flipHorizontally, Func<float, Color> colorFunction, int? projectionWidth = null, int? projectionHeight = null, float widthFactor = 1f, float lengthStretch = 1.3f, bool unscaledMatrix = false)
         {
             // Initialize the rope drawer primitive.
-            var projectionShader = ShaderManager.GetShader("PrimitiveProjection");
-            RopeDrawer = new(_ => projection.Width, new(colorFunction), null, true, projectionShader)
-            {
-                ProjectionAreaWidth = projectionWidth,
-                ProjectionAreaHeight = projectionHeight
-            };
+            var projectionShader = ShaderManager.GetShader("NoxusBoss.PrimitiveProjection");
+
+            // This variable is used as a proxy to allow for dynamic updating in the width function for the primitive drawer.
+            // Using projection.Width directly inside the width function can (and has, in the past) lead to problems where it'll receive the asynchronous load dummy texture and
+            // interpret that as the texture to evaluate the width of, resulting in cases where the drawn width is 1 (since said dummy texture is 1x1 in size).
+            projectionTextureWidth = projection.Width;
 
             Main.instance.GraphicsDevice.Textures[1] = projection;
             Main.instance.GraphicsDevice.SamplerStates[1] = SamplerState.AnisotropicClamp;
             Main.instance.GraphicsDevice.BlendState = BlendState.NonPremultiplied;
 
             projectionShader.TrySetParameter("horizontalFlip", flipHorizontally);
-            projectionShader.TrySetParameter("heightRatio", projection.Height / (float)projection.Width);
-            projectionShader.TrySetParameter("lengthRatio", RopeLength / IdealRopeLength * 1.3f);
+            projectionShader.TrySetParameter("heightRatio", projection.Height / projectionTextureWidth);
+            projectionShader.TrySetParameter("lengthRatio", RopeLength / IdealRopeLength * lengthStretch);
 
-            RopeDrawer.Draw(Rope.Select(r => r.Position), drawOffset, 24);
+            var ropePositions = Rope.Select(r => r.Position).ToList();
+            PrimitiveSettings settings = new(_ => projectionTextureWidth * widthFactor, new(colorFunction), _ => drawOffset + Main.screenPosition, Shader: projectionShader, ProjectionAreaWidth: projectionWidth, ProjectionAreaHeight: projectionHeight, UseUnscaledMatrix: unscaledMatrix);
+            PrimitiveRenderer.RenderTrail(ropePositions, settings, 24);
+        }
+
+        public void DrawProjectionScuffed(Texture2D projection, Vector2 drawOffset, bool flipHorizontally, Func<float, Color> colorFunction, Func<float, float> widthFunction, int? projectionWidth = null, int? projectionHeight = null, float lengthStretch = 1.3f)
+        {
+            // Initialize the rope drawer primitive.
+            var projectionShader = ShaderManager.GetShader("NoxusBoss.PrimitiveProjection");
+            Main.instance.GraphicsDevice.Textures[1] = projection;
+            Main.instance.GraphicsDevice.SamplerStates[1] = SamplerState.AnisotropicClamp;
+            Main.instance.GraphicsDevice.BlendState = BlendState.NonPremultiplied;
+
+            projectionShader.TrySetParameter("horizontalFlip", flipHorizontally);
+            projectionShader.TrySetParameter("heightRatio", projection.Height / (float)projection.Width);
+            projectionShader.TrySetParameter("lengthRatio", RopeLength / IdealRopeLength * lengthStretch);
+
+            var ropePositions = Rope.Select(r => r.Position).ToList();
+            PrimitiveSettings settings = new(new(widthFunction), new(colorFunction), _ => drawOffset + Main.screenPosition, Shader: projectionShader, ProjectionAreaWidth: projectionWidth, ProjectionAreaHeight: projectionHeight, UseUnscaledMatrix: false);
+            PrimitiveRenderer.RenderTrail(ropePositions, settings, 90);
         }
     }
 }

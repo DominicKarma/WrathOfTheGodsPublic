@@ -124,7 +124,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
                 NamelessDeityKeyboardShader.BrightnessIntensity = 1f;
 
                 if (Main.netMode == NetmodeID.SinglePlayer)
-                    NewProjectileBetter(censorPosition, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), censorPosition, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
             }
 
             // Perform galaxy spawning and timing behaviors after the explosion has happened.
@@ -139,7 +139,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
                         Vector2 telegraphSpawnPosition = Target.Center + Vector2.UnitX * (Main.rand.NextFloatDirection() * 900f + Target.Velocity.X * Main.rand.NextFloat(30f, 45f));
-                        NewProjectileBetter(telegraphSpawnPosition, Vector2.UnitY, ModContent.ProjectileType<FallingGalaxy>(), GalaxyDamage, 0f);
+                        NewProjectileBetter(NPC.GetSource_FromAI(), telegraphSpawnPosition, Vector2.UnitY, ModContent.ProjectileType<FallingGalaxy>(), GalaxyDamage, 0f);
                     }
 
                     galaxyReleaseTimer = 0f;

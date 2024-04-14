@@ -1,34 +1,33 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Core.Graphics.Particles;
 using Terraria;
 
 namespace NoxusBoss.Content.Particles
 {
     public class ExpandingGreyscaleCircleParticle : Particle
     {
-        public override BlendState DrawBlendState => BlendState.Additive;
+        public override BlendState BlendState => BlendState.Additive;
 
-        public override string TexturePath => "NoxusBoss/Content/Particles/ExpandingGreyscaleCircle";
+        public override string AtlasTextureName => "NoxusBoss.ExpandingGreyscaleCircleParticle.png";
 
         public ExpandingGreyscaleCircleParticle(Vector2 position, Vector2 velocity, Color color, int lifetime, float scale)
         {
             Position = position;
             Velocity = velocity;
-            Color = color;
-            Scale = scale;
+            DrawColor = color;
+            Scale = Vector2.One * scale;
             Lifetime = lifetime;
         }
 
         public override void Update()
         {
             Opacity = InverseLerp(0f, 4f, Lifetime - Time);
-            Scale += 0.9f;
+            Scale += Vector2.One * 0.9f;
         }
 
-        public override void Draw()
+        public override void Draw(SpriteBatch spriteBatch)
         {
-            Main.spriteBatch.Draw(Texture, Position - Main.screenPosition, null, Color * Opacity, Rotation, Texture.Size() * 0.5f, Scale * 0.4f, 0, 0f);
+            spriteBatch.Draw(Texture, Position - Main.screenPosition, null, DrawColor * Opacity, Rotation, null, Scale * 0.4f, 0);
         }
     }
 }

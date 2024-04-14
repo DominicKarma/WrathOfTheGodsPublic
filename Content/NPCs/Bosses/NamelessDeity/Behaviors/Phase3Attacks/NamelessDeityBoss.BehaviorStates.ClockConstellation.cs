@@ -67,8 +67,8 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
 
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
-                    NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
-                    NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<ClockConstellation>(), 0, 0f);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<ClockConstellation>(), 0, 0f);
                 }
 
                 ImmediateTeleportTo(Target.Center + Vector2.UnitY * 2000f);
@@ -119,7 +119,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
                     NPC.Opacity = 1f;
                     NPC.netUpdate = true;
 
-                    NewProjectileBetter(NPC.Center, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
                 }
             }
 

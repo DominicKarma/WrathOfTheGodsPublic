@@ -1,8 +1,8 @@
 displayName = Calamity: Wrath of the Gods
 author = Dominic Karma
-version = 1.1.19
+version = 1.1.20
 buildIgnore = .vs\*, Properties\*, *.csproj, *.user, obj\*, bin\*, *.config, .git\*, .github\*, LICENSE, README.md, .editorconfig, .gitignore, .gitattributes, Assets\Effects\Compiler\*
-modReferences = CalamityMod, SubworldLibrary
+modReferences = CalamityMod, SubworldLibrary, Luminance
 sortAfter = ToastyQoL
 hideCode = false
 hideResources = false

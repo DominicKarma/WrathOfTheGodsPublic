@@ -14,16 +14,14 @@ namespace NoxusBoss.Core.Graphics.Shaders.Keyboard
 {
     public class KeyboardShaderLoader : ModSystem
     {
-        public class SimpleCondition : CommonConditions.ConditionBase
+        public class SimpleCondition(Func<Player, bool> condition) : CommonConditions.ConditionBase
         {
-            private readonly Func<Player, bool> _condition;
-
-            public SimpleCondition(Func<Player, bool> condition) => _condition = condition;
+            private readonly Func<Player, bool> _condition = condition;
 
             public override bool IsActive() => _condition(CurrentPlayer);
         }
 
-        private static readonly List<ChromaShader> loadedShaders = new();
+        private static readonly List<ChromaShader> loadedShaders = [];
 
         public static bool HasLoaded
         {

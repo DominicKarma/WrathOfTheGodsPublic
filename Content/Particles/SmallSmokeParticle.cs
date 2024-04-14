@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using NoxusBoss.Core.Graphics.Particles;
 using Terraria;
 
 namespace NoxusBoss.Content.Particles
@@ -14,7 +13,7 @@ namespace NoxusBoss.Content.Particles
 
         public Color ColorFade;
 
-        public override string TexturePath => "NoxusBoss/Content/Particles/SmallSmoke";
+        public override string AtlasTextureName => "NoxusBoss.SmallSmokeParticle.png";
 
         public SmallSmokeParticle(Vector2 position, Vector2 velocity, Color colorFire, Color colorFade, float scale, float opacity, float rotationSpeed = 0f)
         {
@@ -22,11 +21,12 @@ namespace NoxusBoss.Content.Particles
             Velocity = velocity;
             ColorFire = colorFire;
             ColorFade = colorFade;
-            Scale = scale;
+            Scale = Vector2.One * scale;
             Alpha = opacity;
             Rotation = Main.rand.NextFloat(TwoPi);
             Opacity = 1f;
             Spin = rotationSpeed;
+            Lifetime = 9999;
         }
 
         public override void Update()
@@ -35,20 +35,20 @@ namespace NoxusBoss.Content.Particles
             Velocity *= 0.85f;
             if (Alpha > 90f)
             {
-                Lighting.AddLight(Position, Color.ToVector3() * 0.1f);
-                Scale += 0.01f;
+                Lighting.AddLight(Position, DrawColor.ToVector3() * 0.1f);
+                Scale += Vector2.One * 0.01f;
                 Alpha -= 3f;
             }
             else
             {
                 Scale *= 0.975f;
-                Alpha -= 2f;
+                Alpha -= 0.6f;
             }
 
             if (Alpha < 0f)
                 Kill();
 
-            Color = Color.Lerp(ColorFire, ColorFade, Clamp((255f - Alpha - 100f) / 80f, 0f, 1f)) * (Alpha / 255f);
+            DrawColor = Color.Lerp(ColorFire, ColorFade, Saturate((255f - Alpha - 100f) / 80f)) * (Alpha / 255f);
         }
     }
 }

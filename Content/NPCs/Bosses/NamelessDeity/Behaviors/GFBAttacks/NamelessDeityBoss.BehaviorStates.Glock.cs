@@ -55,7 +55,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
                     {
                         star.As<BackgroundStar>().ApproachingScreen = true;
                     });
-                    NewProjectileBetter(glockEnd, Vector2.Zero, ModContent.ProjectileType<BackgroundStar>(), 0, 0f, -1, 0.3f);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), glockEnd, Vector2.Zero, ModContent.ProjectileType<BackgroundStar>(), 0, 0f, -1, 0.3f);
 
                     // Apply a bit of recoil to Nameless.
                     Vector2 pushBackForce = (Target.Center - glockEnd).SafeNormalize(Vector2.UnitY) * 20f;
@@ -83,7 +83,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
             // Update hands.
             if (Hands.Count >= 2)
             {
-                DefaultHandDrift(Hands[0], NPC.Center + NPC.DirectionToSafe(Target.Center + Vector2.UnitY * (verticalRecoilOffset + 150f)) * 990f + Vector2.UnitX * verticalRecoilOffset * 0.56f, 3.1f);
+                DefaultHandDrift(Hands[0], NPC.Center + NPC.SafeDirectionTo(Target.Center + Vector2.UnitY * (verticalRecoilOffset + 150f)) * 990f + Vector2.UnitX * verticalRecoilOffset * 0.56f, 3.1f);
                 Hands[0].HasGlock = AttackTimer >= 2;
 
                 DefaultHandDrift(Hands[1], NPC.Center + new Vector2(-900f, -120f) * TeleportVisualsAdjustedScale, 2.5f);

@@ -1,18 +1,15 @@
 ﻿using System.Collections.Generic;
+using Luminance.Assets;
+using Luminance.Common.Easings;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Common.Easings;
 using NoxusBoss.Common.Subworlds;
 using NoxusBoss.Content.NPCs.Bosses.NamelessDeity;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Content.Projectiles.Visuals;
 using NoxusBoss.Core.Fixes;
-using NoxusBoss.Core.Graphics.Automators;
-using NoxusBoss.Core.Graphics.Primitives;
-using NoxusBoss.Core.Graphics.Shaders;
 using NoxusBoss.Core.Graphics.Shaders.Screen;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
-using ReLogic.Content;
 using SubworldLibrary;
 using Terraria;
 using Terraria.Audio;
@@ -23,7 +20,7 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.Projectiles
 {
-    public class TerminusProj : ModProjectile, IDrawPixelated, IDrawAdditive
+    public class TerminusProj : ModProjectile, IPixelatedPrimitiveRenderer, IDrawAdditive
     {
         public class ChargingEnergyStreak
         {
@@ -39,8 +36,6 @@ namespace NoxusBoss.Content.Projectiles
 
             public Vector2 StartingOffset;
 
-            public PrimitiveTrail EnergyStreakDrawer;
-
             public ChargingEnergyStreak(float speedInterpolant, float baseWidth, Color generalColor, Vector2 startingOffset)
             {
                 // Initialize things.
@@ -53,9 +48,6 @@ namespace NoxusBoss.Content.Projectiles
                 // Don't attempt to load shaders serverside.
                 if (Main.netMode == NetmodeID.Server)
                     return;
-
-                // Initialize the streak drawer.
-                EnergyStreakDrawer ??= new(EnergyWidthFunction, EnergyColorFunction, null, true, ShaderManager.GetShader("GenericTrailStreak"));
             }
 
             public void Update()
@@ -66,13 +58,13 @@ namespace NoxusBoss.Content.Projectiles
                 if (CurrentOffset.Length() <= 8f)
                 {
                     StartingOffset = Vector2.Lerp(StartingOffset, Vector2.Zero, SpeedInterpolant * 1.4f);
-                    Opacity = Clamp(Opacity * 0.94f - 0.09f, 0f, 1f);
+                    Opacity = Saturate(Opacity * 0.94f - 0.09f);
                 }
             }
 
             public float EnergyWidthFunction(float completionRatio) => BaseWidth - (1f - completionRatio) * 3f;
 
-            public Color EnergyColorFunction(float completionRatio) => GeneralColor with { A = 0 } * Opacity;
+            public Color EnergyColorFunction(float _) => GeneralColor with { A = 0 } * Opacity;
         }
 
         public enum TerminusAIState
@@ -99,9 +91,9 @@ namespace NoxusBoss.Content.Projectiles
 
         public Vector2 EyePupilOffset;
 
-        public List<ChargingEnergyStreak> EnergyStreaks = new();
+        public List<ChargingEnergyStreak> EnergyStreaks = [];
 
-        public static Asset<Texture2D> MyTexture
+        public static LazyAsset<Texture2D> MyTexture
         {
             get;
             private set;
@@ -112,9 +104,9 @@ namespace NoxusBoss.Content.Projectiles
         public static readonly SoundStyle RoarSound = new("NoxusBoss/Assets/Sounds/Item/TerminusRoar");
 
         public static readonly PiecewiseCurve RiseMotionCurve = new PiecewiseCurve().
-            Add(PolynomialEasing.Quadratic, EasingType.In, -4f, 0.36f). // Ascend motion.
-            Add(LinearEasing.Default, EasingType.In, -4f, 0.72f). // Rise without change.
-            Add(new PolynomialEasing(1.5f), EasingType.Out, 0f, 1f); // Slowdown.
+            Add(EasingCurves.Quadratic, EasingType.In, -4f, 0.36f). // Ascend motion.
+            Add(EasingCurves.Linear, EasingType.In, -4f, 0.72f). // Rise without change.
+            Add(EasingCurves.MakePoly(1.5f), EasingType.Out, 0f, 1f); // Slowdown.
 
         // These first three times are roughly synced to the duration of the Terminus chargeup sound, which is around 5.813 seconds (348 frames).
         public static int RiseUpwardTime => 92;
@@ -142,7 +134,7 @@ namespace NoxusBoss.Content.Projectiles
         public override void SetStaticDefaults()
         {
             if (Main.netMode != NetmodeID.Server)
-                MyTexture = ModContent.Request<Texture2D>(Texture);
+                MyTexture = LazyAsset<Texture2D>.Request(Texture);
         }
 
         public override void SetDefaults()
@@ -204,7 +196,7 @@ namespace NoxusBoss.Content.Projectiles
             }
 
             // Quickly fade in.
-            Projectile.Opacity = Clamp(Projectile.Opacity + 0.1667f, 0f, 1f);
+            Projectile.Opacity = Saturate(Projectile.Opacity + 0.1667f);
 
             // Inform the screen shader that the Terminus is present.
             TerminusShaderScene.Terminus = Projectile;
@@ -280,7 +272,7 @@ namespace NoxusBoss.Content.Projectiles
             DarknessIntensity = InverseLerp(0f, DimnessAppearTime, Time);
 
             // Make the vortex appear.
-            VortexIntensity = Clamp(VortexIntensity + 0.05f, 0f, 1f);
+            VortexIntensity = Saturate(VortexIntensity + 0.05f);
 
             // Go to the next AI state once the dimness animation is completed.
             if (DarknessIntensity >= 1f)
@@ -391,7 +383,7 @@ namespace NoxusBoss.Content.Projectiles
             if (animationCompletion >= 0.56f)
             {
                 EyePupilOffset = Vector2.Lerp(EyePupilOffset, -Vector2.UnitY * 22f, 0.09f);
-                VortexIntensity = Clamp(VortexIntensity - 0.065f, 0f, 1f);
+                VortexIntensity = Saturate(VortexIntensity - 0.065f);
             }
 
             // Make the screen go white. This draws over UI elements so that they don't suddenly and weirdly go away when the subworld is entered.
@@ -419,32 +411,10 @@ namespace NoxusBoss.Content.Projectiles
             }
         }
 
-        public void DrawWithPixelation()
-        {
-            // Configure the streak shader's texture.
-            var streakShader = ShaderManager.GetShader("GenericTrailStreak");
-            streakShader.SetTexture(StreakBloomLine, 1);
-
-            // Draw energy streaks as primitives.
-            Vector2 drawCenter = Projectile.Center - Vector2.UnitY.RotatedBy(Projectile.rotation) * Projectile.scale * 6f - Main.screenPosition;
-            for (int i = 0; i < EnergyStreaks.Count; i++)
-            {
-                ChargingEnergyStreak streak = EnergyStreaks[i];
-                Vector2 start = streak.StartingOffset;
-                Vector2 end = streak.CurrentOffset;
-                Vector2 midpoint1 = Vector2.Lerp(start, end, 0.33f);
-                Vector2 midpoint2 = Vector2.Lerp(start, end, 0.67f);
-                streak.EnergyStreakDrawer.Draw(new Vector2[]
-                {
-                    end, midpoint2, midpoint1, start
-                }, drawCenter, 27);
-            }
-        }
-
         public override bool PreDraw(ref Color lightColor)
         {
-            float opacity = Remap(EyeOpacity, 0f, 0.6f, 1f, 0.2f);
-            Main.EntitySpriteDraw(MyTexture.Value, Projectile.Center - Main.screenPosition, null, Projectile.GetAlpha(Color.White) * opacity, Projectile.rotation, MyTexture.Size() * 0.5f, Projectile.scale, 0, 0);
+            float opacity = Utils.Remap(EyeOpacity, 0f, 0.6f, 1f, 0.2f);
+            Main.EntitySpriteDraw(MyTexture.Value, Projectile.Center - Main.screenPosition, null, Projectile.GetAlpha(Color.White) * opacity, Projectile.rotation, MyTexture.Value.Size() * 0.5f, Projectile.scale, 0, 0);
             return false;
         }
 
@@ -453,7 +423,7 @@ namespace NoxusBoss.Content.Projectiles
             Vector2 eyePosition = Projectile.Center - Vector2.UnitY.RotatedBy(Projectile.rotation) * Projectile.scale * 6f - Main.screenPosition;
 
             // Draw a glowing orb over the moon.
-            float glowDissipateFactor = Remap(EyeOpacity, 0.2f, 1f, 1f, 0.74f) * 0.67f;
+            float glowDissipateFactor = Utils.Remap(EyeOpacity, 0.2f, 1f, 1f, 0.74f) * 0.67f;
             if (!Main.dayTime)
                 glowDissipateFactor *= 1.5f;
 
@@ -480,6 +450,32 @@ namespace NoxusBoss.Content.Projectiles
             Vector2 eyeScale = baseScale * 0.4f;
             Main.spriteBatch.Draw(eyeTexture, eyePosition, null, Color.White * EyeOpacity, 0f, eyeTexture.Size() * 0.5f, eyeScale, 0, 0f);
             Main.spriteBatch.Draw(pupilTexture, eyePosition + (Vector2.UnitX * 6f + EyePupilOffset) * eyeScale, null, Color.White * EyeOpacity, 0f, pupilTexture.Size() * 0.5f, eyeScale, 0, 0f);
+        }
+
+        public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
+        {
+            // Configure the streak shader's texture.
+            var streakShader = ShaderManager.GetShader("NoxusBoss.GenericTrailStreak");
+            streakShader.SetTexture(StreakBloomLine, 1);
+
+            // Draw energy streaks as primitives.
+            Vector2 drawCenter = Projectile.Center - Vector2.UnitY.RotatedBy(Projectile.rotation) * Projectile.scale * 6f;
+            for (int i = 0; i < EnergyStreaks.Count; i++)
+            {
+                ChargingEnergyStreak streak = EnergyStreaks[i];
+                Vector2 start = streak.StartingOffset;
+                Vector2 end = streak.CurrentOffset;
+                Vector2 midpoint1 = Vector2.Lerp(start, end, 0.2f);
+                Vector2 midpoint2 = Vector2.Lerp(start, end, 0.4f);
+                Vector2 midpoint3 = Vector2.Lerp(start, end, 0.6f);
+                Vector2 midpoint4 = Vector2.Lerp(start, end, 0.8f);
+
+                PrimitiveSettings settings = new(streak.EnergyWidthFunction, streak.EnergyColorFunction, _ => drawCenter, Pixelate: true, Shader: ShaderManager.GetShader("NoxusBoss.GenericTrailStreak"));
+                PrimitiveRenderer.RenderTrail(new Vector2[]
+                {
+                    end, midpoint4, midpoint3, midpoint2, midpoint1, start
+                }, settings, 27);
+            }
         }
     }
 }

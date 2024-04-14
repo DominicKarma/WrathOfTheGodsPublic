@@ -1,24 +1,22 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Luminance.Common.Utilities;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Core.Graphics.Particles;
 using Terraria;
 
 namespace NoxusBoss.Content.Particles
 {
     public class VerticalLightStreakParticle : Particle
     {
-        public Vector2 ScaleVector;
+        public override BlendState BlendState => BlendState.Additive;
 
-        public override BlendState DrawBlendState => BlendState.Additive;
-
-        public override string TexturePath => "NoxusBoss/Content/Particles/VerticalLightStreak";
+        public override string AtlasTextureName => "NoxusBoss.VerticalLightStreakParticle.png";
 
         public VerticalLightStreakParticle(Vector2 position, Vector2 velocity, Color color, int lifetime, Vector2 scale)
         {
             Position = position;
             Velocity = velocity;
-            Color = color;
-            ScaleVector = scale;
+            DrawColor = color;
+            Scale = scale;
             Lifetime = lifetime;
         }
 
@@ -27,9 +25,9 @@ namespace NoxusBoss.Content.Particles
             Opacity = InverseLerp(0f, 4f, Time);
         }
 
-        public override void Draw()
+        public override void Draw(SpriteBatch spriteBatch)
         {
-            Main.spriteBatch.Draw(Texture, Position - Main.screenPosition, null, Color * Opacity, Rotation, Texture.Size() * 0.5f, ScaleVector, 0, 0f);
+            spriteBatch.Draw(Texture, Position - Main.screenPosition, null, DrawColor * Opacity, Rotation, null, Scale, 0);
         }
     }
 }

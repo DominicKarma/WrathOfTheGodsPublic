@@ -1,20 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Luminance.Common.Easings;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Assets.Fonts;
-using NoxusBoss.Common.Easings;
+using NoxusBoss.Common.Tools.VerletIntergration;
 using NoxusBoss.Common.Utilities;
-using NoxusBoss.Common.VerletIntergration;
 using NoxusBoss.Content.NPCs.Bosses.NamelessDeity.FormPresets;
 using NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles;
 using NoxusBoss.Content.NPCs.Bosses.NamelessDeity.SpecificEffectManagers;
 using NoxusBoss.Content.Particles;
 using NoxusBoss.Core;
 using NoxusBoss.Core.Graphics;
-using NoxusBoss.Core.Graphics.Particles;
-using NoxusBoss.Core.Graphics.Shaders;
 using ReLogic.Graphics;
 using Terraria;
 using Terraria.ID;
@@ -66,6 +64,15 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
         /// A 0-1 interpolant that determines how strongly a black overlay should be applied to the screen during the death animation.
         /// </summary>
         public float UniversalBlackOverlayInterpolant
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Whether smoke needs to be drawn manually, over Nameless' hands.
+        /// </summary>
+        public bool DrawingSmokeManually
         {
             get;
             set;
@@ -179,6 +186,8 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
+            DrawingSmokeManually = false;
+
             // Ensure that bestiary dummies are visible, have a censor, and various things like wings are update.
             float opacityFactor = 1f;
             if (NPC.IsABestiaryIconDummy)
@@ -239,7 +248,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
             // Use a pixelation shader by default.
             if ((UsedPreset?.ShaderOverlayEffect ?? null) is null)
             {
-                var pixelationShader = ShaderManager.GetShader("PixelationShader");
+                var pixelationShader = ShaderManager.GetShader("NoxusBoss.PixelationShader");
                 pixelationShader.TrySetParameter("pixelationFactor", Vector2.One * 1.75f / target.Size());
                 pixelationShader.Apply();
             }
@@ -264,7 +273,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
             Color color = Color.Lerp(Color.White, Color.White with { A = 0 }, Sqrt(1f - opacityFactor));
 
             // Make the color darker and more transparent as Nameless enters the background, to give the illusion of actually entering it and not just becoming tiny.
-            color = Color.Lerp(color, new(141, 96, 92), InverseLerp(2.1f, 6f, ZPosition)) * Remap(ZPosition, 4f, 9f, 1f, 0.6f);
+            color = Color.Lerp(color, new(141, 96, 92), InverseLerp(2.1f, 6f, ZPosition)) * Utils.Remap(ZPosition, 4f, 9f, 1f, 0.6f);
 
             // Apply relative darkening.
             color = Color.Lerp(color, Color.Black, RelativeDarkening);
@@ -641,9 +650,9 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
 
             // Create the wing scale easing curve.
             var wingFlapCurve = new PiecewiseCurve().
-                Add(PolynomialEasing.Quartic, EasingType.In, 0.03f, 0.3f, 1f).
-                Add(PolynomialEasing.Sextic, EasingType.Out, 1.04f, 0.7f).
-                Add(PolynomialEasing.Quadratic, EasingType.Out, 1f, 1f);
+                Add(EasingCurves.Quartic, EasingType.In, 0.03f, 0.3f, 1f).
+                Add(EasingCurves.Sextic, EasingType.Out, 1.04f, 0.7f).
+                Add(EasingCurves.Quadratic, EasingType.Out, 1f, 1f);
             float flapScale = wingFlapCurve.Evaluate(Main.GlobalTimeWrappedHourly * 0.9f % 1f);
 
             // Draw the wings.
@@ -721,7 +730,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
             // Draw the hands.
             Texture2D forearmTexture = ForearmTextures[ForearmTexture.TextureVariant].Value;
             Texture2D armTexture = ArmTextures[ArmTexture.TextureVariant].Value;
-            float zPositionOpacity = Remap(ZPosition, 0f, 2.1f, 1f, 0.58f);
+            float zPositionOpacity = Utils.Remap(ZPosition, 0f, 2.1f, 1f, 0.58f);
             foreach (NamelessDeityHand hand in Hands)
             {
                 if (hand.HasArms && CurrentState == NamelessAIType.RealityTearPunches && !drawingToTarget)
@@ -784,13 +793,13 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
 
                     Main.spriteBatch.PrepareForShaders(BlendState.NonPremultiplied);
 
-                    var staticShader = ShaderManager.GetShader("StaticOverlayShader");
+                    var staticShader = ShaderManager.GetShader("NoxusBoss.StaticOverlayShader");
                     staticShader.TrySetParameter("staticInterpolant", Pow(InverseLerp(0f, 240f, TimeSinceScreenSmash), 2f));
                     staticShader.TrySetParameter("staticZoomFactor", InverseLerp(0f, 210f, TimeSinceScreenSmash) * 6f + 3f);
                     staticShader.SetTexture(ModContent.Request<Texture2D>("Terraria/Images/Misc/noise"), 1, SamplerState.PointWrap);
                     staticShader.Apply();
 
-                    overlayScale = Vector2.One * Remap(TimeSinceScreenSmash, 0f, 210f, 6f, 10f);
+                    overlayScale = Vector2.One * Utils.Remap(TimeSinceScreenSmash, 0f, 210f, 6f, 10f);
                 }
 
                 for (int i = 0; i < 3; i++)
@@ -819,32 +828,26 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
             }
             else if (UniversalBlackOverlayInterpolant >= 1f && !screenShattered)
             {
+                DrawingSmokeManually = true;
+
                 DrawHands(screenPos, Vector2.Zero, false);
 
-                // Draw fire particles manually since they'd be obscured otherwise.
-                Main.spriteBatch.UseBlendState(BlendState.Additive);
-                foreach (Particle p in ParticleManager.activeParticles)
-                {
-                    if (p is not HeavySmokeParticle t)
-                        continue;
-
-                    t.Draw();
-                }
-
-                Main.spriteBatch.ResetToDefault();
+                Main.spriteBatch.End();
+                ModContent.GetInstance<HeavySmokeParticleRenderer>().RenderParticles();
+                Main.spriteBatch.ResetToDefault(false);
             }
         }
 
         public static void ApplyMoonburnBlueEffect(Texture2D target)
         {
-            var blueShader = ShaderManager.GetShader("MoonburnBlueOverlayShader");
+            var blueShader = ShaderManager.GetShader("NoxusBoss.MoonburnBlueOverlayShader");
             blueShader.TrySetParameter("swapHarshness", 0.85f);
             blueShader.Apply();
         }
 
         public static void ApplyMyraGoldEffect(Texture2D target)
         {
-            var goldShader = ShaderManager.GetShader("MyraGoldOverlayShader");
+            var goldShader = ShaderManager.GetShader("NoxusBoss.MyraGoldOverlayShader");
             goldShader.TrySetParameter("swapHarshness", 0.5f);
             goldShader.Apply();
         }

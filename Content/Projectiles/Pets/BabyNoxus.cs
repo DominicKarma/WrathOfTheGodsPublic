@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Core.Graphics.Metaballs;
+using NoxusBoss.Content.Particles.Metaballs;
 using ReLogic.Content;
 using Terraria;
 using Terraria.ID;
@@ -77,8 +77,8 @@ namespace NoxusBoss.Content.Projectiles.Pets
 
             // Hover near the owner.
             Vector2 hoverDestination = Owner.Center + new Vector2(Owner.direction * -50f, -36f);
-            Projectile.velocity = (Projectile.velocity + Projectile.DirectionToSafe(hoverDestination) * 0.2f).ClampLength(0f, 24f);
-            if (Vector2.Dot(Projectile.velocity, Projectile.DirectionToSafe(hoverDestination)) < 0f)
+            Projectile.velocity = (Projectile.velocity + Projectile.SafeDirectionTo(hoverDestination) * 0.2f).ClampLength(0f, 24f);
+            if (Vector2.Dot(Projectile.velocity, Projectile.SafeDirectionTo(hoverDestination)) < 0f)
                 Projectile.velocity *= 0.95f;
             Projectile.rotation = Projectile.velocity.X * 0.04f;
 
@@ -91,13 +91,13 @@ namespace NoxusBoss.Content.Projectiles.Pets
             // Emit pitch black metaballs around based on movement.
             if (Projectile.Opacity >= 0.5f)
             {
-                int metaballSpawnLoopCount = (int)Remap(Projectile.Opacity, 1f, 0f, 5f, 1f);
+                int metaballSpawnLoopCount = (int)Utils.Remap(Projectile.Opacity, 1f, 0f, 5f, 1f);
                 for (int i = 0; i < metaballSpawnLoopCount; i++)
                 {
                     Vector2 gasSpawnPosition = Projectile.Center + Main.rand.NextVector2Circular(20f, 20f) * Projectile.scale + (Projectile.position - Projectile.oldPosition).SafeNormalize(Vector2.UnitY) * 3f + Vector2.UnitY.RotatedBy(Projectile.rotation) * 18f;
                     float gasSize = Projectile.width * Projectile.scale * Projectile.Opacity * 0.45f;
                     float angularOffset = Sin(Main.GlobalTimeWrappedHourly * 1.1f) * 0.77f - Projectile.rotation;
-                    PitchBlackMetaball.CreateParticle(gasSpawnPosition, Main.rand.NextVector2Circular(2f, 2f) + Projectile.velocity.RotatedBy(angularOffset).RotatedByRandom(0.2f) * 0.26f, gasSize);
+                    ModContent.GetInstance<PitchBlackMetaball>().CreateParticle(gasSpawnPosition, Main.rand.NextVector2Circular(2f, 2f) + Projectile.velocity.RotatedBy(angularOffset).RotatedByRandom(0.2f) * 0.26f, gasSize);
                 }
             }
         }

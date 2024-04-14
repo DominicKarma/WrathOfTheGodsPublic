@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Core.Graphics.Automators;
-using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
@@ -118,11 +117,12 @@ namespace NoxusBoss.Content.Projectiles.Pets
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullNone, null, Matrix.Identity);
 
             // Draw the sun itself.
-            var fireballShader = ShaderManager.GetShader("SunShader");
+            var fireballShader = ShaderManager.GetShader("NoxusBoss.SunShader");
             fireballShader.TrySetParameter("coronaIntensityFactor", 0.05f);
             fireballShader.TrySetParameter("mainColor", new Color(204, 163, 79));
             fireballShader.TrySetParameter("darkerColor", new Color(204, 92, 25));
-            fireballShader.TrySetParameter("subtractiveAccentFactor", new Color(74, 255, 255));
+            fireballShader.TrySetParameter("subtractiveAccentFactor", new Color(181, 0, 0));
+            fireballShader.TrySetParameter("sphereSpinTime", Main.GlobalTimeWrappedHourly * 0.9f);
             fireballShader.SetTexture(WavyBlotchNoise, 1, SamplerState.PointWrap);
             fireballShader.SetTexture(PsychedelicWingTextureOffsetMap, 2, SamplerState.PointWrap);
             fireballShader.Apply();

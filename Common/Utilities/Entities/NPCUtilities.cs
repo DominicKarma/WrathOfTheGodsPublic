@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using NoxusBoss.Common.DataStructures;
+﻿using NoxusBoss.Common.DataStructures;
 using NoxusBoss.Core.CrossCompatibility.Inbound;
 using NoxusBoss.Core.GlobalItems;
 using Terraria;
@@ -11,8 +10,6 @@ namespace NoxusBoss.Common.Utilities
 {
     public static partial class Utilities
     {
-        private static FieldInfo shouldCloseHPBarField;
-
         private static bool miracleBlightWarningDisplayed;
 
         /// <summary>
@@ -66,26 +63,15 @@ namespace NoxusBoss.Common.Utilities
         }
 
         /// <summary>
-        /// Excludes a given <see cref="NPC"/> from the bestiary completely.
+        /// Disables Calamity's special boss bar for a given <see cref="NPC"/>, such that it closes. This effect is temporarily and must be used every frame to sustain the close.
         /// </summary>
-        /// <param name="npc">The NPC to apply the bestiary deletion to.</param>
-        public static void ExcludeFromBestiary(this ModNPC npc)
+        /// <param name="npc">The NPC to change.</param>
+        public static void MakeCalamityBossBarClose(this NPC npc)
         {
-            NPCID.Sets.NPCBestiaryDrawModifiers value = new()
-            {
-                Hide = true
-            };
-            NPCID.Sets.NPCBestiaryDrawOffset.Add(npc.Type, value);
-        }
+            if (ModReferences.BaseCalamity is null || Main.gameMenu)
+                return;
 
-        /// <summary>
-        /// A simple utility that gets an <see cref="NPC"/>'s <see cref="NPC.ModNPC"/> instance as a specific type without having to do clunky casting.
-        /// </summary>
-        /// <typeparam name="T">The ModNPC type to convert to.</typeparam>
-        /// <param name="npc">The NPC to access the ModNPC from.</param>
-        public static T As<T>(this NPC npc) where T : ModNPC
-        {
-            return npc.ModNPC as T;
+            ModReferences.BaseCalamity.Call("SetShouldCloseBossHealthBar", npc, true);
         }
 
         /// <summary>
@@ -114,37 +100,6 @@ namespace NoxusBoss.Common.Utilities
                 return true;
 
             return false;
-        }
-
-        /// <summary>
-        /// Checks if any bosses are present.
-        /// </summary>
-        public static bool AnyBosses()
-        {
-            for (int i = 0; i < Main.maxNPCs; i++)
-            {
-                if (Main.npc[i] is null)
-                    continue;
-
-                NPC npc = Main.npc[i];
-                bool isEaterOfWorlds = npc.type == NPCID.EaterofWorldsBody || npc.type == NPCID.EaterofWorldsHead || npc.type == NPCID.EaterofWorldsTail;
-                if (npc.boss || isEaterOfWorlds)
-                    return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Disables Calamity's special boss bar for a given <see cref="NPC"/>, such that it closes. This effect is temporarily and must be used every frame to sustain the close.
-        /// </summary>
-        /// <param name="npc">The NPC to change.</param>
-        public static void MakeCalamityBossBarClose(this NPC npc)
-        {
-            if (ModReferences.BaseCalamity is null || Main.gameMenu)
-                return;
-
-            ModReferences.BaseCalamity.Call("SetShouldCloseBossHealthBar", npc, true);
         }
 
         /// <summary>

@@ -160,7 +160,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
 
                 // Hover near the target.
                 Vector2 hoverDestination = Target.Center + new Vector2((Target.Center.X < NPC.Center.X).ToDirectionInt() * 524f, -382f);
-                NPC.SimpleFlyMovement(NPC.DirectionToSafe(hoverDestination) * 23f, 0.6f);
+                NPC.SimpleFlyMovement(NPC.SafeDirectionTo(hoverDestination) * 23f, 0.6f);
 
                 // Prepare the hands for attacking.
                 if (AttackTimer == redirectTime + handSummonTime)
@@ -272,13 +272,13 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
                         if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
                             Vector2 impactPoint = (leftHand.Center + rightHand.Center) * 0.5f;
-                            NewProjectileBetter(impactPoint, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
+                            NewProjectileBetter(NPC.GetSource_FromAI(), impactPoint, Vector2.Zero, ModContent.ProjectileType<LightWave>(), 0, 0f);
 
                             float angleToTarget = Target.Center.AngleFrom(impactPoint);
                             for (int i = 0; i < screenSliceCount; i++)
                             {
                                 Vector2 screenSliceDirection = (TwoPi * i / screenSliceCount + angleToTarget).ToRotationVector2();
-                                NewProjectileBetter(impactPoint - screenSliceDirection * 2000f, screenSliceDirection, ModContent.ProjectileType<TelegraphedScreenSlice>(), ScreenSliceDamage, 0f, -1, sliceTelegraphDelay + (int)(i / 2f) * 3, 4000f);
+                                NewProjectileBetter(NPC.GetSource_FromAI(), impactPoint - screenSliceDirection * 2000f, screenSliceDirection, ModContent.ProjectileType<TelegraphedScreenSlice>(), ScreenSliceDamage, 0f, -1, sliceTelegraphDelay + (int)(i / 2f) * 3, 4000f);
                             }
                             leftHand.TrailOpacity = 0f;
                             rightHand.TrailOpacity = 0f;

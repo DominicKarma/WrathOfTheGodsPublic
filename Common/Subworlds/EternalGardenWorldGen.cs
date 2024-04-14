@@ -221,7 +221,7 @@ namespace NoxusBoss.Common.Subworlds
                 int clusterRadius = WorldGen.genRand.Next(MinLakeClusterRadius, MaxLakeClusterRadius);
                 int x = WorldGen.genRand.Next(area.Left + 20, area.Right - 20);
                 int y = area.Bottom - topography[x - area.Left];
-                ushort originalTileType = ParanoidTileRetrieval(x, y).TileType;
+                ushort originalTileType = Framing.GetTileSafely(x, y).TileType;
 
                 WorldUtils.Gen(new(x, y + clusterRadius / 2 + WorldGen.genRand.Next(-2, 3)), new Shapes.Circle(clusterRadius), Actions.Chain(new GenAction[]
                 {
@@ -302,10 +302,10 @@ namespace NoxusBoss.Common.Subworlds
                     // The tile found is dirt. Now check if it has an exposed air or water pocket.
                     if (Main.tile[x, y].TileType == TileID.Dirt)
                     {
-                        Tile left = ParanoidTileRetrieval(x - 1, y);
-                        Tile right = ParanoidTileRetrieval(x + 1, y);
-                        Tile top = ParanoidTileRetrieval(x, y - 1);
-                        Tile bottom = ParanoidTileRetrieval(x, y + 1);
+                        Tile left = Framing.GetTileSafely(x - 1, y);
+                        Tile right = Framing.GetTileSafely(x + 1, y);
+                        Tile top = Framing.GetTileSafely(x, y - 1);
+                        Tile bottom = Framing.GetTileSafely(x, y + 1);
                         bool anyExposedAir = !left.HasTile || !right.HasTile || !top.HasTile || !bottom.HasTile;
                         if (anyExposedAir)
                             WorldGen.SpreadGrass(x, y, TileID.Dirt, TileID.Grass, false);
@@ -320,18 +320,18 @@ namespace NoxusBoss.Common.Subworlds
             {
                 for (int y = 5; y < Main.maxTilesY - 5; y++)
                 {
-                    SlopeType oldSlope = ParanoidTileRetrieval(x, y).Slope;
+                    SlopeType oldSlope = Framing.GetTileSafely(x, y).Slope;
                     Tile.SmoothSlope(x, y);
-                    Tile t = ParanoidTileRetrieval(x, y);
+                    Tile t = Framing.GetTileSafely(x, y);
 
                     if (t.Slope != oldSlope)
                     {
                         t.Get<LiquidData>().Amount = 255;
 
-                        t = ParanoidTileRetrieval(x, y - 1);
+                        t = Framing.GetTileSafely(x, y - 1);
                         t.Get<LiquidData>().Amount = 255;
 
-                        t = ParanoidTileRetrieval(x, y + 1);
+                        t = Framing.GetTileSafely(x, y + 1);
                         t.Get<LiquidData>().Amount = 255;
                     }
                 }
@@ -352,7 +352,7 @@ namespace NoxusBoss.Common.Subworlds
             // Generate a special tree in the very center of the garden.
             int surfaceY = SurfaceTilePoint;
             Point treePosition = new(Main.maxTilesX / 2, surfaceY - topography[Main.maxTilesX / 2]);
-            while (!ParanoidTileRetrieval(treePosition.X, treePosition.Y + 1).HasTile)
+            while (!Framing.GetTileSafely(treePosition.X, treePosition.Y + 1).HasTile)
                 treePosition.Y++;
 
             Main.tile[treePosition].TileType = (ushort)ModContent.TileType<TreeOfLife>();
@@ -475,8 +475,8 @@ namespace NoxusBoss.Common.Subworlds
             {
                 for (int y = 10; y < Main.maxTilesY - 10; y++)
                 {
-                    Tile t = ParanoidTileRetrieval(x, y);
-                    Tile above = ParanoidTileRetrieval(x, y - 1);
+                    Tile t = Framing.GetTileSafely(x, y);
+                    Tile above = Framing.GetTileSafely(x, y - 1);
                     if (t.HasTile && t.TileType == TileID.Dirt && !above.HasTile && above.LiquidAmount >= 127)
                         Main.tile[x, y].TileType = TileID.Grass;
                 }
@@ -492,7 +492,7 @@ namespace NoxusBoss.Common.Subworlds
             {
                 int x = WorldGen.genRand.Next(area.Left + 9, area.Right - 9);
                 int y = area.Bottom + 4;
-                while (ParanoidTileRetrieval(x, y).HasTile)
+                while (Framing.GetTileSafely(x, y).HasTile)
                     y--;
 
                 int cattailHeight = y - area.Top + WorldGen.genRand.NextBool().ToInt() + 1;
@@ -516,17 +516,17 @@ namespace NoxusBoss.Common.Subworlds
             {
                 for (int y = area.Top - 10; y < area.Bottom + 10; y++)
                 {
-                    Tile t = ParanoidTileRetrieval(x, y);
+                    Tile t = Framing.GetTileSafely(x, y);
                     if (!t.HasTile)
                         continue;
 
                     if (t.Slope == SlopeType.Solid && !t.IsHalfBlock)
                         continue;
 
-                    Tile left = ParanoidTileRetrieval(x - 1, y);
-                    Tile right = ParanoidTileRetrieval(x + 1, y);
-                    Tile top = ParanoidTileRetrieval(x, y - 1);
-                    Tile bottom = ParanoidTileRetrieval(x, y + 1);
+                    Tile left = Framing.GetTileSafely(x - 1, y);
+                    Tile right = Framing.GetTileSafely(x + 1, y);
+                    Tile top = Framing.GetTileSafely(x, y - 1);
+                    Tile bottom = Framing.GetTileSafely(x, y + 1);
                     bool neighborHasWater = left.LiquidAmount >= 127 || right.LiquidAmount >= 127 || top.LiquidAmount >= 127 || bottom.LiquidAmount >= 127;
                     if (neighborHasWater)
                         t.Get<LiquidData>().Amount = 255;

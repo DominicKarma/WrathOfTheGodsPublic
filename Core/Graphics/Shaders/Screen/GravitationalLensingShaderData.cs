@@ -1,6 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Luminance.Common.Easings;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Common.Easings;
 using NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles;
 using NoxusBoss.Content.Projectiles.Pets;
 using NoxusBoss.Core.GlobalItems;
@@ -12,9 +12,9 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Core.Graphics.Shaders.Screen
 {
-    public class GravitationalLensingShaderData : ScreenShaderData
+    public class GravitationalLensingShaderData(bool checkForPet, Ref<Effect> shader, string passName) : ScreenShaderData(shader, passName)
     {
-        protected bool checkForPet;
+        protected bool checkForPet = checkForPet;
 
         public static Projectile Quasar
         {
@@ -55,12 +55,6 @@ namespace NoxusBoss.Core.Graphics.Shaders.Screen
         public const string ShaderKey = "NoxusBoss:GravitationalLensing";
 
         public const string ShaderKeyPet = ShaderKey + "Pet";
-
-        public GravitationalLensingShaderData(bool checkForPet, Ref<Effect> shader, string passName)
-            : base(shader, passName)
-        {
-            this.checkForPet = checkForPet;
-        }
 
         internal static void Load()
         {
@@ -126,7 +120,7 @@ namespace NoxusBoss.Core.Graphics.Shaders.Screen
                 float blackRadius = sourceProjectile.width * sourceProjectile.scale / 2560f * 0.048f;
                 if (checkForPet)
                 {
-                    float scale = ElasticEasing.Default.Evaluate(EasingType.In, sourceProjectile.scale);
+                    float scale = EasingCurves.Elastic.Evaluate(EasingType.In, sourceProjectile.scale);
                     if (scale < 0.01f)
                         scale = 0.01f;
                     blackRadius = scale * 0.03f;

@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -53,6 +55,47 @@ namespace NoxusBoss.Content.Items.LoreItems
             {
                 fullLore
             }, true);
+        }
+
+        /// <summary>
+        /// Generates special tooltip text for an item when they're holding the <see cref="Keys.LeftShift"/> button. Notably used for lore items.
+        /// </summary>
+        /// <param name="tooltips">The original tooltips.</param>
+        /// <param name="holdShiftTooltips">The tooltips to display when holding shift.</param>
+        /// <param name="hideNormalTooltip">Whether the original tooltips should be hidden when holding shift. Defaults to false.</param>
+        public static void DrawHeldShiftTooltip(List<TooltipLine> tooltips, TooltipLine[] holdShiftTooltips, bool hideNormalTooltip = false)
+        {
+            // Do not override anything if the Left Shift key is not being held.
+            if (!Main.keyState.IsKeyDown(Keys.LeftShift))
+                return;
+
+            // Acquire base tooltip data.
+            int firstTooltipIndex = -1;
+            int lastTooltipIndex = -1;
+            int standardTooltipCount = 0;
+            for (int i = 0; i < tooltips.Count; i++)
+            {
+                if (tooltips[i].Name.StartsWith("Tooltip"))
+                {
+                    if (firstTooltipIndex == -1)
+                    {
+                        firstTooltipIndex = i;
+                    }
+                    lastTooltipIndex = i;
+                    standardTooltipCount++;
+                }
+            }
+
+            // Replace tooltips.
+            if (firstTooltipIndex != -1)
+            {
+                if (hideNormalTooltip)
+                {
+                    tooltips.RemoveRange(firstTooltipIndex, standardTooltipCount);
+                    lastTooltipIndex -= standardTooltipCount;
+                }
+                tooltips.InsertRange(lastTooltipIndex + 1, holdShiftTooltips);
+            }
         }
 
         public override void AddRecipes()

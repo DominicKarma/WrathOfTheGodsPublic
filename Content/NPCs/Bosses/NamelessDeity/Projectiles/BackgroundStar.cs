@@ -1,15 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using Luminance.Assets;
+using Luminance.Common.DataStructures;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Common.DataStructures;
 using NoxusBoss.Content.NPCs.Bosses.NamelessDeity.SpecificEffectManagers;
 using NoxusBoss.Content.Particles;
-using NoxusBoss.Core.Graphics.Automators;
-using NoxusBoss.Core.Graphics.Primitives;
-using NoxusBoss.Core.Graphics.Shaders;
 using NoxusBoss.Core.Graphics.Shaders.Keyboard;
-using ReLogic.Content;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -17,7 +14,7 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
 {
-    public class BackgroundStar : ModProjectile, IDrawPixelated, IProjOwnedByBoss<NamelessDeityBoss>
+    public class BackgroundStar : ModProjectile, IPixelatedPrimitiveRenderer, IProjOwnedByBoss<NamelessDeityBoss>
     {
         public Vector2 ScreenDestinationOffset
         {
@@ -27,13 +24,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
 
         public Vector2 WorldDestination => NamelessDeityBoss.Myself is null ? Vector2.Zero : NamelessDeityBoss.Myself.GetTargetData().Center + ScreenDestinationOffset;
 
-        public static Asset<Texture2D> MyTexture
-        {
-            get;
-            private set;
-        }
-
-        public PrimitiveTrail TrailDrawer
+        public static LazyAsset<Texture2D> MyTexture
         {
             get;
             private set;
@@ -59,7 +50,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
             ProjectileID.Sets.TrailCacheLength[Type] = 13;
 
             if (Main.netMode != NetmodeID.Server)
-                MyTexture = ModContent.Request<Texture2D>(Texture);
+                MyTexture = LazyAsset<Texture2D>.Request(Texture);
         }
 
         public override void SetDefaults()
@@ -109,7 +100,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
             if (ApproachingScreen)
             {
                 ZPosition = Lerp(ZPosition, -0.93f, 0.23f);
-                Projectile.velocity = Projectile.DirectionToSafe(WorldDestination) * Clamp(Projectile.velocity.Length() + 5.4f, 7f, 99f);
+                Projectile.velocity = Projectile.SafeDirectionTo(WorldDestination) * Clamp(Projectile.velocity.Length() + 5.4f, 7f, 99f);
 
                 if (ZPosition <= -0.92f)
                 {
@@ -121,7 +112,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
                     if (Main.netMode != NetmodeID.MultiplayerClient && NamelessDeityBoss.Myself is not null)
                     {
                         // Create the start explosion.
-                        int starIndex = NewProjectileBetter(Projectile.Center, Vector2.Zero, ModContent.ProjectileType<ExplodingStar>(), 0, 0f, -1, 1.089f);
+                        int starIndex = NewProjectileBetter(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<ExplodingStar>(), 0, 0f, -1, 1.089f);
                         if (starIndex >= 0 && starIndex < Main.maxProjectiles)
                             Main.projectile[starIndex].As<ExplodingStar>().Time = 18f;
 
@@ -138,7 +129,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
                         for (int i = 0; i < sparkCount; i++)
                         {
                             Vector2 sparkVelocity = (TwoPi * i / sparkCount + angleToTarget).ToRotationVector2() * sparkSpeed;
-                            NewProjectileBetter(WorldDestination, sparkVelocity, ModContent.ProjectileType<SlowSolarSpark>(), NamelessDeityBoss.StarburstDamage, 0f);
+                            NewProjectileBetter(Projectile.GetSource_FromThis(), WorldDestination, sparkVelocity, ModContent.ProjectileType<SlowSolarSpark>(), NamelessDeityBoss.StarburstDamage, 0f);
                         }
 
                         NamelessDeitySky.HeavenlyBackgroundIntensity += 1.5f;
@@ -153,7 +144,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
             Projectile.Opacity = InverseLerp(0f, 12f, Time);
 
             // Make the opacity weaker depending on how close the star is to the background.
-            Projectile.Opacity *= Remap(ZPosition, 0.8f, 3.4f, 1f, 0.5f);
+            Projectile.Opacity *= Utils.Remap(ZPosition, 0.8f, 3.4f, 1f, 0.5f);
 
             Time++;
         }
@@ -165,7 +156,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
 
         public Color FlameTrailColorFunction(float completionRatio)
         {
-            // Make the trail fade out at the end and fade in shparly at the start, to prevent the trail having a definitive, flat "start".
+            // Make the trail fade out at the end and fade in sharply at the start, to prevent the trail having a definitive, flat "start".
             float trailOpacity = InverseLerpBump(0f, 0.067f, 0.27f, 0.75f, completionRatio) * 0.9f;
 
             // Interpolate between a bunch of colors based on the completion ratio.
@@ -210,17 +201,16 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
             behindNPCsAndTiles.Add(index);
         }
 
-        public void DrawWithPixelation()
+        public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
         {
-            var fireTrailShader = ShaderManager.GetShader("GenericFlameTrail");
-            TrailDrawer ??= new(FlameTrailWidthFunction, FlameTrailColorFunction, null, true, fireTrailShader);
-
             if (ZPosition >= 0f)
                 return;
 
-            // Draw a flame trail.
-            fireTrailShader.SetTexture(StreakMagma, 1);
-            TrailDrawer.Draw(Projectile.oldPos, Projectile.Size * 0.5f - Main.screenPosition, 11);
+            ManagedShader shader = ShaderManager.GetShader("NoxusBoss.MoltenFlameTrail");
+            shader.SetTexture(StreakMagma, 1, SamplerState.LinearWrap);
+
+            PrimitiveSettings settings = new(FlameTrailWidthFunction, FlameTrailColorFunction, _ => Projectile.Size * 0.5f, Pixelate: true, Shader: shader);
+            PrimitiveRenderer.RenderTrail(Projectile.oldPos, settings, 11);
         }
     }
 }

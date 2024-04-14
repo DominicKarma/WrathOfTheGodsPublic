@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using static NoxusBoss.Core.CrossCompatibility.Inbound.ModReferences;
@@ -18,7 +19,7 @@ namespace NoxusBoss.Core.CrossCompatibility.Inbound
 
             public FannyDialog(string dialogKey, string portrait)
             {
-                if (CalamityRemix is null)
+                if (CalamityRemix is null || Main.netMode == NetmodeID.Server)
                     return;
 
                 // Add the mod name in front of the identifier.
@@ -30,7 +31,7 @@ namespace NoxusBoss.Core.CrossCompatibility.Inbound
 
             public FannyDialog WithoutPersistenceBetweenWorlds()
             {
-                if (CalamityRemix is null)
+                if (CalamityRemix is null || Main.netMode == NetmodeID.Server)
                     return this;
 
                 CalamityRemix.Call("MakeFannyDialogNotPersist", instance);
@@ -39,7 +40,7 @@ namespace NoxusBoss.Core.CrossCompatibility.Inbound
 
             public FannyDialog WithoutClickability()
             {
-                if (CalamityRemix is null)
+                if (CalamityRemix is null || Main.netMode == NetmodeID.Server)
                     return this;
 
                 CalamityRemix.Call("MakeFannyDialogNonClickable", instance);
@@ -48,7 +49,7 @@ namespace NoxusBoss.Core.CrossCompatibility.Inbound
 
             public FannyDialog WithCooldown(float cooldownInSeconds)
             {
-                if (CalamityRemix is null)
+                if (CalamityRemix is null || Main.netMode == NetmodeID.Server)
                     return this;
 
                 CalamityRemix.Call("SetFannyDialogCooldown", instance, cooldownInSeconds);
@@ -57,7 +58,7 @@ namespace NoxusBoss.Core.CrossCompatibility.Inbound
 
             public FannyDialog WithCondition(Func<IEnumerable<NPC>, bool> condition)
             {
-                if (CalamityRemix is null)
+                if (CalamityRemix is null || Main.netMode == NetmodeID.Server)
                     return this;
 
                 CalamityRemix.Call("AddFannyDialogCondition", instance, condition);
@@ -66,7 +67,7 @@ namespace NoxusBoss.Core.CrossCompatibility.Inbound
 
             public FannyDialog WithDrawSizes(int maxWidth = 380, float fontSizeFactor = 1f)
             {
-                if (CalamityRemix is null)
+                if (CalamityRemix is null || Main.netMode == NetmodeID.Server)
                     return this;
 
                 CalamityRemix.Call("SetFannyDialogDrawSize", instance, maxWidth, fontSizeFactor);
@@ -75,7 +76,7 @@ namespace NoxusBoss.Core.CrossCompatibility.Inbound
 
             public FannyDialog WithDuration(float durationInSeconds)
             {
-                if (CalamityRemix is null)
+                if (CalamityRemix is null || Main.netMode == NetmodeID.Server)
                     return this;
 
                 CalamityRemix.Call("SetFannyDialogDuration", instance, durationInSeconds);
@@ -84,7 +85,7 @@ namespace NoxusBoss.Core.CrossCompatibility.Inbound
 
             public FannyDialog WithRepeatability()
             {
-                if (CalamityRemix is null)
+                if (CalamityRemix is null || Main.netMode == NetmodeID.Server)
                     return this;
 
                 CalamityRemix.Call("MakeFannyDialogRepeatable", instance);
@@ -93,7 +94,7 @@ namespace NoxusBoss.Core.CrossCompatibility.Inbound
 
             public FannyDialog WithEvilness()
             {
-                if (CalamityRemix is null)
+                if (CalamityRemix is null || Main.netMode == NetmodeID.Server)
                     return this;
 
                 CalamityRemix.Call("MakeFannyDialogSpokenByEvilFanny", instance);
@@ -102,7 +103,7 @@ namespace NoxusBoss.Core.CrossCompatibility.Inbound
 
             public FannyDialog WithHoverItem(int itemID, float drawScale = 1f, Vector2 drawOffset = default)
             {
-                if (CalamityRemix is null)
+                if (CalamityRemix is null || Main.netMode == NetmodeID.Server)
                     return this;
 
                 CalamityRemix.Call("AddFannyItemDisplay", instance, itemID, drawScale, drawOffset);
@@ -111,7 +112,7 @@ namespace NoxusBoss.Core.CrossCompatibility.Inbound
 
             public FannyDialog WithParentDialog(FannyDialog parent, float appearDelayInSeconds, bool parentNeedsToBeClickedOff = false)
             {
-                if (CalamityRemix is null)
+                if (CalamityRemix is null || Main.netMode == NetmodeID.Server)
                     return this;
 
                 CalamityRemix.Call("ChainFannyDialog", parent.instance, instance, appearDelayInSeconds);
@@ -123,7 +124,7 @@ namespace NoxusBoss.Core.CrossCompatibility.Inbound
 
             public FannyDialog WithHoverText(string hoverText)
             {
-                if (CalamityRemix is null)
+                if (CalamityRemix is null || Main.netMode == NetmodeID.Server)
                     return this;
 
                 CalamityRemix.Call("SetFannyHoverText", instance, hoverText);
@@ -139,7 +140,7 @@ namespace NoxusBoss.Core.CrossCompatibility.Inbound
 
             public void Register()
             {
-                if (CalamityRemix is null)
+                if (CalamityRemix is null || Main.netMode == NetmodeID.Server)
                     return;
 
                 if (Main.gameMenu)

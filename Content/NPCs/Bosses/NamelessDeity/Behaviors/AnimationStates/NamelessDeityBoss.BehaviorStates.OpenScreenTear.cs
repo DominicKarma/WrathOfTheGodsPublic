@@ -90,7 +90,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
             // Make chromatic aberration effects happen periodically.
             if (AttackTimer % 20f == 19f && HeavenlyBackgroundIntensity <= 0.1f)
             {
-                float aberrationIntensity = Remap(AttackTimer, 0f, 120f, 0.4f, 1.6f);
+                float aberrationIntensity = Utils.Remap(AttackTimer, 0f, 120f, 0.4f, 1.6f);
                 ScreenEffectSystem.SetChromaticAberrationEffect(Target.Center, aberrationIntensity, 10);
             }
 

@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.CustomWorldSeeds;
 using NoxusBoss.Content.NPCs.Bosses.Noxus.FirstPhaseForm;
 using NoxusBoss.Core;
-using NoxusBoss.Core.Graphics.Shaders;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
 using Terraria;
 using Terraria.GameContent;
@@ -108,7 +107,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.Noxus.SpecificEffectManagers
             Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.EffectMatrix);
 
             // Apply the blur shader.
-            var blurShader = ShaderManager.GetShader("HorizontalBlurShader");
+            var blurShader = ShaderManager.GetShader("NoxusBoss.HorizontalBlurShader");
             blurShader.TrySetParameter("maxBlurOffset", maxBlurOffset);
             blurShader.Apply();
 

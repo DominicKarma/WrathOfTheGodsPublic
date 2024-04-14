@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework.Graphics;
 using MonoMod.Cil;
-using NoxusBoss.Core.Graphics.Metaballs;
+using NoxusBoss.Content.Particles.Metaballs;
 using Terraria;
 using Terraria.GameContent.Events;
 using Terraria.ModLoader;
@@ -42,12 +41,11 @@ namespace NoxusBoss.Core.Graphics.SpecificEffectManagers
                 if (Main.gameMenu)
                     return;
 
-                // Draw BeforeBlack metaballs.
-                if (MetaballManager.AnyActiveMetaballsAtLayer(MetaballDrawLayer.BeforeBlack))
+                var pitchBlackMetaball = ModContent.GetInstance<PitchBlackMetaball>();
+                if (pitchBlackMetaball.ShouldRender)
                 {
-                    Main.spriteBatch.End();
-                    Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullNone, null, Main.GameViewMatrix.TransformationMatrix);
-                    MetaballManager.DrawMetaballs(MetaballDrawLayer.BeforeBlack);
+                    Main.spriteBatch.PrepareForShaders();
+                    pitchBlackMetaball.RenderLayerWithShader();
                     Main.spriteBatch.ResetToDefault();
                 }
 

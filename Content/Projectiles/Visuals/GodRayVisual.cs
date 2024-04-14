@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Content.Dusts;
 using NoxusBoss.Content.NPCs.Bosses.NamelessDeity;
 using NoxusBoss.Core.Graphics.Automators;
-using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -80,7 +79,7 @@ namespace NoxusBoss.Content.Projectiles.Visuals
         public void DrawWithShader(SpriteBatch spriteBatch)
         {
             // Collect the shader and draw data for later.
-            var godRayShader = ShaderManager.GetShader("GodRayShader");
+            var godRayShader = ShaderManager.GetShader("NoxusBoss.GodRayShader");
             Vector2 textureArea = new Vector2(Projectile.width, Height) / WhitePixel.Size();
 
             // Apply the god ray shader.
@@ -112,7 +111,7 @@ namespace NoxusBoss.Content.Projectiles.Visuals
         public void DrawVignette(float brightnessInterpolant)
         {
             // Draw a pixel over the player's screen and then draw the vignette over it.
-            var vignetteShader = ShaderManager.GetShader("CrackedVignetteShader");
+            var vignetteShader = ShaderManager.GetShader("NoxusBoss.FleshyVignetteShader");
             vignetteShader.TrySetParameter("animationSpeed", 0.05f);
             vignetteShader.TrySetParameter("vignettePower", Lerp(6f, 3.97f, brightnessInterpolant));
             vignetteShader.TrySetParameter("vignetteBrightness", Lerp(3f, 20f, brightnessInterpolant));

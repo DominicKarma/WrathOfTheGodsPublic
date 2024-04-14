@@ -107,7 +107,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
                         handExtendInterpolant = 1f;
 
                     float handExtendFactor = Lerp(2.6f, 1.46f, handExtendInterpolant);
-                    float handDriftSpeed = Remap(ZPosition, 1.1f, 0.36f, 1.9f, 0.8f);
+                    float handDriftSpeed = Utils.Remap(ZPosition, 1.1f, 0.36f, 1.9f, 0.8f);
 
                     NamelessDeityHand hand = Hands[i];
 
@@ -144,7 +144,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
                     sliceOffset = 0f;
                 }
                 if (Main.netMode != NetmodeID.MultiplayerClient)
-                    NewProjectileBetter(Target.Center - sliceDirection * sliceTelegraphLength * 0.5f + sliceSpawnOffset, sliceDirection, ModContent.ProjectileType<TelegraphedScreenSlice>(), ScreenSliceDamage, 0f, -1, sliceTelegraphTime, sliceTelegraphLength, sliceOffset);
+                    NewProjectileBetter(NPC.GetSource_FromAI(), Target.Center - sliceDirection * sliceTelegraphLength * 0.5f + sliceSpawnOffset, sliceDirection, ModContent.ProjectileType<TelegraphedScreenSlice>(), ScreenSliceDamage, 0f, -1, sliceTelegraphTime, sliceTelegraphLength, sliceOffset);
 
                 SoundEngine.PlaySound(RealityTearSound with { Volume = 0.56f });
                 NamelessDeityKeyboardShader.BrightnessIntensity += 0.6f;

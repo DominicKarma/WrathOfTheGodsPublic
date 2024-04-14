@@ -1,13 +1,10 @@
 ﻿using System.Collections.Generic;
+using Luminance.Assets;
+using Luminance.Common.DataStructures;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Common.DataStructures;
 using NoxusBoss.Content.Particles;
-using NoxusBoss.Core.Graphics;
-using NoxusBoss.Core.Graphics.Automators;
-using NoxusBoss.Core.Graphics.Primitives;
 using NoxusBoss.Core.Graphics.SpecificEffectManagers;
-using ReLogic.Content;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -15,21 +12,15 @@ using Terraria.ModLoader;
 
 namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
 {
-    public class LightSlashTelegraph : ModProjectile, IDrawAdditive, IDrawPixelated, IProjOwnedByBoss<NamelessDeityBoss>
+    public class LightSlashTelegraph : ModProjectile, IDrawAdditive, IPixelatedPrimitiveRenderer, IProjOwnedByBoss<NamelessDeityBoss>
     {
-        public static PrimitiveTrail GodRayDrawer
+        public static LazyAsset<Texture2D>[] CrackTextureAssets
         {
             get;
             private set;
         }
 
-        public static Asset<Texture2D>[] CrackTextureAssets
-        {
-            get;
-            private set;
-        }
-
-        public static Asset<Texture2D>[] CrackGlowTextureAssets
+        public static LazyAsset<Texture2D>[] CrackGlowTextureAssets
         {
             get;
             private set;
@@ -58,12 +49,12 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
             // Load textures.
             if (Main.netMode != NetmodeID.Server)
             {
-                CrackTextureAssets = new Asset<Texture2D>[TotalCrackTextures];
-                CrackGlowTextureAssets = new Asset<Texture2D>[TotalCrackTextures];
+                CrackTextureAssets = new LazyAsset<Texture2D>[TotalCrackTextures];
+                CrackGlowTextureAssets = new LazyAsset<Texture2D>[TotalCrackTextures];
                 for (int i = 0; i < TotalCrackTextures; i++)
                 {
-                    CrackTextureAssets[i] = ModContent.Request<Texture2D>($"NoxusBoss/Content/NPCs/Bosses/NamelessDeity/Projectiles/LightSlashTelegraph{i + 1}");
-                    CrackGlowTextureAssets[i] = ModContent.Request<Texture2D>($"NoxusBoss/Content/NPCs/Bosses/NamelessDeity/Projectiles/LightSlashTelegraphGlow{i + 1}");
+                    CrackTextureAssets[i] = LazyAsset<Texture2D>.Request($"NoxusBoss/Content/NPCs/Bosses/NamelessDeity/Projectiles/LightSlashTelegraph{i + 1}");
+                    CrackGlowTextureAssets[i] = LazyAsset<Texture2D>.Request($"NoxusBoss/Content/NPCs/Bosses/NamelessDeity/Projectiles/LightSlashTelegraphGlow{i + 1}");
                 }
             }
         }
@@ -105,7 +96,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
                 for (int i = 0; i < 24; i++)
                 {
                     Vector2 shardVelocity = Main.rand.NextVector2Unit() * Main.rand.NextFloat(6f, 30f);
-                    int shardLifetime = (int)Remap(shardVelocity.Length(), 30f, 11f, 4f, 52f) + Main.rand.Next(10);
+                    int shardLifetime = (int)Utils.Remap(shardVelocity.Length(), 30f, 11f, 4f, 52f) + Main.rand.Next(10);
                     Color shardColor = Color.Lerp(Color.LightCoral, Color.Wheat, Main.rand.NextFloat(0.7f));
                     Color backglowColor = Color.Lerp(Color.Coral, Color.Red, Main.rand.NextFloat(0.6f)) * 0.8f;
 
@@ -114,7 +105,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
                 }
 
                 // Create a strong bloom behind everything.
-                StrongBloom bloom = new(Projectile.Center, Vector2.Zero, DialogColorRegistry.NamelessDeityTextColor, 6f, (int)(Lifetime - Time));
+                StrongBloom bloom = new(Projectile.Center, Vector2.Zero, new(255, 63, 93), 6f, (int)(Lifetime - Time));
                 bloom.Spawn();
             }
 
@@ -179,11 +170,8 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
             spriteBatch.Draw(BrightSpiresTexture, drawPosition, null, color * Sqrt(GlowOpacity), spireRotation, BrightSpiresTexture.Size() * 0.5f, scale * spireScale, 0, 0f);
         }
 
-        public void DrawWithPixelation()
+        public void RenderPixelatedPrimitives(SpriteBatch spriteBatch)
         {
-            // Initialize the god ray drawer.
-            GodRayDrawer ??= new PrimitiveTrail(GodRayWidth, GodRayColor, null, false);
-
             // Draw god rays.
             ulong rngSeed = (ulong)(Projectile.identity * 17175 + 19);
             for (int i = 0; i < 6; i++)
@@ -193,7 +181,8 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
                 float godRayLength = Lerp(300f, 508f, Utils.RandomFloat(ref rngSeed)) * Projectile.scale;
 
                 List<Vector2> godRayPositions = Projectile.GetLaserControlPoints(24, godRayLength, godRayRotation.ToRotationVector2());
-                GodRayDrawer.Draw(godRayPositions, -Main.screenPosition, 32);
+                PrimitiveSettings settings = new(GodRayWidth, GodRayColor, Smoothen: false, Pixelate: true);
+                PrimitiveRenderer.RenderTrail(godRayPositions, settings, 34);
             }
         }
     }

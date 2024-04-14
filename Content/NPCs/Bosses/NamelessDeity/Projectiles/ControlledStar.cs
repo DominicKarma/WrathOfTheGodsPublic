@@ -1,8 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Luminance.Common.DataStructures;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using NoxusBoss.Common.DataStructures;
 using NoxusBoss.Core.Graphics.Automators;
-using NoxusBoss.Core.Graphics.Shaders;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -59,18 +58,21 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity.Projectiles
 
         public void DrawWithShader(SpriteBatch spriteBatch)
         {
-            var fireballShader = ShaderManager.GetShader("SunShader");
+            Main.spriteBatch.Draw(BloomCircleSmall, Projectile.Center - Main.screenPosition, null, Color.White with { A = 0 }, Projectile.rotation, BloomCircleSmall.Size() * 0.5f, Projectile.scale * 1.2f, 0, 0f);
+
+            var fireballShader = ShaderManager.GetShader("NoxusBoss.SunShader");
             fireballShader.TrySetParameter("coronaIntensityFactor", UnstableOverlayInterpolant * 0.67f + 0.044f);
             fireballShader.TrySetParameter("mainColor", new Color(204, 163, 79));
             fireballShader.TrySetParameter("darkerColor", new Color(204, 92, 25));
-            fireballShader.TrySetParameter("subtractiveAccentFactor", new Color(74, 255, 255));
+            fireballShader.TrySetParameter("subtractiveAccentFactor", new Color(181, 0, 0));
+            fireballShader.TrySetParameter("sphereSpinTime", Main.GlobalTimeWrappedHourly * 0.9f);
             fireballShader.SetTexture(WavyBlotchNoise, 1);
             fireballShader.SetTexture(PsychedelicWingTextureOffsetMap, 2);
             fireballShader.Apply();
 
             Vector2 drawPosition = Projectile.Center - Main.screenPosition;
             Vector2 scale = Vector2.One * Projectile.width * Projectile.scale * 1.5f / DendriticNoiseZoomedOut.Size();
-            Main.spriteBatch.Draw(DendriticNoiseZoomedOut, drawPosition, null, Color.White, Projectile.rotation, DendriticNoiseZoomedOut.Size() * 0.5f, scale, 0, 0f);
+            Main.spriteBatch.Draw(DendriticNoiseZoomedOut, drawPosition, null, Color.White with { A = 200 }, Projectile.rotation, DendriticNoiseZoomedOut.Size() * 0.5f, scale, 0, 0f);
 
             // Draw a pure white overlay over the fireball if instructed.
             if (UnstableOverlayInterpolant >= 0.2f)

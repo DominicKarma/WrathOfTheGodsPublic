@@ -147,7 +147,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
         /// <summary>
         /// The intensity of afterimages relative to Nameless' speed.
         /// </summary>
-        public float AfterimageOpacityFactor => Remap(NPC.velocity.Length(), 13f, 37.5f, 0.7f, 1.05f);
+        public float AfterimageOpacityFactor => Utils.Remap(NPC.velocity.Length(), 13f, 37.5f, 0.7f, 1.05f);
 
         /// <summary>
         /// The chance for an afterimage to spawn for a given frame.
@@ -583,7 +583,8 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
             }
 
             // Update the state machine.
-            StateMachine.Update();
+            StateMachine.PerformBehaviors();
+            StateMachine.PerformStateTransitionCheck();
 
             // Disable the silly Alicorn on a Stick in GFB.
             if (Main.zenithWorld && ModReferences.BaseCalamity is not null && NPC.HasPlayerTarget && Target.Center.WithinRange(NPC.Center, TeleportVisualsAdjustedScale.X * 420f))
@@ -599,7 +600,7 @@ namespace NoxusBoss.Content.NPCs.Bosses.NamelessDeity
             {
                 Vector2 afterimageSpawnPosition = NPC.Center + Main.rand.NextVector2Circular(20f, 20f);
                 Vector2 afterimageVelocity = Main.rand.NextVector2Circular(9f, 9f) * AfterimageOpacityFactor;
-                NewProjectileBetter(afterimageSpawnPosition, afterimageVelocity, ModContent.ProjectileType<NamelessDeityAfterimage>(), 0, 0f, -1, MathF.Max(TeleportVisualsAdjustedScale.X, TeleportVisualsAdjustedScale.Y), NPC.rotation);
+                NewProjectileBetter(NPC.GetSource_FromAI(), afterimageSpawnPosition, afterimageVelocity, ModContent.ProjectileType<NamelessDeityAfterimage>(), 0, 0f, -1, MathF.Max(TeleportVisualsAdjustedScale.X, TeleportVisualsAdjustedScale.Y), NPC.rotation);
             }
 
             // Handle mumble sounds.
