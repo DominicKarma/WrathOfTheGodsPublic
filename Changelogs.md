@@ -1,3 +1,8 @@
+# Version 1.1.20
+- Fixed a Calamity Remix incompatibility where servers wouldn't start if the mod was played with it.
+- Fixed an obscure crash pertaining to wire drawing during the divine stairway animation.
+- Ported the mod to Luminance library.
+
 # Version 1.1.19
 - Increased the volume of the new Nameless Deity theme.
 
