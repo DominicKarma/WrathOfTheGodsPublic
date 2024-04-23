@@ -1,3 +1,9 @@
+# Version 1.1.22
+- Fixed the Nameless Deity freezing the game upon appearing.
+
+# Version 1.1.21
+- Fixed the mod being released in Debug instead of Release mode.
+
 # Version 1.1.20
 - Fixed a Calamity Remix incompatibility where servers wouldn't start if the mod was played with it.
 - Fixed an obscure crash pertaining to wire drawing during the divine stairway animation.

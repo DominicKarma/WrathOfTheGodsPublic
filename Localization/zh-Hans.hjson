@@ -1013,6 +1013,7 @@ Mods: {
 			DarkField.DisplayName: 黑暗视野
 			PrimordialStardust.DisplayName: 始源星尘
 			NamelessDeityAfterimage.DisplayName: 余像
+			// FallenGoodApple.DisplayName: Fallen Good Apple
 		}
 
 		Tiles: {

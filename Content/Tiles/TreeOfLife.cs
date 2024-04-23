@@ -3,9 +3,10 @@ using Microsoft.Xna.Framework.Graphics;
 using NoxusBoss.Common.Subworlds;
 using NoxusBoss.Content.Items;
 using NoxusBoss.Content.NPCs.Bosses.NamelessDeity;
-using NoxusBoss.Content.Particles;
+using NoxusBoss.Content.Projectiles.Typeless;
 using ReLogic.Content;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
@@ -75,8 +76,7 @@ namespace NoxusBoss.Content.Tiles
                 if (namelessIsPresent)
                 {
                     Vector2 fruitWorldPosition = new Point(i, j).ToWorldCoordinates() + Vector2.UnitY * 20f + properFruitOffset;
-                    GoodAppleParticle fruit = new(fruitWorldPosition, Vector2.UnitY.RotatedBy(fruitRotation) * Main.rand.NextFloat(2.5f, 3.2f), fruitColor, Main.rand.Next(420, 540), fruitScale);
-                    fruit.Spawn();
+                    NewProjectileBetter(new EntitySource_WorldEvent(), fruitWorldPosition, Vector2.UnitY.RotatedBy(fruitRotation) * Main.rand.NextFloat(2.5f, 3.3f), ModContent.ProjectileType<FallenGoodApple>(), 0, 0f);
                     EternalGardenUpdateSystem.LifeFruitDroppedFromTree = true;
                 }
             }
